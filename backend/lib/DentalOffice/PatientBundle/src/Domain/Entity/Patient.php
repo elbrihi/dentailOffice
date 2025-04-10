@@ -3,83 +3,125 @@
 namespace DentalOffice\PatientBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Get;
 use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPostProcessor;
+use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPutProcessor;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
 
 #[ApiResource(
     order: ['id' => 'DESC'],
     operations:[
-         new Post(
-            security: "is_granted('ROLE_ADMIN')",
-            uriTemplate: "/create/new/patient",
-            processor: PatientPostProcessor::class,
-            normalizationContext: ['groups' => ['patient:read']],
-            denormalizationContext: ['groups' => ['patient:write']],
-        )
-    ]
+            new Post(
+                security: "is_granted('ROLE_ADMIN')",
+                uriTemplate: "/create/new/patient",
+                processor: PatientPostProcessor::class,
+                normalizationContext: ['groups' => ['patient:read']],
+                denormalizationContext: ['groups' => ['patient:write']],
+            ),
+            new Put(
+                security: "is_granted('ROLE_ADMIN')",
+                uriTemplate: "/update/patient/{id}",
+                processor: PatientPutProcessor::class,
+                normalizationContext: ['groups' => ['patient:read']],
+                denormalizationContext: ['groups' => ['patient:write']],
+            ),
+            new Get(
+                uriTemplate: "/get/patient/{id}",
+                normalizationContext: ['groups' => ['patient:read']],
+                denormalizationContext: ['groups' => ['patient:write']],
+            ),
+            new GetCollection(
+                uriTemplate: '/get/patients/by/paginations',
+                paginationClientItemsPerPage: true,
+                paginationItemsPerPage: true,
+
+            ),
+        ],
+        paginationPartial: true,
 )]
 class Patient
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['patient:read','patient:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $firstName = null;
 
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $gender = null;
 
     #[ORM\Column(length: 255, nullable:true)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
+
     private ?string $bloodType = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $medicalHistory = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $notes = null;
 
     #[ORM\Column]
+    #[Groups(['patient:read','patient:write'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'patients')]
+    #[Groups(['patient:read','patient:write'])]
     private ?User $createdBy = null;
 
 
     #[ORM\ManyToOne(inversedBy: 'patientdModifieds')]
+    #[Groups(['patient:read','patient:write'])]
     private ?User $modifiedBy = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['patient:read','patient:write'])]
     private ?\DateTimeInterface $modified_at = null;
 
 
     #[ORM\Column]
+    #[Groups(['patient:read','patient:write'])]
     private ?bool $status = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['patient:read','patient:write'])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $cni = null;
 
 

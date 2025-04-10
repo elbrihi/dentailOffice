@@ -11,7 +11,15 @@
 
         <service id='DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Processor\State\PatientPostProcessor'
         
-                class = 'Stock\SupplierBundle\Infrastucture\Persistence\Doctrine\Processor\State\PatientPostProcessor' >
+                class = 'DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Processor\State\PatientPostProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+        <service id='DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Processor\State\PatientPutProcessor'
+        
+                class = 'DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Processor\State\PatientPutProcessor' >
             <argument id="api_platform.doctrine.orm.state.persist_processor" />
             <argument id="api_platform.doctrine.orm.state.remove_processor" />
             <argument id="api_platform.validator" />

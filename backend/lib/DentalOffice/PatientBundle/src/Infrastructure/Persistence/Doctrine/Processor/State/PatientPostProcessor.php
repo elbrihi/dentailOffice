@@ -32,12 +32,13 @@ class PatientPostProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Patient
     {
-        
         $request = $context['request'];
 
        
 
         $patient = json_decode($request->getContent(), true);
+
+      
 
         try {
             $birthDate = new DateTimeImmutable($patient["birthDate"]);

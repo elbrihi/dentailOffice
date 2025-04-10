@@ -1,7 +1,7 @@
 # create this file if you need to configure anything
 maker:
-    root_namespace: 'DentalOffice\PatientBundle\Domain'
-    #root_namespace:  'DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor'
+    #root_namespace: 'DentalOffice\PatientBundle\Domain'
+    root_namespace:  'DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor'
     #root_namespace: 'Stock\ProductBundle\Infrastucture\Persistence\Doctrine\Provider'
     #root_namespace: 'Stock\UserBundle\Domain'
     #root_namespace: 'Stock\ProductBundle\Interface'

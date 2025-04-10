@@ -25,6 +25,10 @@
         <testsuite name="ProductBundle">
             <directory>./tests</directory>
         </testsuite>
+
+        <testsuite name="ProductBundle">
+            <directory>./tests</directory>
+        </testsuite>
     </testsuites>
 
     <coverage processUncoveredFiles="true">
