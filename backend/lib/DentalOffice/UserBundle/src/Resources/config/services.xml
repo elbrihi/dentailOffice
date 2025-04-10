@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    
+    <services>
+
+        <defaults autowire="true" autoconfigure="true" public="false" />
+
+        <service id="DentalOffice\UserBundle\Infrastructure\Persistence\Doctrine\Repository\AuthTokenRepository"
+                 class="DentalOffice\UserBundle\Infrastructure\Persistence\Doctrine\Repository\AuthTokenRepository" >
+                 <tag name="doctrine.repository_service"/>
+        </service>
+
+        <service id="DentalOffice\UserBundle\Infrastructure\Persistence\Doctrine\Repository\UserRepository"
+                 class="DentalOffice\UserBundle\Infrastructure\Persistence\Doctrine\Repository\UserRepository" >
+                 <tag name="doctrine.repository_service"/>
+        </service>
+
+    
+         <!-- Register the AuthTokenManager service -->
+        <service id="DentalOffice\UserBundle\Application\Security\Authenticator\ApiTokenAuthenticator" 
+                class="DentalOffice\UserBundle\Application\Security\Authenticator\ApiTokenAuthenticator" >
+        </service>
+
+        <service id="DentalOffice\UserBundle\Application\Service\Manager\AuthTokenManager" 
+            class="DentalOffice\UserBundle\Application\Service\Manager\AuthTokenManager" />
+
+        <!-- Alias the AuthTokenManagerInterface to the AuthTokenManager implementation -->
+        <service id="DentalOffice\UserBundle\Application\Service\Manager\AuthTokenManagerInterface"
+                 alias="DentalOffice\UserBundle\Application\Service\Manager\AuthTokenManager" />
+
+        <service id="DentalOffice\UserBundle\UI\Controller\PostUserAuthTokenController">
+            <tag name="controller.service_arguments" />
+             <argument type="service" 
+             id="DentalOffice\UserBundle\Application\Service\Manager\AuthTokenManagerInterface" />
+        </service>
+
+
+        <service id="DentalOffice\UserBundle\UI\Controller\PostAddNewUserController">
+            <tag name="controller.service_arguments" />
+
+        </service>
+
+                <!-- Register the UserRepository service -->
+        <service id="DentalOffice\UserBundle\Domain\Repository\UserRepository"
+                 class="DentalOffice\UserBundle\Domain\Repository\UserRepository">
+            <tag name="doctrine.repository_service" />
+            <argument type="service" id="doctrine" />
+        </service>
+
+        
+    </services>
+    
+</container>
