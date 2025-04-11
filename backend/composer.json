@@ -44,7 +44,8 @@
         "psr-4": {
             "App\\":"src/",
             "DentalOffice\\UserBundle\\":"lib/DentalOffice/UserBundle/src/",
-            "DentalOffice\\PatientBundle\\":"lib/DentalOffice/PatientBundle/src/"
+            "DentalOffice\\PatientBundle\\":"lib/DentalOffice/PatientBundle/src/",
+            "DentalOffice\\MedicalRecordBundle\\":"lib/DentalOffice/MedicalRecordBundle/src/"
     
         }
     },

@@ -36,7 +36,7 @@ class ProductPostProcessor implements ProcessorInterface
         /** @var Request $request */
         $request = $context['request'];
         
-       //$this->clock->now();
+        //$this->clock->now();
 
         $categoryId = $uriVariables["categoryId"];
         $categories= $this->entityManager->getRepository(Category::class)->findOneBy([

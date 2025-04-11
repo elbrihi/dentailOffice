@@ -7,10 +7,13 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
+use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPostProcessor;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPutProcessor;
 use DentalOffice\UserBundle\Domain\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -123,6 +126,19 @@ class Patient
     #[ORM\Column(length: 255)]
     #[Groups(['patient:read','patient:write'])]
     private ?string $cni = null;
+
+    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'patient')]
+    #[Groups(['patient:read','patient:write'])]
+    private Collection $medicalRecord;
+
+    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['patient:read','patient:write'])]
+    private ?string $mote = null;
+
+    public function __construct()
+    {
+        $this->medicalRecord = new ArrayCollection();
+    }
 
 
 
@@ -324,6 +340,48 @@ class Patient
     public function setCni(string $cni): static
     {
         $this->cni = $cni;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MedicalRecord>
+     */
+    public function getMedicalRecord(): Collection
+    {
+        return $this->medicalRecord;
+    }
+
+    public function addMedicalRecord(MedicalRecord $medicalRecord): static
+    {
+        if (!$this->medicalRecord->contains($medicalRecord)) {
+            $this->medicalRecord->add($medicalRecord);
+            $medicalRecord->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedicalRecord(MedicalRecord $medicalRecord): static
+    {
+        if ($this->medicalRecord->removeElement($medicalRecord)) {
+            // set the owning side to null (unless already changed)
+            if ($medicalRecord->getPatient() === $this) {
+                $medicalRecord->setPatient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMote(): ?string
+    {
+        return $this->mote;
+    }
+
+    public function setMote(string $mote): static
+    {
+        $this->mote = $mote;
 
         return $this;
     }

@@ -6,6 +6,7 @@ api_platform:
         paths: 
             - '%kernel.project_dir%/lib/DentalOffice/UserBundle/src/Domain/Entity'
             - '%kernel.project_dir%/lib/DentalOffice/PatientBundle/src/Domain/Entity'
+            - '%kernel.project_dir%/lib/DentalOffice/MedicalRecordBundle/src/Domain/Entity'
                 
     formats:
         jsonld: ['application/ld+json']

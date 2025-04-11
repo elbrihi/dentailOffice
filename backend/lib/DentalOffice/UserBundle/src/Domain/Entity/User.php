@@ -3,6 +3,7 @@
 namespace DentalOffice\UserBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\Post;
+use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -51,17 +52,17 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write'])]
+    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write','medical_record:read','medical_record:write', 'patient:read','patient:write'])]
     private ?int $id = null;
 
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write'])]
+    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write','medical_record:read','medical_record:write', 'patient:read','patient:write'])]
     private ?string $username = null;
 
 
     #[ORM\Column]
-    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write'])]
+    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write','medical_record:read','medical_record:write', 'patient:read','patient:write'])]
     private array $roles = [];
 
     #[ORM\Column(length: 255)]
@@ -80,11 +81,19 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Patient::class, mappedBy: 'modifiedBy')]
     private Collection $patientdModifieds;
 
+    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'createdBy')]
+    private Collection $medicalRecords;
+
+    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'modifiedBy')]
+    private Collection $medicalRecordsModifier;
+
 
     public function __construct()
     {
         $this->patients = new ArrayCollection();
         $this->patientdModifieds = new ArrayCollection();
+        $this->medicalRecords = new ArrayCollection();
+        $this->medicalRecordsModifier = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,6 +255,66 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($patientdModified->getModifiedBy() === $this) {
                 $patientdModified->setModifiedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MedicalRecord>
+     */
+    public function getMedicalRecords(): Collection
+    {
+        return $this->medicalRecords;
+    }
+
+    public function addMedicalRecord(MedicalRecord $medicalRecord): static
+    {
+        if (!$this->medicalRecords->contains($medicalRecord)) {
+            $this->medicalRecords->add($medicalRecord);
+            $medicalRecord->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedicalRecord(MedicalRecord $medicalRecord): static
+    {
+        if ($this->medicalRecords->removeElement($medicalRecord)) {
+            // set the owning side to null (unless already changed)
+            if ($medicalRecord->getCreatedBy() === $this) {
+                $medicalRecord->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MedicalRecord>
+     */
+    public function getMedicalRecordsModifier(): Collection
+    {
+        return $this->medicalRecordsModifier;
+    }
+
+    public function addMedicalRecordsModifier(MedicalRecord $medicalRecordsModifier): static
+    {
+        if (!$this->medicalRecordsModifier->contains($medicalRecordsModifier)) {
+            $this->medicalRecordsModifier->add($medicalRecordsModifier);
+            $medicalRecordsModifier->setModifiedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedicalRecordsModifier(MedicalRecord $medicalRecordsModifier): static
+    {
+        if ($this->medicalRecordsModifier->removeElement($medicalRecordsModifier)) {
+            // set the owning side to null (unless already changed)
+            if ($medicalRecordsModifier->getModifiedBy() === $this) {
+                $medicalRecordsModifier->setModifiedBy(null);
             }
         }
 

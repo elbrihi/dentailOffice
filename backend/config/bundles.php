@@ -12,5 +12,6 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     DentalOffice\UserBundle\DentalOfficeUserBundle::class => ['all' => true],
     DentalOffice\PatientBundle\DentalOfficePatientBundle::class => ['all' => true],
+    DentalOffice\MedicalRecordBundle\DentalOfficeMedicalRecordBundle::class => ['all' => true],
 
 ];
