@@ -89,6 +89,26 @@ export class CustomSidenavComponent {
         route: 'dashboard', 
         subItems: [] 
       },
+      {
+        icon: 'person',
+        label: 'Gestion des patients',
+        route: 'patients',
+        subItems: [
+          {
+            icon: 'folder_open',
+            label: 'Dossier médical',
+            route: ':patientId/medical-records', // Use programmatic navigation to resolve :patientId
+            subItems: []
+          },
+       
+            {
+              icon: 'folder_open',
+              label: 'Patient Tuto',
+              route: 'patient-tuto', // Use programmatic navigation to resolve :patientId
+              subItems: []
+            }
+        ]
+      },
       { 
         icon: 'storefront',  // Supplier-related icon
         label: 'Fournisseurs', 

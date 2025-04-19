@@ -1,0 +1,84 @@
+:root {
+  --scrollable-bg: #f0f0f0;
+  --scrollable-border: #ccc;
+}
+
+.theme-container {
+  .mat-elevation-z2 {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    .full-width-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+      }
+
+      tr, th, td {
+        background-color: var(--sys-surface-container);
+        color: var(--sys-on-surface);
+      }
+
+      td:hover {
+        background-color: var(--sys-surface-container-highest);
+      }
+    }
+  }
+
+  .scrollable {
+    background-color: var(--scrollable-bg);
+    border: 1px solid var(--scrollable-border);
+    border-radius: 8px;
+    padding: 16px;
+    max-height: 80vh;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sys-outline) var(--scrollable-bg);
+
+    .add-patient-button {
+      top: 80px;
+      right: 16px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      padding: 6px 12px;
+      position: sticky;
+    }
+  }
+
+  .scrollable::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollable::-webkit-scrollbar-thumb {
+    background-color: var(--sys-outline);
+    border-radius: 4px;
+  }
+
+  .scrollable::-webkit-scrollbar-track {
+    background-color: var(--scrollable-bg);
+  }
+
+  mat-paginator {
+    background-color: var(--paginator-bg);
+    color: var(--paginator-text);
+    border: 1px solid var(--paginator-border);
+
+    .mat-paginator-navigation-next,
+    .mat-paginator-navigation-previous {
+      color: var(--paginator-text);
+    }
+
+    mat-option:hover {
+      background-color: var(--paginator-hover-bg);
+    }
+  }
+}

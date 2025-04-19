@@ -13,7 +13,8 @@ import { CategoryListComponent } from './modules/product/components/category-lis
 import { CategoryProductListComponent } from './modules/product/components/product-list/category-product-list.component';
 import { DatatableSubitemComponent } from './modules/product/components/datatable-subitem/datatable-subitem.component';
 import { DatatableTutoComponent } from './modules/product/components/datatable-tuto/datatable-tuto.component';
-
+import { PatientListComponent } from './modules/patient/components/patient-list/patient-list.component';
+import { PatientTutoComponent } from './modules/patient/components/patient-tuto/patient-tuto.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,20 @@ const routes: Routes = [
           {
             path: 'analytics',
             component: AnalyticsComponent
+          }
+        ]
+      },
+      {
+        path: 'patients',
+       
+        children: [
+          {
+            path: ':patientId/medical-records',
+            component: PatientListComponent
+          },
+          {
+            path: 'patient-tuto',
+            component: PatientTutoComponent
           }
         ]
       },

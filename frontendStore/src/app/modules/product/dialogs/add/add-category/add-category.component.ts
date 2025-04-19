@@ -28,7 +28,7 @@ export class AddCategoryComponent {
   saveCategory(event: Event){
   
    
-    event.preventDefault();
+   // event.preventDefault();
 
     const category: Category = 
         { categoryName: this.categoryForm.value.categoryName,

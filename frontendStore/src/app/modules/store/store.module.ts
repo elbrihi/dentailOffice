@@ -39,7 +39,10 @@ import { DatatableSubitemComponent } from "../product/components/datatable-subit
 import { DatatableTutoComponent } from "../product/components/datatable-tuto/datatable-tuto.component";
 import { AddProductComponent } from "../product/dialogs/add/add-product/add-product.component";
 import { AddCategoryComponent } from "../product/dialogs/add/add-category/add-category.component";
-
+import { PatientListComponent } from "../patient/components/patient-list/patient-list.component";
+import { MedicalRecordComponent } from "../patient/components/medical-record/medical-record.component";
+import { PatientTutoComponent } from "../patient/components/patient-tuto/patient-tuto.component";
+import { AddPatientComponent } from "../patient/dialogs/patient/add-patient/add-patient.component";
 
 @NgModule({
     declarations: [
@@ -72,7 +75,11 @@ import { AddCategoryComponent } from "../product/dialogs/add/add-category/add-ca
         DatatableTutoComponent,
         AddProductComponent,
         AddCategoryComponent,
-        
+        PatientListComponent,
+        MedicalRecordComponent,
+        PatientTutoComponent,
+        AddPatientComponent
+
 
 
     ],
@@ -116,6 +123,7 @@ import { AddCategoryComponent } from "../product/dialogs/add/add-category/add-ca
         SupplierUpdateComponent,
         CategoryListComponent,
         DatatableSubitemComponent,
+        AddPatientComponent
 
     ],
 

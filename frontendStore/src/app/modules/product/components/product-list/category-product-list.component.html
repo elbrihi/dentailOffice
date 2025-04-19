@@ -128,7 +128,10 @@
           <tr mat-row *matRowDef="let category; columns: displayedColumns;"></tr>
       
           <tr mat-row *matRowDef="let row; columns: ['detailsProduct']"  ></tr>
-      
+          <button mat-raised-button (click)="openAddProductDialog()" color="primary" class="add-product-btn" aria-label="Add Product">
+            <mat-icon>add</mat-icon>
+            Add Product
+          </button>
         </table>
           <mat-paginator class="paginator"
               #paginator 
@@ -140,12 +143,10 @@
               (page)="onPageChange($event)"
               >
           </mat-paginator>
-      </div>
 
-      <button mat-raised-button (click)="openAddProductDialog()" color="primary" class="add-product-btn" aria-label="Add Product">
-        <mat-icon>add</mat-icon>
-        Add Product
-      </button>
+      </div>
+  
+  
       
     </div>
   

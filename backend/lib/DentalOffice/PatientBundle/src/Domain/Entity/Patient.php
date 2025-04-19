@@ -44,8 +44,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ),
             new GetCollection(
                 uriTemplate: '/get/patients/by/paginations',
+                normalizationContext: ['groups' => ['patient:read']],
+                denormalizationContext: ['groups' => ['patient:write']],
                 paginationClientItemsPerPage: true,
                 paginationItemsPerPage: true,
+
 
             ),
         ],
@@ -131,9 +134,6 @@ class Patient
     #[Groups(['patient:read','patient:write'])]
     private Collection $medicalRecord;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['patient:read','patient:write'])]
-    private ?string $mote = null;
 
     public function __construct()
     {
@@ -374,17 +374,6 @@ class Patient
         return $this;
     }
 
-    public function getMote(): ?string
-    {
-        return $this->mote;
-    }
-
-    public function setMote(string $mote): static
-    {
-        $this->mote = $mote;
-
-        return $this;
-    }
 
  
  
