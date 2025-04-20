@@ -54,6 +54,7 @@ export class AddMedicalRecordComponent {
       }
     })
   }
+  
   get prescriptions(): FormArray {
     return this.addMedicalDiscoredForm.get('prescriptions') as FormArray;
   }

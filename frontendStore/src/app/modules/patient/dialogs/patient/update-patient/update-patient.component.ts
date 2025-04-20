@@ -69,7 +69,6 @@ export class UpdatePatientComponent implements OnInit{
   {
    // event.preventDefault();
 
-
     const patient = this.patientForm.value
     
 

@@ -33,4 +33,26 @@ export class MedicalRecordDataSourceService extends RestDataSource {
             })
           );
   }
+
+  getMedicalRecodById(id: number)
+  {
+      const url  = `${this,this.baseUrl}/get/medicalRecord/${id}`
+      return this.http.get<MedicalRecordDto>(url)
+  }
+
+  putMedicalRecord(medicalRecord:MedicalRecordDto, id:number)
+  {
+       const url = `${this.baseUrl}/update/medicalRecords/${id}`
+
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+        'Content-Type': 'application/ld+json', // Ensure this is set correctly
+      })
+      return this.http.put<MedicalRecordDto>(url,medicalRecord,{headers}).pipe(
+        catchError(err => {
+          console.error('Error during patient update:', err);
+          return throwError(() => new Error('Failed to update patient.'));
+        })
+      )
+  }
 }

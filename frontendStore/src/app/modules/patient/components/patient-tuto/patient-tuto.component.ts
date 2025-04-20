@@ -139,6 +139,8 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
       data:{
         id:patientId } as PatientDTO
     })
+
+    this.dialog.afterAllClosed.subscribe(() => this.loadPatiens())
   }
 
 
@@ -159,6 +161,7 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
         data:{
           id:id as MedicalRecordDto} 
          })
+         this.dialog.afterAllClosed.subscribe(() => this.loadPatiens())
   }
 
 }

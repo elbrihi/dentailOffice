@@ -68,7 +68,8 @@ class MedicalRecordPutProcessor implements ProcessorInterface
             $data->setCreatedBy($medicalRecordFromDataBase->getCreatedBy());
             $data->setModifiedAt($this->clock->now());
             $data->setModifiedBy($this->security->getUser());
-
+            $data->setPatient($medicalRecordFromDataBase->getPatient());
+          //  dd($data);
             return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
 
