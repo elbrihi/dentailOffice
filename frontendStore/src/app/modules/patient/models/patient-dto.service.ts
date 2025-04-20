@@ -10,7 +10,9 @@ export interface PatientDTO {
   birthDate: Date;
   gender: string;
   bloodType: string;
+  cni:string;
   address: string;
+  status:boolean;
   medicalHistory: string;
   notes: string;
   createdAt: Date;

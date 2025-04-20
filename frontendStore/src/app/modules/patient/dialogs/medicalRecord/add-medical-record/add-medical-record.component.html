@@ -1,0 +1,71 @@
+<div class="patient-container mat-elevation-z4">
+    <h2 class="patient-title">Medical Record</h2>
+    <form class="patient-form" [formGroup]="addMedicalDiscoredForm" (ngSubmit)="submitMedicalRecord($event)">
+      <div class="mat-form-fields">
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Visit Date</mat-label>
+          <input matInput formControlName="visit_date" type="date" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Chief Complaint</mat-label>
+          <input matInput formControlName="chief_complaint" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Clinical Diagnosis</mat-label>
+          <input matInput formControlName="clinical_diagnosis" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Treatment Plan</mat-label>
+          <input matInput formControlName="treatment_plan" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Follow Up Date</mat-label>
+          <input matInput formControlName="follow_up_date" type="date" />
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Notes</mat-label>
+          <textarea matInput formControlName="notes" rows="3"></textarea>
+        </mat-form-field>
+  
+      </div>
+  
+      <div formArrayName="prescriptions" class="mat-form-fields">
+        <div *ngFor="let prescription of prescriptions.controls; let i = index" [formGroupName]="i">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Medication</mat-label>
+            <input matInput formControlName="medication" />
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Dosage</mat-label>
+            <input matInput formControlName="dosage" />
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Notes</mat-label>
+            <input matInput formControlName="notes" />
+          </mat-form-field>
+          <button mat-raised-button color="warn" (click)="removePrescription(i)">Remove</button>
+
+        </div>
+  
+
+      </div>
+  
+      <div class="form-actions">
+       
+        <button mat-button color="primary" type="button" (click)="addPrescription()">+ Add Prescription</button>
+
+        <button mat-raised-button (click)="reset()" color="warn">Rest</button>
+        <button mat-raised-button color="primary">Save</button>
+        <button mat-raised-button type="button" color="warn" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+  

@@ -14,6 +14,8 @@ export class Patient implements PatientDTO {
   birthDate: Date = new Date();
   gender: string = '';
   bloodType: string = '';
+  status: boolean = true;
+  cni: string = '';
   address: string = '';
   medicalHistory: string = '';
   notes: string = '';

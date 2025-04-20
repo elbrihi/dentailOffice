@@ -13,8 +13,6 @@ import { Dialog, DialogRef } from '@angular/cdk/dialog';
 export class AddPatientComponent {
     
     FormBuilder: FormGroup;
-
-
     fb =  inject(FormBuilder);;
     dialogRef= inject(DialogRef)
 

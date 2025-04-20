@@ -18,9 +18,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { AddDialogComponent } from './modules/supplier/dialogs/add/add.dialog/add-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateCategoryComponent } from './modules/product/dialogs/update/update-category/update-category.component';
-import { AddPatientComponent } from './modules/patient/dialogs/patient/add-patient/add-patient.component';
-import { UpdatePatientComponent } from './modules/patient/dialogs/patient/update-patient/update-patient.component';
-
+import { UpdateMedicalRecordComponent } from './modules/patient/dialogs/medicalRecord/update-medical-record/update-medical-record.component';
 
 
 
@@ -33,7 +31,6 @@ import { UpdatePatientComponent } from './modules/patient/dialogs/patient/update
     TestComponent,
     AddDialogComponent,
     UpdateCategoryComponent,
-    UpdatePatientComponent,
 
   ],
   imports: [

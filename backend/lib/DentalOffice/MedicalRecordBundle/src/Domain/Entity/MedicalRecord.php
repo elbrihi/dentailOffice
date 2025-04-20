@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Get;
 use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPostProcessor;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPutProcessor;
@@ -40,6 +41,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 processor: MedicalRecordPutProcessor::class,
 
             ),
+            new Get(
+                uriTemplate: "/get/medicalRecord/{id}",
+                normalizationContext: ['groups' => ['medical_record:read']],
+                denormalizationContext: ['groups' => ['medical_record:read']],
+            ),
 
         ],
         paginationPartial: true,
@@ -72,7 +78,6 @@ class MedicalRecord
 
     #[ORM\Column(type: Types::ARRAY)]
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
-
     private array $prescriptions = [];
 
 

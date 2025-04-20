@@ -43,6 +43,9 @@ import { PatientListComponent } from "../patient/components/patient-list/patient
 import { MedicalRecordComponent } from "../patient/components/medical-record/medical-record.component";
 import { PatientTutoComponent } from "../patient/components/patient-tuto/patient-tuto.component";
 import { AddPatientComponent } from "../patient/dialogs/patient/add-patient/add-patient.component";
+import { UpdatePatientComponent } from "../patient/dialogs/patient/update-patient/update-patient.component";
+import { AddMedicalRecordComponent } from "../patient/dialogs/medicalRecord/add-medical-record/add-medical-record.component";
+import { UpdateMedicalRecordComponent } from "../patient/dialogs/medicalRecord/update-medical-record/update-medical-record.component";
 
 @NgModule({
     declarations: [
@@ -78,7 +81,12 @@ import { AddPatientComponent } from "../patient/dialogs/patient/add-patient/add-
         PatientListComponent,
         MedicalRecordComponent,
         PatientTutoComponent,
-        AddPatientComponent
+        AddPatientComponent,
+        UpdatePatientComponent,
+        AddMedicalRecordComponent,
+        UpdateMedicalRecordComponent,
+
+
 
 
 
@@ -123,7 +131,11 @@ import { AddPatientComponent } from "../patient/dialogs/patient/add-patient/add-
         SupplierUpdateComponent,
         CategoryListComponent,
         DatatableSubitemComponent,
-        AddPatientComponent
+        AddPatientComponent,
+        AddMedicalRecordComponent,
+        UpdateMedicalRecordComponent,
+
+
 
     ],
 

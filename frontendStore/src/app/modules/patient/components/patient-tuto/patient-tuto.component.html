@@ -41,7 +41,7 @@
                             <button mat-icon-button color="primary">
                               <mat-icon>visibility</mat-icon>
                             </button>
-                            <button mat-icon-button color="accent" >
+                            <button mat-icon-button (click)="openUpdatePatientDialog($event,patient.id)" color="accent" >
                               <mat-icon>edit</mat-icon>
                             </button>
                             <button mat-icon-button color="warn">
@@ -98,8 +98,8 @@
 
                                 <ng-container matColumnDef="actions">
                                     <th mat-header-cell *matHeaderCellDef>
-                                        <button mat-icon-button color="primary">
-                                        <mat-icon aria-label="Add new supplier">add</mat-icon>
+                                        <button mat-icon-button color="primary" (click)="openMedicalRecordDialog(patient.id)">
+                                        <mat-icon aria-label="Add new medicalRecord">add</mat-icon>
                                         </button>
                                     </th>
                                     <td mat-cell *matCellDef="let row">
@@ -108,12 +108,12 @@
                                         <mat-icon aria-label="View Details">visibility</mat-icon>
                                         </button>
                             
-                                        <button mat-icon-button color="accent" >
-                                        <mat-icon aria-label="Edit supplier">edit</mat-icon>
+                                        <button mat-icon-button color="accent" (click)="openUpdateMedicalRecord(row.id)">
+                                        <mat-icon aria-label="Edit medicalRecord">edit</mat-icon>
                                         </button>
                                         
                                         <button mat-icon-button color="warn" >
-                                        <mat-icon aria-label="Delete supplier">delete</mat-icon>
+                                        <mat-icon aria-label="Delete medicalRecord">delete</mat-icon>
                                         </button>
                             
                                     </td>

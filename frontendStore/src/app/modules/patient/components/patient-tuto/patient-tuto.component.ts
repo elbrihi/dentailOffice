@@ -7,6 +7,12 @@ import { PatientListDataSource, PatientListItem } from '../patient-list/patient-
 import { Patient } from '../../models/patient.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { AddPatientComponent } from '../../dialogs/patient/add-patient/add-patient.component';
+import { UpdatePatientComponent } from '../../dialogs/patient/update-patient/update-patient.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AddMedicalRecordComponent } from '../../dialogs/medicalRecord/add-medical-record/add-medical-record.component';
+import { PatientDTO } from '../../models/patient-dto.service';
+import { UpdateMedicalRecordComponent } from '../../dialogs/medicalRecord/update-medical-record/update-medical-record.component';
+import { MedicalRecordDto } from '../../models/medical-record-dto';
 
 @Component({
   selector: 'app-patient-list',
@@ -49,7 +55,7 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
 
   // dependiencnies injectons 
   patientDataSource = inject(PatientDataSource)
-  dialog = inject(Dialog)
+  dialog = inject(MatDialog)
 
 
   constructor(){}
@@ -92,21 +98,67 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
       console.log(element)
   }
 
-    openAddPatientDialog()
-    {
-        let dialog = this.dialog.open(AddPatientComponent,{
-          width: '60vw',   // 98% of the viewport width
-          height: '95h',  // 95% of the viewport height
-          maxWidth: '98vw',
-          maxHeight: '98vh',
-        
-   
-        })
-    
-        this.dialog.afterAllClosed.subscribe(() => this.loadPatiens())
+  openAddPatientDialog()
+  {
+      let dialog = this.dialog.open(AddPatientComponent,{
+        width: '60vw',   // 98% of the viewport width
+        height: '95h',  // 95% of the viewport height
+        maxWidth: '98vw',
+        maxHeight: '98vh',
+      
+  
+      })
+  
+      this.dialog.afterAllClosed.subscribe(() => this.loadPatiens())
+  }
+
+  openUpdatePatientDialog(event:Event,patientId:number|string)
+  {
+    let dialog = this.dialog.open(UpdatePatientComponent,{
+      width: '60vw',   // 98% of the viewport width
+      height: '95h',  // 95% of the viewport height
+      maxWidth: '98vw',
+      maxHeight: '98vh',
+      data:{
+        id:patientId } as Patient
     }
+  
+  )
+
+    this.dialog.afterAllClosed.subscribe(() => this.loadPatiens())
+  }
+
+  openMedicalRecordDialog(patientId:number)
+  {
+    
+    this.dialog.open(AddMedicalRecordComponent,{
+      width: '60vw',   // 98% of the viewport width
+      height: '95h',  // 95% of the viewport height
+      maxWidth: '98vw',
+      maxHeight: '98vh',
+      data:{
+        id:patientId } as PatientDTO
+    })
+  }
+
+
+
 
   get patientColSpan(): number {
     return this.displayedPatientColumns.length;
   }
+
+  openUpdateMedicalRecord(id:any)
+  {
+      
+      this.dialog.open(UpdateMedicalRecordComponent,{      
+        width: '60vw',   // 98% of the viewport width
+        height: '95h',  // 95% of the viewport height
+        maxWidth: '98vw',
+        maxHeight: '98vh',
+        data:{
+          id:id as MedicalRecordDto} 
+         })
+  }
+
 }
