@@ -41,7 +41,6 @@ export class AddMedicalRecordComponent {
   }
   submitMedicalRecord(event:Event)
   {
-    event.preventDefault();
     this.medicalRecordDataSource.postMedicalRecord(this.addMedicalDiscoredForm.value,this.patient.id).subscribe({
 
       next: () => {

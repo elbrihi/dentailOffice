@@ -2,6 +2,8 @@
 
 namespace DentalOffice\PatientBundle\Domain\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
@@ -51,9 +53,32 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
             ),
+            new GetCollection(
+                uriTemplate: '/get/patients/',
+                normalizationContext: ['groups' => ['patient:read']],
+                denormalizationContext: ['groups' => ['patient:write']],
+            ),
         ],
         paginationPartial: true,
 )]
+#[ApiFilter(SearchFilter::class, properties: [
+    'status' => 'exact',
+    'cni' => 'exact',
+    'lastName' => 'partial',
+    'firstName' => 'partial',
+    'notes' => 'partial',
+    'medicalHistory'=>'partial',
+    'medicalRecord.chief_complaint' => 'partial',
+    'medicalRecord.notes' => 'partial',
+    'medicalRecord.treatment_plan' => 'partial'
+])]
+#[ApiFilter(DateFilter::class, properties: [
+    'modified_at'  => DateFilter::EXCLUDE_NULL,
+    'createdAt' => DateFilter::EXCLUDE_NULL,
+    'birthDate' => DateFilter::EXCLUDE_NULL,
+    'medicalRecord.visit_date'  => DateFilter::EXCLUDE_NULL,
+    'medicalRecord.follow_up_date'  => DateFilter::EXCLUDE_NULL
+])]
 class Patient
 {
     #[ORM\Id]
@@ -61,6 +86,10 @@ class Patient
     #[ORM\Column]
     #[Groups(['patient:read','patient:write'])]
     private ?int $id = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['patient:read','patient:write'])]
+    private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['patient:read','patient:write'])]
@@ -122,9 +151,7 @@ class Patient
     #[Groups(['patient:read','patient:write'])]
     private ?bool $status = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['patient:read','patient:write'])]
-    private ?\DateTimeInterface $birthDate = null;
+
 
     #[ORM\Column(length: 255)]
     #[Groups(['patient:read','patient:write'])]

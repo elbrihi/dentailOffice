@@ -1,13 +1,68 @@
 <div  class="theme-container">
     
+    <div class="title">title</div>
+    <div class="searchFiler">
+        <mat-card class="filter-card">
+            <mat-card-title>Filtres avancés</mat-card-title>
+          
+
+            <div *ngFor="let filter of filters; let i = index" class="filter-row">
+
+              <mat-form-field appearance="fill">
+                <mat-label>Champ</mat-label>
+                <mat-select [(ngModel)]="filter.field">
+                  <mat-option *ngFor="let field of availableFields" [value]="field.value">
+                    {{ field.label }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+          
+              <mat-form-field appearance="fill">
+                <mat-label>Opérateur</mat-label>
+                <mat-select [(ngModel)]="filter.operator" (selectionChange)="onOperatorChange(filter)">
+                  <mat-option value="equals">Égale</mat-option>
+                  <mat-option value="contains">Contient</mat-option>
+                  <mat-option *ngIf="filter.field === 'visit_date'" value="between">Entre</mat-option>
+                  <mat-option *ngIf="filter.field === 'birthDate'" value="between">Entre</mat-option>
+                </mat-select>
+              </mat-form-field>
+          
+              <!-- Value Input(s) -->
+              <ng-container [ngSwitch]="filter.operator">
+                <mat-form-field *ngSwitchCase="'between'" appearance="fill">
+                  <input matInput [(ngModel)]="filter.value.start" type="date" placeholder="Début">
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'between'" appearance="fill">
+                  <input matInput [(ngModel)]="filter.value.end" type="date" placeholder="Fin">
+                </mat-form-field>
+          
+                <mat-form-field *ngSwitchDefault appearance="fill">
+                  <input matInput [(ngModel)]="filter.value" placeholder="Valeur">
+                </mat-form-field>
+              </ng-container>
+          
+              <button mat-icon-button color="warn" (click)="removeFilter(i)">
+                <mat-icon>remove_circle</mat-icon>
+              </button>
+            </div>
+          
+            <div class="filter-buttons">
+                <button mat-button color="primary" (click)="addFilter()">
+                    <mat-icon>add</mat-icon> Ajouter un filtre
+                </button>
+            
+                <button mat-raised-button color="accent" (click)="applyFilters()">Rechercher</button>
+                <button mat-raised-button (click)="resetFilters()">Réinitialiser</button>
+            </div>
+  
+        </mat-card>
+    </div>
     <div class="scrollable">
             <button mat-raised-button  color="primary" class="add-product-btn" (click)="openAddPatientDialog()" aria-label="Add Product">
                 <mat-icon>add</mat-icon>
                     Ajouter Patient
             </button> 
         <div class="mat-elevation-z2">
-
-
             <table mat-table  class="full-width-table" [dataSource]="listPatient" multiTemplateDataRows matSort aria-label="Categories" >
             
                  <!-- Dynamic Columns -->
@@ -117,9 +172,9 @@
                                         </button>
                             
                                     </td>
-                                    </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="displayedMedicalRecordColumns"></tr>
-                                <tr mat-row *matRowDef="let medicalRecord; columns:displayedMedicalRecordColumns"></tr>
+                                </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedMedicalRecordColumns"></tr>
+                            <tr mat-row *matRowDef="let medicalRecord; columns:displayedMedicalRecordColumns"></tr>
                         </table>
                         
                     </td>

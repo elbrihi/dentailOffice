@@ -109,6 +109,7 @@ export class UpdateMedicalRecordComponent implements OnInit {
         }
       }
     )
+    this.dialogRef.close(); 
   }
 
   reset(): void {

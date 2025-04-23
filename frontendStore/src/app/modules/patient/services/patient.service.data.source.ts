@@ -18,7 +18,7 @@ export class PatientDataSource extends RestDataSource{
   {
     const url = `${this.baseUrl}/get/patients/by/paginations`;
 
-    console.log('itemsPerPAge',itemsPerPage)
+    console.log('itemsPerPage',itemsPerPage)
     const params = new HttpParams()
     .set('itemsPerPage', itemsPerPage.toString())
     .set('page',page.toString())
@@ -70,6 +70,40 @@ export class PatientDataSource extends RestDataSource{
         return throwError(() => new Error('Failed to update patient.'));
       })
     );
+  }
+  getFilterPatientByParms(queryParams: { [param: string]: string | number | boolean })
+  {
+     //http://localhost:8181/api/get/patients
+
+     let params = new HttpParams();
+          Object.keys(queryParams).forEach(key => {
+            const value = queryParams[key];
+
+            // Handle nested or object-like values (optional, for safety)
+            if (typeof value === 'object' && value !== null) {
+              params = params.set(key, JSON.stringify(value));
+            } else {
+              params = params.set(key, String(value));
+            }
+
+      });
+      console.log("params__",params)
+      const paramString = params.toString(); // ✅ serializes all params
+
+      const fullUrl = `${this.baseUrl}/get/patients?${paramString}`;
+      console.log('Full request URL:', fullUrl);
+
+     return this.http.get(`${this.baseUrl}/get/patients`, {
+       headers: new HttpHeaders({
+         'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+       }),
+       params: params
+     }).pipe(
+       catchError(err => {
+         console.error('API error:', err);
+         return throwError(() => new Error('Unable to filter patients.'));
+       })
+     );
   }
   
 }
