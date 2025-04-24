@@ -15,6 +15,7 @@ import { DatatableSubitemComponent } from './modules/product/components/datatabl
 import { DatatableTutoComponent } from './modules/product/components/datatable-tuto/datatable-tuto.component';
 import { PatientListComponent } from './modules/patient/components/patient-list/patient-list.component';
 import { PatientTutoComponent } from './modules/patient/components/patient-tuto/patient-tuto.component';
+import { PatientDetailsComponent } from './modules/patient/components/patient-details/patient-details.component';
 
 const routes: Routes = [
   {
@@ -53,6 +54,10 @@ const routes: Routes = [
         path: 'patients',
        
         children: [
+          {
+            path: ':patientId/details', // ✅ Add this route
+            component: PatientDetailsComponent
+          },
           {
             path: ':patientId/medical-records',
             component: PatientListComponent

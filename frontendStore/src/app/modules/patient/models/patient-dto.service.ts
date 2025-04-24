@@ -1,4 +1,5 @@
 import { User } from '../../user/models/user';
+import { MedicalRecordDto } from './medical-record-dto';
 import { MedicalRecord } from './medical.record.model.service';
 
 export interface PatientDTO {
@@ -19,5 +20,5 @@ export interface PatientDTO {
   createdBy: User;
   modifiedAt: Date;
   modifiedBy: User;
-  medicalRecords: MedicalRecord[];
+  medicalRecord: MedicalRecordDto[] ;
 }

@@ -13,6 +13,7 @@ import { AddMedicalRecordComponent } from '../../dialogs/medicalRecord/add-medic
 import { PatientDTO } from '../../models/patient-dto.service';
 import { UpdateMedicalRecordComponent } from '../../dialogs/medicalRecord/update-medical-record/update-medical-record.component';
 import { MedicalRecordDto } from '../../models/medical-record-dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-patient-list',
@@ -56,6 +57,7 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
   // dependiencnies injectons 
   patientDataSource = inject(PatientDataSource)
   dialog = inject(MatDialog)
+  router = inject(Router);
 
   filters: any[] = [];
 
@@ -255,5 +257,7 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
     this.filters = [];
     this.applyFilters();
   }
-    
+  goToDetails(patientId: number) {
+    this.router.navigate(['store', 'patients', patientId, 'details']);
+  }
 }

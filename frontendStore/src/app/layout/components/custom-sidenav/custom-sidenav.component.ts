@@ -10,9 +10,6 @@ export type MenuItem = {
 
 }
 
-
-
-
 @Component({
   selector: 'app-custom-sidenav',
   template: `

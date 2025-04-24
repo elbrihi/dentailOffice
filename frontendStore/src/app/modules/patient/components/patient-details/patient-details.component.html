@@ -1,0 +1,60 @@
+  <mat-card class="patient-card">
+      <mat-card-title>Title</mat-card-title>
+      <mat-card-subtitle>Gender: {{patient.gender}} | Blood Type: {{patient.bloodType}} </mat-card-subtitle>
+    
+      <mat-card-content>
+        <div class="patient-info">
+          <div><strong>Date of Birth:</strong> {{ patient.birthDate | date }}</div>
+          <div><strong>Phone:</strong> {{ patient.phone }}</div>
+          <div><strong>Email:</strong> {{ patient.email }}</div>
+          <div><strong>Address:</strong> {{ patient.address }}</div>
+          <div><strong>CNI:</strong> {{ patient.cni }}</div>
+
+          <div><strong>Medical History:</strong> {{ patient.medicalHistory }}</div>
+          <div><strong>Notes:</strong> {{ patient.notes }}</div>
+        </div>
+      </mat-card-content>
+    
+      <mat-divider></mat-divider>
+    
+      <mat-card-actions>
+        <!--span><strong>cree par: </strong> {{patient.createdBy.username}}</span> |
+        <span><strong>modifiee par: </strong>{{patient.modifiedBy.username}}</span-->
+      </mat-card-actions>
+</mat-card>
+    
+<mat-accordion class="medical-records" multi>
+  <h4>Prescriptions</h4>
+  <mat-expansion-panel *ngFor="let record of patient.medicalRecord">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Visit on {{ record.visit_date | date:'mediumDate' }} — {{ record.chief_complaint }}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ record.treatment_plan }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <table mat-table [dataSource]="record.prescriptions" class="mat-elevation-z1">
+      
+      <ng-container matColumnDef="medication">
+        <th mat-header-cell *matHeaderCellDef> Medication </th>
+        <td mat-cell *matCellDef="let element"> {{ element.medication }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dosage">
+        <th mat-header-cell *matHeaderCellDef> Dosage </th>
+        <td mat-cell *matCellDef="let element"> {{ element.dosage }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef> Notes </th>
+        <td mat-cell *matCellDef="let element"> {{ element.notes }} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="prescriptionDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: prescriptionDisplayedColumns;"></tr>
+    </table>
+
+  </mat-expansion-panel>
+</mat-accordion>
+    

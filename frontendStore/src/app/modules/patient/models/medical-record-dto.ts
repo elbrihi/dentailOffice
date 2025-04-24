@@ -1,5 +1,5 @@
 
-export interface MedicalRecordDto {
+export interface  MedicalRecordDto {
 
   id:number;
   visit_date: string ;

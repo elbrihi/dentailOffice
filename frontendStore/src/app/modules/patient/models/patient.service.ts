@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { PatientDTO } from './patient-dto.service';
 import { MedicalRecord } from './medical.record.model.service';
+import { MedicalRecordDto } from './medical-record-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Patient implements PatientDTO {
+
+
   id: number = 0;
   firstName: string = '';
   lastName: string = '';
@@ -23,7 +26,7 @@ export class Patient implements PatientDTO {
   createdBy: any;
   modifiedAt: Date = new Date();
   modifiedBy: any;
-  medicalRecords: MedicalRecord[] = [];
+  medicalRecord: MedicalRecordDto[] = [];
 
   // UI state
   expanded: boolean = false;

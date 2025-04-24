@@ -93,7 +93,7 @@
                         </span>
 
                         <span *ngSwitchCase="'actions'">
-                            <button mat-icon-button color="primary">
+                            <button mat-icon-button color="primary" (click)="goToDetails(patient.id)">
                               <mat-icon>visibility</mat-icon>
                             </button>
                             <button mat-icon-button (click)="openUpdatePatientDialog($event,patient.id)" color="accent" >

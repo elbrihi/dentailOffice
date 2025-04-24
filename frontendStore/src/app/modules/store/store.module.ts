@@ -46,6 +46,7 @@ import { AddPatientComponent } from "../patient/dialogs/patient/add-patient/add-
 import { UpdatePatientComponent } from "../patient/dialogs/patient/update-patient/update-patient.component";
 import { AddMedicalRecordComponent } from "../patient/dialogs/medicalRecord/add-medical-record/add-medical-record.component";
 import { UpdateMedicalRecordComponent } from "../patient/dialogs/medicalRecord/update-medical-record/update-medical-record.component";
+import { PatientDetailsComponent } from "../patient/components/patient-details/patient-details.component";
 
 @NgModule({
     declarations: [
@@ -85,6 +86,8 @@ import { UpdateMedicalRecordComponent } from "../patient/dialogs/medicalRecord/u
         UpdatePatientComponent,
         AddMedicalRecordComponent,
         UpdateMedicalRecordComponent,
+        PatientDetailsComponent,
+
 
 
 
@@ -134,6 +137,8 @@ import { UpdateMedicalRecordComponent } from "../patient/dialogs/medicalRecord/u
         AddPatientComponent,
         AddMedicalRecordComponent,
         UpdateMedicalRecordComponent,
+        PatientDetailsComponent,
+
 
 
 
