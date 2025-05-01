@@ -43,6 +43,7 @@ export class AddPatientComponent {
       this.PatientDataSource.savePatient(patient).subscribe({
         next: (response) => {
           console.log('Patient added successfully', response);
+          this.dialogRef.close(true); // <-- close and return "true"
         },
         error: (error) => {
           console.error('Error adding patient', error);

@@ -92,9 +92,9 @@ export class CustomSidenavComponent {
         route: 'patients',
         subItems: [
           { 
-            icon: 'insights', 
-            label: 'paginator', 
-            route: 'paginator', 
+            icon: 'person', 
+            label: 'patiens', 
+            route: 'patiens', 
             subItems: [],
           },
           {
@@ -103,92 +103,10 @@ export class CustomSidenavComponent {
             route: 'medical-records', // Use programmatic navigation to resolve :patientId
             subItems: []
           },       
-          {
-            icon: 'folder_open',
-            label: 'Patient Tuto',
-            route: 'patient-tuto', // Use programmatic navigation to resolve :patientId
-            subItems: []
-          },
-
             
         ]
       },
-      { 
-        icon: 'storefront',  // Supplier-related icon
-        label: 'Fournisseurs', 
-        route: 'supplier', 
-        subItems: [ 
-          { 
-            icon: 'list', 
-            label: 'Liste des Fournisseurs', 
-            route: 'supplier', 
-            subItems: [],
-          },
-          { 
-            icon: 'analytics', 
-            label: 'Analytics', 
-            route: 'analytics', 
-            subItems: [],
-          },
-          { 
-            icon: 'video_library', 
-            label: 'Vidéos', 
-            route: 'videos', 
-            subItems: [],
-          }
-        ]
-      },
-      { 
-        icon: 'category',  // Product categories icon
-        label: 'Produits', 
-        route: 'category', 
-        subItems: [ 
-          { 
-            icon: 'category', 
-            label: 'Categories', 
-            route: 'category', 
-            subItems: [],
-          },
-          { 
-            icon: 'inventory_2',  // Better icon for products
-            label: 'Produits', 
-            route: 'product', 
-            subItems: [],
-          },
-        ]
-      },
-      { 
-        icon: 'article',  // Content-related icon
-        label: 'Content', 
-        route: 'content', 
-        subItems: [ 
-          { 
-            icon: 'article', 
-            label: 'Content', 
-            route: 'content', 
-            subItems: [],
-          },
-          { 
-            icon: 'insights', 
-            label: 'Analytics', 
-            route: 'analytics', 
-            subItems: [],
-          },
-
-        ]
-      },
-      { 
-        icon: 'bar_chart',  // Analytics
-        label: 'Analytics', 
-        route: 'analytics', 
-        subItems: [],
-      },
-      { 
-        icon: 'comment',  // Comments section
-        label: 'Comments', 
-        route: 'comments', 
-        subItems: [],
-      }
+     
     ]);
 
 

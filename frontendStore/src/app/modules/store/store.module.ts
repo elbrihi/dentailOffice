@@ -36,9 +36,7 @@ import { DatatableSubitemComponent } from "../product/components/datatable-subit
 import { DatatableTutoComponent } from "../product/components/datatable-tuto/datatable-tuto.component";
 import { AddProductComponent } from "../product/dialogs/add/add-product/add-product.component";
 import { AddCategoryComponent } from "../product/dialogs/add/add-category/add-category.component";
-import { PatientListComponent } from "../patient/components/patient-list/patient-list.component";
 import { MedicalRecordComponent } from "../patient/components/medical-record/medical-record.component";
-import { PatientTutoComponent } from "../patient/components/patient-tuto/patient-tuto.component";
 import { AddPatientComponent } from "../patient/dialogs/patient/add-patient/add-patient.component";
 import { UpdatePatientComponent } from "../patient/dialogs/patient/update-patient/update-patient.component";
 import { AddMedicalRecordComponent } from "../patient/dialogs/medicalRecord/add-medical-record/add-medical-record.component";
@@ -46,6 +44,7 @@ import { UpdateMedicalRecordComponent } from "../patient/dialogs/medicalRecord/u
 import { PatientDetailsComponent } from "../patient/components/patient-details/patient-details.component";
 import { DatabaleTutoComponent } from "../patient/components/databale-tuto/databale-tuto.component";
 import { PaginatorConfigurableExampleComponent } from "../patient/components/paginator-configurable-example/paginator-configurable-example.component";
+import { PatientListComponent } from "../patient/components/patient-list/patient-list.component";
 
 @NgModule({
     declarations: [
@@ -78,9 +77,7 @@ import { PaginatorConfigurableExampleComponent } from "../patient/components/pag
         DatatableTutoComponent,
         AddProductComponent,
         AddCategoryComponent,
-        PatientListComponent,
         MedicalRecordComponent,
-        PatientTutoComponent,
         AddPatientComponent,
         UpdatePatientComponent,
         AddMedicalRecordComponent,
@@ -88,6 +85,7 @@ import { PaginatorConfigurableExampleComponent } from "../patient/components/pag
         PatientDetailsComponent,
         DatabaleTutoComponent,
         PaginatorConfigurableExampleComponent,
+        PatientListComponent
 
     ],
     imports:[

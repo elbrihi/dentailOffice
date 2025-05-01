@@ -13,11 +13,11 @@ import { CategoryListComponent } from './modules/product/components/category-lis
 import { CategoryProductListComponent } from './modules/product/components/product-list/category-product-list.component';
 import { DatatableSubitemComponent } from './modules/product/components/datatable-subitem/datatable-subitem.component';
 import { DatatableTutoComponent } from './modules/product/components/datatable-tuto/datatable-tuto.component';
-import { PatientTutoComponent } from './modules/patient/components/patient-tuto/patient-tuto.component';
 import { PatientDetailsComponent } from './modules/patient/components/patient-details/patient-details.component';
 import { MedicalRecordComponent } from './modules/patient/components/medical-record/medical-record.component';
 import { DatabaleTutoComponent } from './modules/patient/components/databale-tuto/databale-tuto.component';
 import { PaginatorConfigurableExampleComponent } from './modules/patient/components/paginator-configurable-example/paginator-configurable-example.component';
+import { PatientListComponent } from './modules/patient/components/patient-list/patient-list.component';
 
 const routes: Routes = [
   {
@@ -59,8 +59,8 @@ const routes: Routes = [
         children: [
           
           {
-            path: 'paginator',
-            component: PaginatorConfigurableExampleComponent
+            path: 'patiens',
+            component: PatientListComponent
           },
           {
             path: 'datatable-tuto',
@@ -76,7 +76,7 @@ const routes: Routes = [
           },
           {
             path: 'patient-tuto',
-            component: PatientTutoComponent
+            component: PatientListComponent
           },
         
         ]
