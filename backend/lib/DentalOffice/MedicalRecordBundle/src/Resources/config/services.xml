@@ -17,6 +17,12 @@
             <argument id="api_platform.validator" />
         </service>
 
+        <service id="DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\MedicalRecordCollectionProvider">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="App\Repository\MedicalRecordRepository" />
+            <tag name="api_platform.state_provider" priority="10" />
+        </service>
+        
     </services>
     
 </container>

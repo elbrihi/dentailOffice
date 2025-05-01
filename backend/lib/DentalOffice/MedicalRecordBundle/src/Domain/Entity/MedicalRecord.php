@@ -2,14 +2,22 @@
 
 namespace DentalOffice\MedicalRecordBundle\Domain\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPostProcessor;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPutProcessor;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\GetMedicalRecordByPatient;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\GetMedicalRecordByPatientProvider;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\GetPatientByMedicalRecord;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\MedicalRecordCollectionProvider;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\PostMedicalRecordProvider;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
@@ -46,10 +54,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 normalizationContext: ['groups' => ['medical_record:read']],
                 denormalizationContext: ['groups' => ['medical_record:read']],
             ),
+            new GetCollection(
+                uriTemplate: "get/medicalRecord/by/pagination",
+                normalizationContext: ['groups' => ['medical_record:read']],
+                denormalizationContext: ['groups' => ['medical_record:read']],
+                paginationClientItemsPerPage: true,
+                paginationItemsPerPage: true,
+                provider: MedicalRecordCollectionProvider::class,
+            ),
+            new GetCollection(
+                uriTemplate: "get/medicalrecords",
+                
+                normalizationContext: ['groups' => ['medical_record:read']],
+                denormalizationContext: ['groups' => ['medical_record:read']],
+              
+            ),
+            
 
         ],
-        paginationPartial: true,
+        paginationPartial: false,
 )]
+#[ApiFilter(SearchFilter::class, properties: [
+    'chief_complaint' => 'partial',
+])]
+
 class MedicalRecord
 {
     

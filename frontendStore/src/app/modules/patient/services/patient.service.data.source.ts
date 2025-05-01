@@ -39,6 +39,15 @@ export class PatientDataSource extends RestDataSource{
       return this.http.post<Patient>(url, patient, {headers})
   }
 
+
+  data = [
+    {field: "chief_complaint", value: "egrgeh"},
+    {field: "visit_date", value: {end_date: "2024-12-30",start_date: "2024-01-01"}
+
+    },
+
+  ]
+
   getPatientById(id: number): Observable<PatientDTO> {
     const url = `${this.baseUrl}/get/patient/${id}`;
     console.log("url", url);
@@ -56,7 +65,7 @@ export class PatientDataSource extends RestDataSource{
   {
       //http://localhost:8181/api/update/patient/1
 
-      const url = `${this.baseUrl}/update/patient/${id}`;
+    const url = `${this.baseUrl}/update/patient/${id}`;
                // Set the correct headers to match the API expectations (application/ld+json)
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
@@ -71,39 +80,35 @@ export class PatientDataSource extends RestDataSource{
       })
     );
   }
-  getFilterPatientByParms(queryParams: { [param: string]: string | number | boolean })
-  {
-     //http://localhost:8181/api/get/patients
-
-     let params = new HttpParams();
-          Object.keys(queryParams).forEach(key => {
-            const value = queryParams[key];
-
-            // Handle nested or object-like values (optional, for safety)
-            if (typeof value === 'object' && value !== null) {
-              params = params.set(key, JSON.stringify(value));
-            } else {
-              params = params.set(key, String(value));
-            }
-
-      });
-      console.log("params__",params)
-      const paramString = params.toString(); // ✅ serializes all params
-
-      const fullUrl = `${this.baseUrl}/get/patients?${paramString}`;
-      console.log('Full request URL:', fullUrl);
-
-     return this.http.get(`${this.baseUrl}/get/patients`, {
-       headers: new HttpHeaders({
-         'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
-       }),
-       params: params
-     }).pipe(
-       catchError(err => {
-         console.error('API error:', err);
-         return throwError(() => new Error('Unable to filter patients.'));
-       })
-     );
+  getFilterPatientByParms(queryParams: { [param: string]: any }) {
+    let params = new HttpParams();
+  
+    // Append only non-null, non-undefined, and non-empty string values
+    for (const key in queryParams) {
+      const value = queryParams[key];
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, value);
+      }
+    }
+  
+    // Optional: Log the serialized query string for debugging
+    const paramString = params.toString();
+    console.log("Serialized Query Params:", paramString);
+    console.log("Full URL (debug only):", `${this.baseUrl}/get/patients/by/paginations?${paramString}`);
+  
+    // Return the GET request with correct types
+    return this.http.get<PatientDTO[]>(`${this.baseUrl}/get/patients/by/paginations`, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+      }),
+      params: params // ✅ Correct usage
+    }).pipe(
+      catchError(err => {
+        console.error('API error:', err);
+        return throwError(() => new Error('Unable to filter patients.'));
+      })
+    );
   }
+  
   
 }

@@ -24,16 +24,17 @@
                   <mat-option value="contains">Contient</mat-option>
                   <mat-option *ngIf="filter.field === 'visit_date'" value="between">Entre</mat-option>
                   <mat-option *ngIf="filter.field === 'birthDate'" value="between">Entre</mat-option>
+                  <mat-option *ngIf="filter.field === 'createdAt'" value="between">Entre</mat-option>
                 </mat-select>
               </mat-form-field>
           
               <!-- Value Input(s) -->
               <ng-container [ngSwitch]="filter.operator">
                 <mat-form-field *ngSwitchCase="'between'" appearance="fill">
-                  <input matInput [(ngModel)]="filter.value.start" type="date" placeholder="Début">
+                  <input matInput [(ngModel)]="filter.value.start_date" type="date" placeholder="Début">
                 </mat-form-field>
                 <mat-form-field *ngSwitchCase="'between'" appearance="fill">
-                  <input matInput [(ngModel)]="filter.value.end" type="date" placeholder="Fin">
+                  <input matInput [(ngModel)]="filter.value.end_date" type="date" placeholder="Fin">
                 </mat-form-field>
           
                 <mat-form-field *ngSwitchDefault appearance="fill">

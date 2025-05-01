@@ -44,8 +44,8 @@ export class PatientDetailsComponent implements AfterViewInit,OnInit {
       { 
         next: (patient: PatientDTO) =>
         {
-            this.patient = patient;
-            console.log("patientData",this.patient)
+          this.patient = patient;
+          console.log("patientData",this.patient)
         },
         error: err => {
         }

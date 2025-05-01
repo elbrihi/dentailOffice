@@ -25,6 +25,12 @@
             <argument id="api_platform.validator" />
         </service>
 
+        <service id="DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider\State\PatientGetCollectionProvider">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="DentalOffice\PatientBundle\Domain\Repository\PatientRepository" />
+            <tag name="api_platform.state_provider" priority="10" />
+        </service>
+
     </services>
     
-</container>
+</container> 

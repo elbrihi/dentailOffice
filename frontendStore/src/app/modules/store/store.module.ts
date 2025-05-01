@@ -9,14 +9,11 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ModelModule } from "./model.module";
 import { VideoComponent } from "../../pages/video/video.component";
 import { MenuItemComponent } from "../../layout/components/menu-item/menu-item.component";
-
 import { WidgetComponent } from "../../layout/components/widget/widget.component";
 import { WidgetOptionsComponent } from "../../layout/components/widget/widget-options/widget-options.component";
-
 import { ContentComponent } from "../../pages/content/content.component";
 import { CommentsComponent } from "../../pages/comments/comments.component";
 import { AnalyticsComponent } from "../../pages/analytics/analytics.component";
-
 import { CustomSidenavComponent } from "../../layout/components/custom-sidenav/custom-sidenav.component";
 import { DemoMaterialModule } from "../../shared/material-module";
 import { DashboardHeaderComponent } from "./components/dashboard/dashboard-header/dashboard-header.component";
@@ -47,6 +44,8 @@ import { UpdatePatientComponent } from "../patient/dialogs/patient/update-patien
 import { AddMedicalRecordComponent } from "../patient/dialogs/medicalRecord/add-medical-record/add-medical-record.component";
 import { UpdateMedicalRecordComponent } from "../patient/dialogs/medicalRecord/update-medical-record/update-medical-record.component";
 import { PatientDetailsComponent } from "../patient/components/patient-details/patient-details.component";
+import { DatabaleTutoComponent } from "../patient/components/databale-tuto/databale-tuto.component";
+import { PaginatorConfigurableExampleComponent } from "../patient/components/paginator-configurable-example/paginator-configurable-example.component";
 
 @NgModule({
     declarations: [
@@ -87,11 +86,8 @@ import { PatientDetailsComponent } from "../patient/components/patient-details/p
         AddMedicalRecordComponent,
         UpdateMedicalRecordComponent,
         PatientDetailsComponent,
-
-
-
-
-
+        DatabaleTutoComponent,
+        PaginatorConfigurableExampleComponent,
 
     ],
     imports:[
@@ -138,9 +134,8 @@ import { PatientDetailsComponent } from "../patient/components/patient-details/p
         AddMedicalRecordComponent,
         UpdateMedicalRecordComponent,
         PatientDetailsComponent,
-
-
-
+        DatabaleTutoComponent,
+        PaginatorConfigurableExampleComponent,
 
     ],
 

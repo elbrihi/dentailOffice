@@ -2,7 +2,7 @@
 maker:
     #root_namespace: 'DentalOffice\PatientBundle\Domain'
     #root_namespace:  'DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor'
-    #root_namespace: 'Stock\ProductBundle\Infrastucture\Persistence\Doctrine\Provider'
+    root_namespace:    'DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider'
     #root_namespace: 'Stock\UserBundle\Domain'
     #root_namespace: 'Stock\ProductBundle\Interface'
     #root_namespace: 'Stock\SupplierBundle\Domain'
@@ -10,7 +10,7 @@ maker:
 
 
     #root_namespace:  'DentalOffice\MedicalRecordBundle\Domain'
-    root_namespace:  'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor'
+    #root_namespace:  'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor'
     #root_namespace:  'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider'
     #root_namespace: 'Stock\'
     #root_namespace: 'App'

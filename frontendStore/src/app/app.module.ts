@@ -18,11 +18,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { AddDialogComponent } from './modules/supplier/dialogs/add/add.dialog/add-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateCategoryComponent } from './modules/product/dialogs/update/update-category/update-category.component';
-import { PatientDetailsComponent } from './modules/patient/components/patient-details/patient-details.component';
-
-
-
-
 
 
 @NgModule({
@@ -43,7 +38,11 @@ import { PatientDetailsComponent } from './modules/patient/components/patient-de
     AppRoutingModule,
     DemoMaterialModule,
     NgComponentOutlet,
-    CdkDropList, CdkDrag, MatTableModule, MatPaginatorModule, MatSortModule,
+    CdkDropList,
+    CdkDrag,
+    MatTableModule,
+    MatPaginatorModule, 
+    MatSortModule,
   ],
   providers: [
     provideAnimationsAsync(),

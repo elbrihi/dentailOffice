@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestDataSource } from '../../../core/services/rest-data-source.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { MedicalRecord } from '../models/medical.record.model.service';
 import { MedicalRecordDto } from '../models/medical-record-dto';
 import { Patient } from '../models/patient.service';
@@ -33,7 +33,17 @@ export class MedicalRecordDataSourceService extends RestDataSource {
             })
           );
   }
+  getMedicalRecordByPagination(page: number,itemsPerPage:number)
+  {
 
+    const url = `${this.baseUrl}/get/medicalRecord/by/pagination`;
+
+        const params = new HttpParams()
+        .set('itemsPerPage', itemsPerPage.toString())
+        .set('page',page.toString())
+
+        return this.http.get<MedicalRecordDto[]>(url, {params})
+  }
   getMedicalRecodById(id: number)
   {
       const url  = `${this,this.baseUrl}/get/medicalRecord/${id}`
@@ -55,4 +65,29 @@ export class MedicalRecordDataSourceService extends RestDataSource {
         })
       )
   }
+
+  getFilterMedicalRecordByParms(queryParams: { [param: string]: any }) {
+    
+    let params = new HttpParams();
+    
+    const paramString = params.toString(); // serialize to URL query string
+  
+    const fullUrl = `${this.baseUrl}/get/medicalRecord/by/pagination?${paramString}`;
+    console.log('Full request URL:', fullUrl);
+  
+    return this.http.get<MedicalRecordDto[]>(`${this.baseUrl}/get/medicalRecord/by/pagination`, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+      }),
+      params: queryParams
+    }).pipe(
+      catchError(err => {
+        console.error('API error:', err);
+        return throwError(() => new Error('Unable to filter medical records.'));
+      })
+    );
+  
+  }
+  
+  
 }

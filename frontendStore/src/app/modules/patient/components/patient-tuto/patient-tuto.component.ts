@@ -65,12 +65,17 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
     { value: 'lastName', label: 'Nom' },
     { value: 'firstName', label: 'Prénom' },
     { value: 'cni', label: 'CNI' },
-    { value: 'notes', label: 'Notes' },
-    { value: 'visit_date', label: 'Date de visite' },
-    { value: 'birthDate', label: 'Birth date' },
+    { value: 'createdAt', label: 'la date de la creation' },
 
   ];
     
+  data = [
+    {field: "cni", value: "A789012"},
+    {field: "createdAt", value: {end_date: "2025-12-20",start_date: "2025-01-01"}
+
+    },
+
+  ]
 
   constructor(){}
 
@@ -83,48 +88,10 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
     this.lengthOfDisplayedPatientColumns = this.displayedMedicalRecordColumns.length
     this.loadPatiens(); 
   }
-  applyFilters() {
-    const queryParams: any = {};
 
-    this.filters.forEach(filter => {
-      if (
-        filter.field === 'birthDate' ||
-        filter.field === 'createdAt' ||
-        filter.field === 'medicalRecord.visit_date' ||
-        filter.field === 'medicalRecord.follow_up_date'
-      ) {
-        if (filter.operator === 'between') {
-          queryParams[`${filter.field}[after]`] = filter.value.start;
-          queryParams[`${filter.field}[before]`] = filter.value.end;
-        } else if (filter.operator === 'after') {
-          queryParams[`${filter.field}[after]`] = filter.value;
-        } else if (filter.operator === 'before') {
-          queryParams[`${filter.field}[before]`] = filter.value;
-        }
-      } else {
-        // partial or exact search
-        queryParams[filter.field] = filter.value;
-      }
-    });
-  
-    console.log("applayfilter",this.filters,queryParams)
-    // Send to backend
-    console.log(this.patientDataSource.getFilterPatientByParms(queryParams).subscribe({
-      next: (response:any) =>{
-        this.patients =  response['hydra:member']; 
-     
-        this.listPatient = new MatTableDataSource(this.patients)
-      },
-      error: (err) => {
-        console.error('Error updating patient:', err);
-        alert('Error updating patient. Please try again.'); // Or use a snackbar
-      }
-    }))
-    this.patientDataSource.getFilterPatientByParms(queryParams)
-  }
   onOperatorChange(filter: any) {
     if (filter.operator === 'between') {
-      filter.value = { befor: '', end: '' };
+      filter.value = {   };
     } else {
       filter.value = '';
     }
@@ -142,14 +109,16 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
     .subscribe({
       next: (response: any) =>{
 
-        this.patients =  response['hydra:member']; 
-        console.log()
-        this.listPatient = new MatTableDataSource(this.patients)
-        this.listPatient.sort = this.sort
-        this.listPatient.paginator = this.paginator
-        this.totalPatientItem = response['hydra:view']?.['hydra:next']
-          ? this.currentPatientPage * this.itemsPatientPerPage
-          : this.patients.length; // Handle total count dynamically or add API metadata parsing
+        const data = response['hydra:member'] || [];
+        const total = response['hydra:totalItems'] || data.length; // Prefer 'hydra:totalItems' if available
+
+        this.listPatient.data = data;
+        this.totalPatientItem = total;
+
+
+        console.log("Fetched Medical Records:", data.length);
+        console.log("Total Medical Records:", total);
+        console.log("Medical Records:", data);
       },
       error: (err) => {
         console.error('Error updating patient:', err);
@@ -231,8 +200,7 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
   }
 
   openUpdateMedicalRecord(id:any)
-  {
-      
+  {     
     const dialogRef = this.dialog.open(UpdateMedicalRecordComponent,{      
         width: '60vw',   // 98% of the viewport width
         height: '95h',  // 95% of the viewport height
@@ -242,12 +210,45 @@ export class PatientTutoComponent implements AfterViewInit, OnInit {
           id:id as MedicalRecordDto} 
          })
          this.loadPatiens() 
-    }
+  }
 
   addFilter() {
     this.filters.push({ field: '', operator: '', value: '' });
   }
+  applyFilters() {
   
+    //const val = new Date("2024-12-30");
+    //const strVal = val.toISOString().split('T')[0]; // "2024-12-30"
+    console.log("filters", this.filters);
+    const queryParams: any = {};
+    this.filters.forEach(({ field, value }) => {
+      if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        Object.entries(value).forEach(([key, val]) => {
+          queryParams[`${field}_${key}`] = String(val) ;
+        });
+      } else {
+        queryParams[field] = String(value);
+      }
+    });
+   
+  
+    console.log(this.patientDataSource.getFilterPatientByParms(queryParams).subscribe({
+      next: (response:any) =>{
+        const data = response['hydra:member'] || [];
+        const total = response['hydra:totalItems'] || data.length; // Prefer 'hydra:totalItems' if available
+        this.listPatient.data = data;
+        this.totalPatientItem = total;
+
+        console.log("patient data",data)
+
+      },
+      error: (err) => {
+        console.error('Error updating patient:', err);
+        alert('Error updating patient. Please try again.'); // Or use a snackbar
+      }
+    }))
+   // this.patientDataSource.getFilterPatientByParms(queryParams)
+  }
   removeFilter(index: number) {
     this.filters.splice(index, 1);
   }

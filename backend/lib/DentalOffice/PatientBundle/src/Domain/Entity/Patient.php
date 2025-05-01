@@ -13,6 +13,7 @@ use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPostProcessor;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPutProcessor;
+use DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider\State\PatientGetCollectionProvider;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -50,7 +51,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 denormalizationContext: ['groups' => ['patient:write']],
                 paginationClientItemsPerPage: true,
                 paginationItemsPerPage: true,
-
+                provider: PatientGetCollectionProvider::class
 
             ),
             new GetCollection(
@@ -59,26 +60,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 denormalizationContext: ['groups' => ['patient:write']],
             ),
         ],
-        paginationPartial: true,
+        paginationPartial: false,
 )]
-#[ApiFilter(SearchFilter::class, properties: [
-    'status' => 'exact',
-    'cni' => 'exact',
-    'lastName' => 'partial',
-    'firstName' => 'partial',
-    'notes' => 'partial',
-    'medicalHistory'=>'partial',
-    'medicalRecord.chief_complaint' => 'partial',
-    'medicalRecord.notes' => 'partial',
-    'medicalRecord.treatment_plan' => 'partial'
-])]
-#[ApiFilter(DateFilter::class, properties: [
-    'modified_at'  => DateFilter::EXCLUDE_NULL,
-    'createdAt' => DateFilter::EXCLUDE_NULL,
-    'birthDate' => DateFilter::EXCLUDE_NULL,
-    'medicalRecord.visit_date'  => DateFilter::EXCLUDE_NULL,
-    'medicalRecord.follow_up_date'  => DateFilter::EXCLUDE_NULL
-])]
+
 class Patient
 {
     #[ORM\Id]
@@ -92,7 +76,7 @@ class Patient
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['patient:read','patient:write'])]
+    #[Groups(['patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]

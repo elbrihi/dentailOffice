@@ -91,19 +91,26 @@ export class CustomSidenavComponent {
         label: 'Gestion des patients',
         route: 'patients',
         subItems: [
+          { 
+            icon: 'insights', 
+            label: 'paginator', 
+            route: 'paginator', 
+            subItems: [],
+          },
           {
             icon: 'folder_open',
             label: 'Dossier médical',
-            route: ':patientId/medical-records', // Use programmatic navigation to resolve :patientId
+            route: 'medical-records', // Use programmatic navigation to resolve :patientId
+            subItems: []
+          },       
+          {
+            icon: 'folder_open',
+            label: 'Patient Tuto',
+            route: 'patient-tuto', // Use programmatic navigation to resolve :patientId
             subItems: []
           },
-       
-            {
-              icon: 'folder_open',
-              label: 'Patient Tuto',
-              route: 'patient-tuto', // Use programmatic navigation to resolve :patientId
-              subItems: []
-            }
+
+            
         ]
       },
       { 
@@ -167,6 +174,7 @@ export class CustomSidenavComponent {
             route: 'analytics', 
             subItems: [],
           },
+
         ]
       },
       { 
