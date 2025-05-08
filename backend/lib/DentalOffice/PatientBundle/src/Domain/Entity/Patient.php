@@ -69,19 +69,18 @@ class Patient
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write'])]
+    #[Groups(['patient:read','patient:write','appointment:write','appointment:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['patient:read','patient:write'])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['patient:read','patient:write','medical_record:read','medical_record:write'])]
+    #[Groups(['patient:read','patient:write','medical_record:read','medical_record:write','appointment:write','appointment:read'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['patient:read','patient:write'])]
+    #[Groups(['patient:read','patient:write','appointment:write','appointment:read'])]
     private ?string $firstName = null;
 
 
@@ -147,13 +146,13 @@ class Patient
     private Collection $medicalRecord;
 
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'patient')]
-    private Collection $appointment;
+    private Collection $appointments;
 
 
     public function __construct()
     {
         $this->medicalRecord = new ArrayCollection();
-        $this->appointment = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
 
 
@@ -393,15 +392,15 @@ class Patient
     /**
      * @return Collection<int, Appointment>
      */
-    public function getAppointment(): Collection
+    public function getAppointments(): Collection
     {
-        return $this->appointment;
+        return $this->appointments;
     }
 
     public function addAppointment(Appointment $appointment): static
     {
-        if (!$this->appointment->contains($appointment)) {
-            $this->appointment->add($appointment);
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments->add($appointment);
             $appointment->setPatient($this);
         }
 
@@ -410,7 +409,7 @@ class Patient
 
     public function removeAppointment(Appointment $appointment): static
     {
-        if ($this->appointment->removeElement($appointment)) {
+        if ($this->appointments->removeElement($appointment)) {
             // set the owning side to null (unless already changed)
             if ($appointment->getPatient() === $this) {
                 $appointment->setPatient(null);
@@ -419,8 +418,5 @@ class Patient
 
         return $this;
     }
-
-
- 
  
 }

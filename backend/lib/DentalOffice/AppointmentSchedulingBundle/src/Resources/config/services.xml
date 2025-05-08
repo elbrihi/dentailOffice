@@ -18,6 +18,24 @@
         </service>
 
 
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentPutProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentPutProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+
     </services>
     
 </container> 

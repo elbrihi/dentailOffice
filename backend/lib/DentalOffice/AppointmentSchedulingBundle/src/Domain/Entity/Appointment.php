@@ -5,7 +5,10 @@ namespace DentalOffice\AppointmentSchedulingBundle\Domain\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentPutProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentStateProvider;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
@@ -15,6 +18,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 #[ApiResource(
@@ -32,6 +36,19 @@ use Symfony\Bundle\SecurityBundle\Security;
             provider: AppointmentStateProvider::class,
             processor: AppointmentStateProcessor::class
         ),
+        new Get(
+            security: "is_granted('ROLE_ADMIN')",
+            uriTemplate: "/get/appointment/by/{id}",
+            normalizationContext: ['groups'=>'appointment:write'],
+            denormalizationContext: ['groups'=>'appointment:read']
+        ),
+        new Put(
+            security: "is_granted('ROLE_ADMIN')",
+            uriTemplate: "/update/appointment/{id}",
+            processor: AppointmentPutProcessor::class,
+            normalizationContext: ['groups' => ['patient:read']],
+            denormalizationContext: ['groups' => ['patient:write']],
+        ),
     ]
 )]
 class Appointment
@@ -39,35 +56,48 @@ class Appointment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('appointment:write','appointment:read')]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups('appointment:write','appointment:read')]
     private ?\DateTimeInterface $appointmentDate = null;
 
 
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups('appointment:write','appointment:read')]
     private ?\DateTimeInterface $modifiedAt = null;
 
  
 
     #[ORM\Column(length: 255)]
+    #[Groups('appointment:write','appointment:read')]
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointment', cascade: ['persist'])]
+    #[Groups('appointment:write','appointment:read')]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist'])]
+    #[Groups('appointment:write','appointment:read')]
     private ?User $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist'])]
+    #[Groups('appointment:write','appointment:read')]
     private ?User $modifiedBy = null;
 
     #[ORM\Column]
+    #[Groups('appointment:write','appointment:read')]
     private ?bool $status = null;
 
     #[ORM\Column]
+    #[Groups('appointment:write','appointment:read')]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'appointments',cascade: ['persist'])]
+    #[Groups('appointment:write','appointment:read')]
+    private ?Patient $patient = null;
 
     public function __construct()
     {
@@ -174,6 +204,18 @@ class Appointment
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPatient(): ?Patient
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?Patient $patient): static
+    {
+        $this->patient = $patient;
 
         return $this;
     }

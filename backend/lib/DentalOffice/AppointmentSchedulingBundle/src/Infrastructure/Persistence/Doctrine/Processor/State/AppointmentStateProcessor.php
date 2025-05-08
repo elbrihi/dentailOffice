@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -44,6 +45,13 @@ class AppointmentStateProcessor implements ProcessorInterface
             throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
         }
        
+        $patient = $this->entityManager->getRepository(Patient::class)->findOneBy([
+            'id' => $uriVariables['patientId']
+                
+        ]);
+
+
+        
         $data->setReason($appointment["reason"]);
         $data->setAppointmentDate($appointmentDate);
         $data->setModifiedAt($this->clock->now());
@@ -52,6 +60,7 @@ class AppointmentStateProcessor implements ProcessorInterface
         $data->setModifiedBy($user );
         $data->setUser($user);
         $data->setStatus($appointment["reason"]);
+        $data->setPatient($patient);
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         
