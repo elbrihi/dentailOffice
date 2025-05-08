@@ -3,6 +3,7 @@
 namespace DentalOffice\UserBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\Post;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\Mapping as ORM;
@@ -87,6 +88,12 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'modifiedBy')]
     private Collection $medicalRecordsModifier;
 
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'user')]
+    private Collection $appointment;
+
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'createdBy')]
+    private Collection $appointments;
+
 
     public function __construct()
     {
@@ -94,7 +101,11 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         $this->patientdModifieds = new ArrayCollection();
         $this->medicalRecords = new ArrayCollection();
         $this->medicalRecordsModifier = new ArrayCollection();
+        $this->appointment = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -319,6 +330,44 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointment(): Collection
+    {
+        return $this->appointment;
+    }
+
+    public function addAppointment(Appointment $appointment): static
+    {
+        if (!$this->appointment->contains($appointment)) {
+            $this->appointment->add($appointment);
+            $appointment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): static
+    {
+        if ($this->appointment->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getUser() === $this) {
+                $appointment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
     }
 
 }

@@ -16,9 +16,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CredentialsInterface;
-use DentalOffice\UserBundle\Infrastructure\Persistence\Doctrine\Repository\AuthTokenRepositoryInterface;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ApiTokenAuthenticator extends AbstractAuthenticator

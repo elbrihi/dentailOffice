@@ -66,15 +66,15 @@
       <table mat-table [dataSource]="listMedicalRecords" class="full-width-table" matSort multiTemplateDataRows>
 
         <ng-container *ngFor="let column of displayedMedicalRecordsColumns" [matColumnDef]="column">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column | titlecase }}</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ columnLabels[column]  | titlecase }}</th>
           <td mat-cell *matCellDef="let medicalRecord">
             <ng-container [ngSwitch]="column">
               <span *ngSwitchCase="'id'">{{ medicalRecord.id }}</span>
               <span *ngSwitchCase="'visitDate'">{{ medicalRecord.visit_date }}</span>
               <span *ngSwitchCase="'chiefComplaint'">{{ medicalRecord.chief_complaint }}</span>
               <span *ngSwitchCase="'clinicalDiagnosis'">{{ medicalRecord.clinical_diagnosis }}</span>
-              <span *ngSwitchCase="'cree par'">{{ medicalRecord.createdBy?.username }}</span>
-              <span *ngSwitchCase="'cree a'">{{ medicalRecord.createdAt }}</span>
+              <span *ngSwitchCase="'createdBy'">{{ medicalRecord.createdBy?.username }}</span>
+              <span *ngSwitchCase="'createdAt'">{{ medicalRecord.createdAt }}</span>
               <span *ngSwitchCase="'reatmentPlan'">{{ medicalRecord.treatment_plan }}</span>
               <span *ngSwitchCase="'follow_up_date'">{{ medicalRecord.follow_up_date }}</span>
               <span *ngSwitchCase="'notes'">{{ medicalRecord.clinical_diagnosis }}</span>

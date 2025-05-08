@@ -38,8 +38,29 @@ export class PatientListComponent implements AfterViewInit, OnInit {
 
   dataSource = new PatientListDataSource();
 
+  columnLabels: { [key: string]: string } = {
+    id: 'ID',
+    lastName: 'Nom',
+    firstName: 'Prénom',
+    cni: 'Numéro de CNI',
+    createdBy: 'Créé par',
+    sex: 'Sexe',
+    phone: 'Téléphone',
+    email: 'Email',
+    address: 'Adresse',
+    bloodGroup: 'Groupe sanguin',
+    medicalHistory: 'Antécédents médicaux',
+    notes: 'Notes',
+    createdAt: 'Date de création',
+    actions: 'Actions',
+    chief_complaint: 'Plainte principale',
+    clinical_diagnos: 'Diagnostic clinique',
+    follow_up_date: 'Date de suivi',
+    treatment_plan: 'Plan de traitement',
+    visit_date: 'Date de visite'
+  };
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  displayedColumns = ['id', 'name']
   displayedPatientColumns = ['id','lastName', 'firstName','cni', 'cree par', 'gender','phone','email',
                               'address','bloodType','medicalHistory','notes','createdAt','actions'
                           ]

@@ -15,6 +15,8 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.6" />
+        <env name="APP_ENV" value="test"/>
+        <env name="DATABASE_URL" value="mysql://sino:sino@db_cabiner:3306/dentalOffice_test?serverVersion=5.7"/>
     </php>
 
     <testsuites>
@@ -22,13 +24,13 @@
             <directory>tests</directory>
         </testsuite>
 
-        <testsuite name="ProductBundle">
+        <!--testsuite name="ProductBundle">
             <directory>./tests</directory>
         </testsuite>
 
         <testsuite name="ProductBundle">
             <directory>./tests</directory>
-        </testsuite>
+        </testsuite-->
     </testsuites>
 
     <coverage processUncoveredFiles="true">

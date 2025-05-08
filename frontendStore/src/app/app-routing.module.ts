@@ -72,7 +72,7 @@ const routes: Routes = [
           },
           {
             path: 'medical-records',
-            component: MedicalRecordComponent
+            component: PaginatorConfigurableExampleComponent
           },
           {
             path: 'patient-tuto',

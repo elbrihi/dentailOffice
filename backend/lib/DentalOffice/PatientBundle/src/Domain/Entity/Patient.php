@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPostProcessor;
@@ -122,7 +123,7 @@ class Patient
     private ?User $createdBy = null;
 
 
-    #[ORM\ManyToOne(inversedBy: 'patientdModifieds')]
+    #[ORM\ManyToOne(inversedBy: 'patientdModifieds', cascade: ['persist'])]
     #[Groups(['patient:read','patient:write'])]
     private ?User $modifiedBy = null;
 
@@ -145,10 +146,14 @@ class Patient
     #[Groups(['patient:read','patient:write'])]
     private Collection $medicalRecord;
 
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'patient')]
+    private Collection $appointment;
+
 
     public function __construct()
     {
         $this->medicalRecord = new ArrayCollection();
+        $this->appointment = new ArrayCollection();
     }
 
 
@@ -379,6 +384,36 @@ class Patient
             // set the owning side to null (unless already changed)
             if ($medicalRecord->getPatient() === $this) {
                 $medicalRecord->setPatient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointment(): Collection
+    {
+        return $this->appointment;
+    }
+
+    public function addAppointment(Appointment $appointment): static
+    {
+        if (!$this->appointment->contains($appointment)) {
+            $this->appointment->add($appointment);
+            $appointment->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): static
+    {
+        if ($this->appointment->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getPatient() === $this) {
+                $appointment->setPatient(null);
             }
         }
 

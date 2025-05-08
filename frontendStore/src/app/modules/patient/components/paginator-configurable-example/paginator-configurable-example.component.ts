@@ -24,6 +24,20 @@ export class PaginatorConfigurableExampleComponent implements OnInit, AfterViewI
 
   listMedicalRecords = new MatTableDataSource<any>();
 
+  columnLabels: { [key: string]: string } = {
+    id: 'ID',
+    visitDate: 'Date de visite',
+    chiefComplaint: 'Plainte principale',
+    clinicalDiagnosis: 'Diagnostic clinique',
+    createdBy: 'Créé par',
+    createdAt: 'Créé le',
+    treatmentPlan: 'Plan de traitement',
+    followUpDate: 'Date de suivi',
+    prescriptions: 'Ordonnances',
+    notes: 'Notes',
+    actions: 'Actions'
+  };
+
   displayedMedicalRecordsColumns = ['id','visitDate', 'chiefComplaint','clinicalDiagnosis', 'cree par', 'cree a',
     'treatmentPlan','followUpDate','prescriptions','notes','actions'
   ]
@@ -152,6 +166,7 @@ export class PaginatorConfigurableExampleComponent implements OnInit, AfterViewI
   
     console.log(this.medicalRecordDataSource.getFilterMedicalRecordByParms(queryParams).subscribe({
       next: (response:any) =>{
+
         const data = response['hydra:member'] || [];
         const total = response['hydra:totalItems'] || data.length; // Prefer 'hydra:totalItems' if available
 
@@ -162,6 +177,7 @@ export class PaginatorConfigurableExampleComponent implements OnInit, AfterViewI
         console.log("Fetched Medical Records:", data.length);
         console.log("Total Medical Records:", total);
         console.log("Medical Records:", data);
+        
       },
       error: (err) => {
         console.error('Error updating patient:', err);

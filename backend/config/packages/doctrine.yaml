@@ -47,6 +47,13 @@ doctrine:
                 dir: '%kernel.project_dir%/lib/DentalOffice/MedicalRecordBundle/src/Domain/Entity'
                 prefix: 'DentalOffice\MedicalRecordBundle\Domain\Entity'
                 alias: DentalOfficeMedicalRecordBundle
+
+            DentalOfficeAppointmentSchedulingBundle:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/lib/DentalOffice/AppointmentSchedulingBundle/src/Domain/Entity'
+                prefix: 'DentalOffice\AppointmentSchedulingBundle\Domain\Entity'
+                alias: DentalOfficeDentalAppointmentSchedulingBundle
                         
 
         controller_resolver:
@@ -56,7 +63,7 @@ when@test:
     doctrine:
         dbal:
             # "TEST_TOKEN" is typically set by ParaTest
-            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+            #dbname_suffix: '_test%env(default::TEST_TOKEN)%'
             logging: true
 
 when@prod:

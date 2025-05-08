@@ -25,35 +25,43 @@ export class MedicalRecordComponent implements AfterViewInit, OnInit {
   listMedicalRecords = new MatTableDataSource<any>();
 
   
-  displayedMedicalRecordsColumns = ['id','visitDate', 'chiefComplaint','clinicalDiagnosis', 'cree par', 'cree a',
+  displayedMedicalRecordsColumns = ['id','visitDate', 'chiefComplaint','clinicalDiagnosis', 
+                                 'createdBy', 'createdAt',
                                  'treatmentPlan','followUpDate','prescriptions','notes','actions'
   ]
+
+  columnLabels: { [key: string]: string } = {
+    id: 'ID',
+    visitDate: 'Date de visite',
+    chiefComplaint: 'Plainte principale',
+    clinicalDiagnosis: 'Diagnostic clinique',
+    createdBy: 'Créé par',
+    createdAt: 'Créé le',
+    treatmentPlan: 'Plan de traitement',
+    followUpDate: 'Date de suivi',
+    prescriptions: 'Ordonnances',
+    notes: 'Notes',
+    actions: 'Actions'
+  };
 //  displayedPrescriptionColumns = ['medication']
   displayedPrescriptionColumns = ['medication','dosage','notes']
   medicalRecord: any[] = []
 
+
+  availableFields = [
+    { value: 'chief_complaint', label: 'Plainte principale' },
+    { value: 'visit_date', label: 'Date de visite' },
+    { value: 'birthDate', label: 'Birth date' },
+
+  ];
+
   data = [
     {field: "chief_complaint", value: "egrgeh"},
-    {
-      field: "visit_date", value: {end_date: "2024-12-30",start_date: "2024-01-01"
-
-    }
+    {field: "visit_date", value: {end_date: "2024-12-30",start_date: "2024-01-01"}
 
     },
 
   ]
-
-  availableFields = [
-    { value: 'lastName', label: 'Nom' },
-    { value: 'firstName', label: 'Prénom' },
-    { value: 'cni', label: 'CNI' },
-    { value: 'notes', label: 'Notes' },
-    { value: 'visit_date', label: 'Date de visite' },
-    { value: 'birthDate', label: 'Birth date' },
-    { value: 'createdAt', label: 'Birth date' },
-
-  ];
-
   medicalRecordDataSource = inject(MedicalRecordDataSourceService)
   tab(medicalRecord:MedicalRecordDto)
   {
@@ -110,24 +118,60 @@ export class MedicalRecordComponent implements AfterViewInit, OnInit {
     this.filters.push({ field: '', operator: '', value: '' });
   }
 
-   applyFilters() {
-      const queryParams: any = {};
+  applyFilters() {
   
-
-      // Send to backend
-      /*console.log(this.patientDataSource.getFilterPatientByParms(queryParams).subscribe({
-        next: (response:any) =>{
-          this.patients =  response['hydra:member']; 
-       
-          this.listPatient = new MatTableDataSource(this.patients)
-        },
-        error: (err) => {
-          console.error('Error updating patient:', err);
-          alert('Error updating patient. Please try again.'); // Or use a snackbar
-        }
-      }))
-      this.patientDataSource.getFilterPatientByParms(queryParams)*/
+    //const val = new Date("2024-12-30");
+    //const strVal = val.toISOString().split('T')[0]; // "2024-12-30"
+   // this.filters = this.data
+   console.log("filters", this.filters);
+    const queryParams: any = {};
+    const queryParams1: any = {};
+    this.filters.forEach(({ field, value }) => {
+      if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        Object.entries(value).forEach(([key, val]) => {
+          console.log("val",val)
+          queryParams[`${field}_${key}`] = String(val) ;
+        });
+      } else {
+        queryParams[field] = String(value);
+      }
+    });
+   
+  
+    if (queryParams.visit_date_start_date || queryParams.visit_date_end_date) {
+      if (queryParams.visit_date_start_date && queryParams.visit_date_end_date) {
+        // Both exist
+        queryParams1[`visit_date_start_date`] = queryParams.visit_date_start_date
+        queryParams1[`visit_date_end_date`] = queryParams.visit_date_end_date
+      } else if (queryParams.visit_date_start_date) {
+        // Only start date exists
+        queryParams1[`visit_date_start_date`] = queryParams.visit_date_start_date
+      } else if (queryParams.visit_date_end_date) {
+        queryParams1[`visit_date_start_date`] = queryParams.visit_date_start_date
+      }
     }
+  
+    console.log(this.medicalRecordDataSource.getFilterMedicalRecordByParms(queryParams).subscribe({
+      next: (response:any) =>{
+        const data = response['hydra:member'] || [];
+        const total = response['hydra:totalItems'] || data.length; // Prefer 'hydra:totalItems' if available
+
+
+        this.listMedicalRecords.data = data;
+        this.totalMedicalRecordItem = total;
+
+        console.log("Fetched Medical Records:", data.length);
+        console.log("Total Medical Records:", total);
+        console.log("Medical Records:", data);
+      },
+      error: (err) => {
+        console.error('Error updating patient:', err);
+        alert('Error updating patient. Please try again.'); // Or use a snackbar
+      }
+    }))
+   // this.patientDataSource.getFilterPatientByParms(queryParams)
+  }
+  
     resetFilters() {
       this.filters = [];
       this.applyFilters();

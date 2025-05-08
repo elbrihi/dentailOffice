@@ -30,15 +30,17 @@ class PatientPostProcessor implements ProcessorInterface
         
     }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Patient
+    public function process(mixed $data, Operation $operation, array $uriVariables = [],
+                           array $context = []): Patient
     {
         $request = $context['request'];
-
-       
-
-        $patient = json_decode($request->getContent(), true);
+ 
+        $user = $this->security->getUser();
 
       
+        $patient = json_decode($request->getContent(), true);
+
+     
 
         try {
             $birthDate = new DateTimeImmutable($patient["birthDate"]);
@@ -58,9 +60,14 @@ class PatientPostProcessor implements ProcessorInterface
         $data->setMedicalHistory($patient["medicalHistory"]);
         $data->setNotes($patient["notes"]);
         $data->setCreatedAt($this->clock->now());
-        $data->setCreatedBy($this->security->getUser());
+       
+
+        if (!$user instanceof \DentalOffice\UserBundle\Domain\Entity\User) {
+            throw new \LogicException('Authenticated user must be an instance of DentalOffice\UserBundle\Domain\Entity\User.');
+        }
+        $data->setCreatedBy($user);
         $data->setModifiedAt($this->clock->now());
-        $data->setModifiedBy($this->security->getUser());
+        $data->setModifiedBy($user);
         $data->setStatus(true);
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);

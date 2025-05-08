@@ -57,6 +57,14 @@ services:
             #- '../lib/DentalOffice/UserBundle/src/Resources/config/'
             - '../lib/DentalOffice/MedicalRecordBundle/src/DentalOfficeMedicalRecordBundle.php'
 
+    DentalOffice\AppointmentSchedulingBundle\:
+        resource: '../lib/DentalOffice/AppointmentSchedulingBundle/src/*'
+        exclude: 
+            - '../lib/DentalOffice/AppointmentSchedulingBundle/src/Domain/Entity/'
+            #- '../lib/DentalOffice/UserBundle/src/UI/Controller/'
+            #- '../lib/DentalOffice/UserBundle/src/Resources/config/'
+            - '../lib/DentalOffice/AppointmentSchedulingBundle/src/DentalOfficeMedicalRecordBundle.php'
+
 
 
 

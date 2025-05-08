@@ -2,8 +2,10 @@
 maker:
     #root_namespace: 'DentalOffice\PatientBundle\Domain'
     #root_namespace:  'DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor'
-    root_namespace:    'DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider'
-    #root_namespace: 'Stock\UserBundle\Domain'
+    #root_namespace:    'DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider'
+    
+    
+    #root_namespace: 'DentalOffice\UserBundle\Domain'
     #root_namespace: 'Stock\ProductBundle\Interface'
     #root_namespace: 'Stock\SupplierBundle\Domain'
     #root_namespace: 'Stock\SupplierBundle\Infrastucture\Persistence\Doctrine\Processor'
@@ -14,3 +16,10 @@ maker:
     #root_namespace:  'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider'
     #root_namespace: 'Stock\'
     #root_namespace: 'App'
+
+    root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Domain'
+    #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor'
+    #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider'
+    #root_namespace: 'Stock\'
+    #root_namespace: 'App'
+
