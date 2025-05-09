@@ -36,6 +36,13 @@
         </service>
 
 
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentsGetCollectionProvider'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository' >
+
+        </service>
     </services>
     
 </container> 
+
+

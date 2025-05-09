@@ -6,10 +6,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentPutProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentsGetCollectionProvider;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentStateProvider;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
@@ -49,7 +51,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups' => ['patient:read']],
             denormalizationContext: ['groups' => ['patient:write']],
         ),
-    ]
+        new GetCollection(
+            security: "is_granted('ROLE_ADMIN')",
+            uriTemplate: "/get/appointments/by/paginations",
+            processor: AppointmentsGetCollectionProvider::class,
+            normalizationContext: ['groups'=>'appointment:write'],
+            denormalizationContext: ['groups'=>'appointment:read'],
+            paginationClientItemsPerPage: true,
+            paginationItemsPerPage: true,
+        ),
+        
+    ],
+    paginationPartial: false,
 )]
 class Appointment
 {

@@ -10,7 +10,6 @@ use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CreateAppointmentPostTest extends ApiTestCase
 {
@@ -24,10 +23,10 @@ class CreateAppointmentPostTest extends ApiTestCase
         $this->entityManager = $container->get(EntityManagerInterface::class);
         $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
 
-          // Clear existing data
-          $this->entityManager->createQuery('DELETE FROM DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment')->execute();
-          $this->entityManager->createQuery('DELETE FROM DentalOffice\PatientBundle\Domain\Entity\Patient')->execute();
-          $this->entityManager->createQuery('DELETE FROM DentalOffice\UserBundle\Domain\Entity\User')->execute();
+        // Clear existing data
+        $this->entityManager->createQuery('DELETE FROM DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment')->execute();
+        $this->entityManager->createQuery('DELETE FROM DentalOffice\PatientBundle\Domain\Entity\Patient')->execute();
+        $this->entityManager->createQuery('DELETE FROM DentalOffice\UserBundle\Domain\Entity\User')->execute();
     }
     public function testAppointmentProcessPersists(): void
     {
