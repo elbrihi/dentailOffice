@@ -11,6 +11,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
 use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPostProcessor;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPutProcessor;
@@ -21,6 +23,8 @@ use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provide
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\PostMedicalRecordProvider;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -31,11 +35,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations:[
             new Post(
                 security: "is_granted('ROLE_ADMIN')",
-                uriTemplate: "/create/patient/{patientId}/medicalRecords",
+                uriTemplate: "/create/patient/{patientId}/appointment/{appointmentId}/medicalRecords",
                 uriVariables: [
                     'patientId' => new Link(
                         fromClass: Patient::class,
                         toProperty: 'patient'
+                    ),
+                    'appointmentId' => new Link(
+                        fromClass: Appointment::class,
+                        toProperty: 'appointment'
                     ),
                 ],
                 processor: MedicalRecordPostProcessor::class,
@@ -136,6 +144,30 @@ class MedicalRecord
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
     private ?\DateTimeInterface $modifiedAt = null;
+
+    #[ORM\Column]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    private ?float $agreedAmout = null;
+
+    #[ORM\Column]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    private ?float $totalPaid = null;
+
+    #[ORM\Column]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    private ?float $remainingDue = null;
+
+    #[ORM\ManyToOne(inversedBy: 'medicalRecord')]
+    private ?Appointment $appointment = null;
+
+
+    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'medicalRecord')]
+    private Collection $visits;
+
+    public function __construct()
+    {
+        $this->visits = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -286,5 +318,84 @@ class MedicalRecord
 
         return $this;
     }
+
+    public function getAgreedAmout(): ?float
+    {
+        return $this->agreedAmout;
+    }
+
+    public function setAgreedAmout(float $agreedAmout): static
+    {
+        $this->agreedAmout = $agreedAmout;
+
+        return $this;
+    }
+
+    public function getTotalPaid(): ?float
+    {
+        return $this->totalPaid;
+    }
+
+    public function setTotalPaid(float $totalPaid): static
+    {
+        $this->totalPaid = $totalPaid;
+
+        return $this;
+    }
+
+    public function getRemainingDue(): ?float
+    {
+        return $this->remainingDue;
+    }
+
+    public function setRemainingDue(float $remainingDue): static
+    {
+        $this->remainingDue = $remainingDue;
+
+        return $this;
+    }
+
+    public function getAppointment(): ?Appointment
+    {
+        return $this->appointment;
+    }
+
+    public function setAppointment(?Appointment $appointment): static
+    {
+        $this->appointment = $appointment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Visit>
+     */
+    public function getVisits(): Collection
+    {
+        return $this->visits;
+    }
+
+    public function addVisit(Visit $visit): static
+    {
+        if (!$this->visits->contains($visit)) {
+            $this->visits->add($visit);
+            $visit->setMedicalRecord($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVisit(Visit $visit): static
+    {
+        if ($this->visits->removeElement($visit)) {
+            // set the owning side to null (unless already changed)
+            if ($visit->getMedicalRecord() === $this) {
+                $visit->setMedicalRecord(null);
+            }
+        }
+
+        return $this;
+    }
+
 
 }

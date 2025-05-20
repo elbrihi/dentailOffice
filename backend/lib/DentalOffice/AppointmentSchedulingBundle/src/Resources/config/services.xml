@@ -9,6 +9,30 @@
 
         <defaults autowire="true" autoconfigure="true" public="false" />
 
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPutStateProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPutStateProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitPostStateProvider'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitPostStateProvider' >
+
+        </service>
+
+
         <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor'
         
                 class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor' >
@@ -41,6 +65,15 @@
                 class = 'DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository' >
 
         </service>
+
+        <!-- Listers --> 
+        <service id="DentalOffice\AppointmentSchedulingBundle\Application\UseCase\UpdateMedicalRecordOnVisit">
+            <tag name="kernel.event_listener"
+                 event="DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent"
+                 method="__invoke" />
+        </service>
+
+        
     </services>
     
 </container> 

@@ -13,6 +13,7 @@ use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentsGetCollectionProvider;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentStateProvider;
+use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,7 +37,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 ),
             ],
             provider: AppointmentStateProvider::class,
-            processor: AppointmentStateProcessor::class
+            processor: AppointmentStateProcessor::class,
+            normalizationContext: ['groups'=>'appointment:write'],
+            denormalizationContext: ['groups'=>'appointment:read'],
         ),
         new Get(
             security: "is_granted('ROLE_ADMIN')",
@@ -48,8 +51,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             security: "is_granted('ROLE_ADMIN')",
             uriTemplate: "/update/appointment/{id}",
             processor: AppointmentPutProcessor::class,
-            normalizationContext: ['groups' => ['patient:read']],
-            denormalizationContext: ['groups' => ['patient:write']],
+            normalizationContext: ['groups'=>'appointment:write'],
+            denormalizationContext: ['groups'=>'appointment:read'],
         ),
         new GetCollection(
             security: "is_granted('ROLE_ADMIN')",
@@ -76,13 +79,9 @@ class Appointment
     #[Groups('appointment:write','appointment:read')]
     private ?\DateTimeInterface $appointmentDate = null;
 
-
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups('appointment:write','appointment:read')]
     private ?\DateTimeInterface $modifiedAt = null;
-
- 
 
     #[ORM\Column(length: 255)]
     #[Groups('appointment:write','appointment:read')]
@@ -108,13 +107,20 @@ class Appointment
     #[Groups('appointment:write','appointment:read')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'appointments',cascade: ['persist'])]
+    #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist', 'remove'])]
     #[Groups('appointment:write','appointment:read')]
     private ?Patient $patient = null;
 
+    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'appointment')]
+    private Collection $medicalRecord;
+
+
+
+
+
     public function __construct()
     {
- 
+        $this->medicalRecord = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -232,4 +238,36 @@ class Appointment
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, MedicalRecord>
+     */
+    public function getMedicalRecord(): Collection
+    {
+        return $this->medicalRecord;
+    }
+
+    public function addMedicalRecord(MedicalRecord $medicalRecord): static
+    {
+        if (!$this->medicalRecord->contains($medicalRecord)) {
+            $this->medicalRecord->add($medicalRecord);
+            $medicalRecord->setAppointment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedicalRecord(MedicalRecord $medicalRecord): static
+    {
+        if ($this->medicalRecord->removeElement($medicalRecord)) {
+            // set the owning side to null (unless already changed)
+            if ($medicalRecord->getAppointment() === $this) {
+                $medicalRecord->setAppointment(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

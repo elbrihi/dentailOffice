@@ -145,7 +145,7 @@ class Patient
     #[Groups(['patient:read','patient:write'])]
     private Collection $medicalRecord;
 
-    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'patient')]
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'patient' , cascade: ['persist', 'remove'])]
     private Collection $appointments;
 
 

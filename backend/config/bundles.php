@@ -1,6 +1,7 @@
 <?php
 
 return [
+    
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
@@ -14,5 +15,9 @@ return [
     DentalOffice\PatientBundle\DentalOfficePatientBundle::class => ['all' => true],
     DentalOffice\MedicalRecordBundle\DentalOfficeMedicalRecordBundle::class => ['all' => true],
     DentalOffice\AppointmentSchedulingBundle\DentalOfficeAppointmentSchedulingBundle::class => ['all' => true],
+    DentalOffice\AppointmentSchedulingBundle\DentalOfficeAppointmentSchedulingBundle::class => ['all' => true],
+    DentalOffice\PaymentsBundle\DentalOfficePaymentsBundle::class => ['all' => true],
+    DentalOffice\SharedBundle\DentalOfficeSharedBundle::class => ['all' => true]
+
 
 ];

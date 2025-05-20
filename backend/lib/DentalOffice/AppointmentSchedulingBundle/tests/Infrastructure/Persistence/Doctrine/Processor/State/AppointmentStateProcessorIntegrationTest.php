@@ -5,6 +5,7 @@ use ApiPlatform\Metadata\Post;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor;
+use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -29,13 +30,32 @@ class AppointmentStateProcessorIntegrationTest extends KernelTestCase
         $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
 
 
-          // Clear existing data
-          $this->entityManager->createQuery('DELETE FROM DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment')->execute();
-          $this->entityManager->createQuery('DELETE FROM DentalOffice\PatientBundle\Domain\Entity\Patient')->execute();
-          $this->entityManager->createQuery('DELETE FROM DentalOffice\UserBundle\Domain\Entity\User')->execute();
-   
-   
+
+        $medicalRecords = $this->entityManager->getRepository(MedicalRecord::class)->findAll();
+        foreach ($medicalRecords as $medicalRecord) {
+            $this->entityManager->remove($medicalRecord);
         }
+        // Step 1: Remove Appointments
+        $appointments = $this->entityManager->getRepository(Appointment::class)->findAll();
+        foreach ($appointments as $appointment) {
+            $this->entityManager->remove($appointment);
+        }
+
+        // Step 2: Remove Patients
+        $patients = $this->entityManager->getRepository(Patient::class)->findAll();
+        foreach ($patients as $patient) {
+            $this->entityManager->remove($patient);
+        }
+
+        // Step 3: Remove Users
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        foreach ($users as $user) {
+            $this->entityManager->remove($user);
+        }
+
+        // Step 4: Apply the deletions
+        $this->entityManager->flush();
+    }
 
     public function testAppointmentProcessPersists(): void
     {
@@ -98,7 +118,7 @@ class AppointmentStateProcessorIntegrationTest extends KernelTestCase
             ->getRepository(User::class)
             ->findOneBy(['username' => 'testuser']);
 
-                    // 2. Simulate authenticated user
+        // 2. Simulate authenticated user
         $tokenStorage = static::getContainer()->get('security.token_storage');
 
         $tokenStorage->setToken(new UsernamePasswordToken(
@@ -131,8 +151,13 @@ class AppointmentStateProcessorIntegrationTest extends KernelTestCase
         $patient->setModifiedBy($user);
         $patient->setStatus(true);
         
+
+        
         
         $this->entityManager->persist($patient);
         $this->entityManager->flush();
+
+        
+
     }
 }

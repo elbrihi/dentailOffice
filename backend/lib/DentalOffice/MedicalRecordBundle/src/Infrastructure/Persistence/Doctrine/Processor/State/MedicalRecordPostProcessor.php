@@ -5,6 +5,7 @@ namespace DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\P
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use DateTimeImmutable;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,17 +33,26 @@ class MedicalRecordPostProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): MedicalRecord
     {
               
+        
         $medicalRecord = json_decode($context['request']->getContent(),true);
         /** @var Request $request */
         $request = $context['request'];
 
         
         $patientId = $uriVariables["patientId"];
+        $appointmentId = $uriVariables["appointmentId"];
 
+  
         $patient = $this->entityManager->getRepository(Patient::class)
                    ->findById([
                         'id' =>  $patientId 
-            ]);
+        ]);
+
+        $appointment = $this->entityManager->getRepository(Appointment::class)->findOneBy([
+            'id' => $appointmentId
+        ]);
+
+        
         try {
             $visitDate = new DateTimeImmutable($medicalRecord["visit_date"]);
         } catch (\Exception $e) {
@@ -53,6 +63,11 @@ class MedicalRecordPostProcessor implements ProcessorInterface
         } catch (\Exception $e) {
             throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
         }
+
+        $agreededAmount = $medicalRecord["agreedAmout"];
+        $totalPaid = 0;
+        $remainingDue = $agreededAmount - $totalPaid;
+
         $data->setVisitDate($visitDate);
      
         $data->setChiefComplaint($medicalRecord["chief_complaint"]);
@@ -62,20 +77,28 @@ class MedicalRecordPostProcessor implements ProcessorInterface
       
         $data->setTreatmentPlan($medicalRecord["treatment_plan"]);
      
-        $data->setPrescriptions($medicalRecord["prescriptions"]);
-        
+        $data->setPrescriptions($medicalRecord["prescriptions"]);     
+      
         $data->setNotes($medicalRecord["follow_up_date"]);
+
         $data->setFollowUpDate($followUpDate);
         
         $data->setPatient($patient[0]);
-       
+ 
         $data->setCreatedAt($this->clock->now());
         $data->setCreatedBy($this->security->getUser());
         $data->setModifiedAt($this->clock->now());
         $data->setModifiedBy($this->security->getUser());
 
+  
+        $data->setAgreedAmout($agreededAmount);
+        $data->setTotalPaid($totalPaid);
+        $data->setRemainingDue($remainingDue);
+        $data->setAppointment($appointment);
+        
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
+        
         
     }
 }

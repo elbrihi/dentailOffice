@@ -18,8 +18,14 @@ maker:
     #root_namespace: 'App'
 
     #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Domain'
+    root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor'
+    #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider'
+    #root_namespace: 'Stock\'
+    #root_namespace: 'App'
+
+    #root_namespace:  'DentalOffice\PaymentsBundle\Domain'
     #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor'
-    root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider'
+    #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider'
     #root_namespace: 'Stock\'
     #root_namespace: 'App'
 

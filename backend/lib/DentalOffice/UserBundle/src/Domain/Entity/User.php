@@ -4,6 +4,7 @@ namespace DentalOffice\UserBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\Post;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\Mapping as ORM;
@@ -94,6 +95,9 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'createdBy')]
     private Collection $appointments;
 
+    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'createdBy')]
+    private Collection $visits;
+
 
     public function __construct()
     {
@@ -103,6 +107,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         $this->medicalRecordsModifier = new ArrayCollection();
         $this->appointment = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+        $this->visits = new ArrayCollection();
     }
 
 
@@ -368,6 +373,36 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     public function getAppointments(): Collection
     {
         return $this->appointments;
+    }
+
+    /**
+     * @return Collection<int, Visit>
+     */
+    public function getVisits(): Collection
+    {
+        return $this->visits;
+    }
+
+    public function addVisit(Visit $visit): static
+    {
+        if (!$this->visits->contains($visit)) {
+            $this->visits->add($visit);
+            $visit->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVisit(Visit $visit): static
+    {
+        if ($this->visits->removeElement($visit)) {
+            // set the owning side to null (unless already changed)
+            if ($visit->getCreatedBy() === $this) {
+                $visit->setCreatedBy(null);
+            }
+        }
+
+        return $this;
     }
 
 }

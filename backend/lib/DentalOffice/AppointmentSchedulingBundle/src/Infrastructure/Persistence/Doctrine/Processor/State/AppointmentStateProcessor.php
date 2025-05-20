@@ -59,7 +59,7 @@ class AppointmentStateProcessor implements ProcessorInterface
         $data->setCreatedBy($user );
         $data->setModifiedBy($user );
         $data->setUser($user);
-        $data->setStatus($appointment["reason"]);
+        $data->setStatus(true);
         $data->setPatient($patient);
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);

@@ -65,6 +65,13 @@ services:
             #- '../lib/DentalOffice/UserBundle/src/Resources/config/'
             - '../lib/DentalOffice/AppointmentSchedulingBundle/src/DentalOfficeMedicalRecordBundle.php'
 
+    DentalOffice\SharedBundle\:
+        resource: '../lib/DentalOffice/SharedBundle/src/*'
+        exclude: 
+            #- '../lib/DentalOffice/SharedBundle/src/Domain/Entity/'
+            #- '../lib/DentalOffice/UserBundle/src/UI/Controller/'
+            #- '../lib/DentalOffice/UserBundle/src/Resources/config/'
+            - '../lib/DentalOffice/SharedBundle/src/DentalOfficeSharedBundle.php'
 
 
 

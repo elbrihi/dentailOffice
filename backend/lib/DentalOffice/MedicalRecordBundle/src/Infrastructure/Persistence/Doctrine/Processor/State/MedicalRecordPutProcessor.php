@@ -30,48 +30,45 @@ class MedicalRecordPutProcessor implements ProcessorInterface
     }
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): MedicalRecord
     {
-            $medicalRecord = new MedicalRecord();
+        /** @var Request $request */
+        $request = $context['request'];
+    
+        $medicalRecordData = json_decode($request->getContent(), true);
+    
+        $existingRecord = $this->entityManager->getRepository(MedicalRecord::class)->find($uriVariables['id']);
+    
+        if (!$existingRecord instanceof MedicalRecord) {
+            throw new \RuntimeException("MedicalRecord not found.");
+        }
+    
+        try {
+            $visitDate = new DateTimeImmutable($medicalRecordData["visit_date"]);
+            $followUpDate = new DateTimeImmutable($medicalRecordData["follow_up_date"]);
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException("Invalid date format, expected YYYY-MM-DD.");
+        }
 
-            $medicalRecord = json_decode($context['request']->getContent(),true);
-            /** @var Request $request */
-            $request = $context['request'];
-
-            $medicalRecordFromDataBase = $this->entityManager->getRepository(MedicalRecord::class)->findOneBy(
-                ['id' => $uriVariables['id']]
-            );
-            try {
-                $visitDate = new DateTimeImmutable($medicalRecord["visit_date"]);
-            } catch (\Exception $e) {
-                throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
-            }
-            try {
-                $followUpDate = new DateTimeImmutable($medicalRecord["follow_up_date"]);
-            } catch (\Exception $e) {
-                throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
-            }
-            $data->setVisitDate($visitDate);
-        
-            $data->setChiefComplaint($medicalRecord["chief_complaint"]);
-
-
-            $data->setClinicalDiagnosis($medicalRecord["clinical_diagnosis"]);
-        
-            $data->setTreatmentPlan($medicalRecord["treatment_plan"]);
-        
-            $data->setPrescriptions($medicalRecord["prescriptions"]);
-            
-            $data->setNotes($medicalRecord["follow_up_date"]);
-            $data->setFollowUpDate($followUpDate);
-        
-        
-            $data->setCreatedAt($medicalRecordFromDataBase->getCreatedAt());
-            $data->setCreatedBy($medicalRecordFromDataBase->getCreatedBy());
-            $data->setModifiedAt($this->clock->now());
-            $data->setModifiedBy($this->security->getUser());
-            $data->setPatient($medicalRecordFromDataBase->getPatient());
-          //  dd($data);
-            return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-
-
+        $agreededAmount = $medicalRecordData["agreedAmout"];
+        $totalPaid = 0;
+        $remainingDue = $agreededAmount - $totalPaid;
+    
+        $data->setVisitDate($visitDate);
+        $data->setChiefComplaint($medicalRecordData["chief_complaint"]);
+        $data->setClinicalDiagnosis($medicalRecordData["clinical_diagnosis"]);
+        $data->setTreatmentPlan($medicalRecordData["treatment_plan"]);
+        $data->setPrescriptions($medicalRecordData["prescriptions"]);
+        $data->setNotes($medicalRecordData["notes"]);
+        $data->setFollowUpDate($followUpDate);
+        $data->setCreatedAt($existingRecord->getCreatedAt());
+        $data->setCreatedBy($existingRecord->getCreatedBy());
+        $data->setModifiedAt($this->clock->now());
+        $data->setModifiedBy($this->security->getUser());
+        $data->setPatient($existingRecord->getPatient());
+        $data->setAgreedAmout($agreededAmount);
+        $data->setTotalPaid($totalPaid);
+        $data->setRemainingDue($remainingDue);
+    
+        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
+    
 }
