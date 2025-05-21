@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPutStateProcessor;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
@@ -19,8 +20,12 @@ class VisitApiTestCase extends ApiTestCase
     protected EntityManagerInterface $entityManager ;
     protected ClockInterface $clock;
     protected VisitPostStateProcessor $visitPostStateProcessor ;
+    protected VisitPutStateProcessor $visitPutStateProcessor ;
     protected static string $username = "testuser";
     protected static int $medicalRecordId ;
+    protected static int $visitId;
+    private MedicalRecord $medicalRecord;
+    private User $user;
     
     protected function setUp():void 
     {
@@ -28,6 +33,7 @@ class VisitApiTestCase extends ApiTestCase
 
         $container = static::getContainer();
         $this->visitPostStateProcessor = $container->get(VisitPostStateProcessor::class);
+        $this->visitPutStateProcessor = $container->get(VisitPutStateProcessor::class);
         $this->entityManager = $container->get(EntityManagerInterface::class);
         $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
 
@@ -80,7 +86,7 @@ class VisitApiTestCase extends ApiTestCase
     
         $this->entityManager->clear();
     
-        $userFromDb = $this->entityManager
+        $this->user = $userFromDb = $this->entityManager
             ->getRepository(User::class)
             ->findOneBy(['username' => $username]);
     
@@ -196,12 +202,66 @@ class VisitApiTestCase extends ApiTestCase
         $this->entityManager->persist($medicalRecord);
         $this->entityManager->flush();
 
+        $this->medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)->findOneBy(
+            [
+                'createdAt' => $createdAt
+            ]
+            );
         static::$medicalRecordId = $this->entityManager->getRepository(MedicalRecord::class)->findOneBy(
             [
                 'createdAt' => $createdAt
             ]
         )->getId();
 
+    }
+    function saveVisits()
+    {
+        $visit =  new Visit();
+
+        $visitDate =  new DateTimeImmutable("2025-02-12");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Consultation initiale + radio");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate1 =  new DateTimeImmutable("2025-02-19");
+        $visit->setVisitDate($visitDate1);
+        $visit->setNotes("Dévitalisation");
+        $visit->setAmountPaid(400);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-03-01");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        static::$visitId = $this->entityManager->getRepository(Visit::class)->findOneBy([
+            "visitDate" => $visitDate1
+        ])->getId();
         
 
     }

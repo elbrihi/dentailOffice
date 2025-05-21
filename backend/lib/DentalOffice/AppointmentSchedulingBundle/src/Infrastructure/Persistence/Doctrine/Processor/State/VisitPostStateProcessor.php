@@ -64,8 +64,9 @@ class VisitPostStateProcessor implements ProcessorInterface
         $visit = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
       
-            $event = new VisitCreatedEvent($visit);
-            $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
+        $event = new VisitCreatedEvent($visit);
+        
+        $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
 
         return $visit;
 

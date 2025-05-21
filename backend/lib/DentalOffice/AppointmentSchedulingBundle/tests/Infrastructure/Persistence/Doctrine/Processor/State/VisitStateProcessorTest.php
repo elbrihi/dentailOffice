@@ -49,7 +49,7 @@ class VisitStateProcessorTest extends VisitApiTestCase
 
     $this->visitPostStateProcessor->process($visit2, $operation, $uriVariables, $context2);
 
-        // 🔁 Second Visit
+    // 🔁 Second Visit
     $request3 = new Request([], [], [], [], [], [], json_encode([
         "visit_date" => "2025-03-15",
         "notes" => "Suivi traitement",
