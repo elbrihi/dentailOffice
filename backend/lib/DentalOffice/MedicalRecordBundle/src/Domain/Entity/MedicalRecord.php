@@ -92,76 +92,77 @@ class MedicalRecord
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?\DateTimeInterface $visit_date = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]    
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?string $chief_complaint = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?string $clinical_diagnosis = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?string $treatment_plan = null;
 
 
     #[ORM\Column(type: Types::ARRAY)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private array $prescriptions = [];
 
 
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     #[ORM\Column(length: 255)]
     private ?string $notes = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?\DateTimeInterface $follow_up_date = null;
 
     #[ORM\ManyToOne(inversedBy: 'medicalRecord')]
-    #[Groups(['medical_record:read','medical_record:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?Patient $patient = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'medicalRecords')]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?User $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'medicalRecordsModifier')]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?User $modifiedBy = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?\DateTimeInterface $modifiedAt = null;
 
     #[ORM\Column]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?float $agreedAmout = null;
 
     #[ORM\Column]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?float $totalPaid = null;
 
     #[ORM\Column]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?float $remainingDue = null;
 
-    #[ORM\ManyToOne(inversedBy: 'medicalRecord')]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?Appointment $appointment = null;
 
 
-    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'medicalRecord')]
+    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'medicalRecord' , cascade: ['persist', 'remove'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private Collection $visits;
 
     public function __construct()

@@ -59,12 +59,12 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write','medical_record:read','medical_record:write', 'patient:read','patient:write','appointment:write','appointment:read'])]
+    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write','medical_record:read','medical_record:write', 'patient:read','patient:write','appointment:write','appointment:read','visit:read','visit:write'])]
     private ?string $username = null;
 
 
     #[ORM\Column]
-    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write','medical_record:read','medical_record:write', 'patient:read','patient:write'])]
+    #[Groups(['category:read','read:user','write:user','product:read', 'product:write','supplier:read', 'supplier:write','medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private array $roles = [];
 
     #[ORM\Column(length: 255)]

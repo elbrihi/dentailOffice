@@ -8,6 +8,7 @@ api_platform:
             - '%kernel.project_dir%/lib/DentalOffice/PatientBundle/src/Domain/Entity'
             - '%kernel.project_dir%/lib/DentalOffice/MedicalRecordBundle/src/Domain/Entity'
             - '%kernel.project_dir%/lib/DentalOffice/AppointmentSchedulingBundle/src/Domain/Entity'
+            - '%kernel.project_dir%/lib/DentalOffice/PaymentsBundle/src/Domain/Entity'
 
                 
     formats:

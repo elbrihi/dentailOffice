@@ -8,6 +8,8 @@ use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
+use DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -26,7 +28,8 @@ class VisitPostStateProcessor implements ProcessorInterface
         private Security $security, 
         private EntityManagerInterface $entityManager,
         private ClockInterface $clock,
-        private EventDispatcherInterface $dispatcher
+        private EventDispatcherInterface $dispatcher,
+        private PaymentRepository $paymentRepository
         
     )
     {      
@@ -43,15 +46,43 @@ class VisitPostStateProcessor implements ProcessorInterface
 
         $user = $this->security->getUser();
         $visit =  json_decode($request->getContent(), true);
+        $visiAmout = $visit["amount_paid"];
+         ;
+      
         try {
             $visitDate =  new DateTimeImmutable($visit["visit_date"]);
         } catch (\Exception $e) {
             throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
         }
+
+       
+        try {
+            $paymentDate =  new DateTimeImmutable( $visit["payments"][0]["payment_date"]);
+        } catch (\Exception $e) {
+            throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
+        }
+
+       
+
+        $payment = new Payment();
+        $payment->setAmount( $visiAmout);
+        $payment->setPaymentDate($paymentDate);
+        $payment->setMethod($visit["payments"][0]["method"]);
+        $payment->setPaymentDate($paymentDate );
+
+        $this->entityManager->persist($payment);
+        $this->entityManager->flush();
+
+        $payment = $this->paymentRepository->findLastPayment();
+
+
+        $data->setDurationMinutes( $visit["duration_minutes"]);
+        $data->setType($visit["type"]);
         $data->setVisitDate($visitDate );
         $data->setNotes($visit["notes"]);
-        $data->setAmountPaid($visit["amount_paid"]);
+        $data->setAmountPaid($visiAmout);
         $data->setRemainingDueAfterVisit($visit["remaining_due_after_visit"]);
+        $data->setStatus(true);
         $data->setMedicalRecord($medicalRecord);
         $medicalRecord->getVisits()->add($data);
         $data->setCreatedAt($this->clock->now());
@@ -59,12 +90,15 @@ class VisitPostStateProcessor implements ProcessorInterface
         $data->setCreatedBy($user);
         $data->setModifiedBy($user);
         $data->setVisitDate($visitDate);
+        $data->addPayment( $payment);
         // Handle the state
 
+        
+        
         $visit = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
       
-        $event = new VisitCreatedEvent($visit);
+        $event = new VisitCreatedEvent($visit,$medicalRecordId);
         
         $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
 

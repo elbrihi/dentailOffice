@@ -55,7 +55,12 @@ doctrine:
                 prefix: 'DentalOffice\AppointmentSchedulingBundle\Domain\Entity'
                 alias: DentalOfficeDentalAppointmentSchedulingBundle
                         
-
+            DentalOfficePaymentsBundle:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/lib/DentalOffice/PaymentsBundle/src/Domain/Entity'
+                prefix: 'DentalOffice\PaymentsBundle\Domain\Entity'
+                alias: DentalOfficePaymentsBundle
         controller_resolver:
             auto_mapping: true
 

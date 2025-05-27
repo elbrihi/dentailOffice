@@ -17,6 +17,12 @@
             <argument id="api_platform.validator" />
         </service>
 
+        
+        <service id="DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository">
+            <tag name="doctrine.repository_service"/>
+            <argument type="service" id="doctrine"/>
+        </service>
+
     </services>
     
 </container> 

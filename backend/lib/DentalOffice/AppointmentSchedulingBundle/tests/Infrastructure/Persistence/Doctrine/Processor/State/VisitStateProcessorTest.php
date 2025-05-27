@@ -27,6 +27,14 @@ class VisitStateProcessorTest extends VisitApiTestCase
         "notes" => "Consultation initiale + radio",
         "amount_paid" => 300,
         "remaining_due_after_visit" => 700,
+        "duration_minutes" => 40,
+        "type" => "consultation",
+        "payments" => [
+            [
+                "method" => "Virement",
+                "payment_date" => "2025-03-01"
+            ]
+        ],
     ]));
 
     $operation = new Post();
@@ -42,6 +50,14 @@ class VisitStateProcessorTest extends VisitApiTestCase
         "notes" => "Suivi traitement",
         "amount_paid" => 400,
         "remaining_due_after_visit" => 500,
+        "duration_minutes" => 40,
+        "type"=> "consultation",
+        "payments" => [
+            [
+                "method" => "Carte",
+                "payment_date" => "2025-03-15"
+            ]
+        ],
     ]));
 
     $visit2 = new Visit();
@@ -55,6 +71,14 @@ class VisitStateProcessorTest extends VisitApiTestCase
         "notes" => "Suivi traitement",
         "amount_paid" => 300,
         "remaining_due_after_visit" => 500,
+        "duration_minutes" => 40,
+        "type"=> "consultation",
+        "payments" => [
+            [
+                "method" => "Virement",
+                "payment_date" => "2025-03-15"
+            ]
+        ],
     ]));
 
     $visit3 = new Visit();

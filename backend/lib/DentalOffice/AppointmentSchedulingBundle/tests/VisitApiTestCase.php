@@ -6,10 +6,14 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitDeleteProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPutStateProcessor;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitsGetCollectionProvider; // ✅ Correct
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
+use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
+use DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
@@ -21,6 +25,9 @@ class VisitApiTestCase extends ApiTestCase
     protected ClockInterface $clock;
     protected VisitPostStateProcessor $visitPostStateProcessor ;
     protected VisitPutStateProcessor $visitPutStateProcessor ;
+    protected VisitDeleteProcessor $visitDeleteStateProcessor ;
+    protected VisitsGetCollectionProvider $visitsGetCollectionProvider;
+    protected PaymentRepository $paymentRepository;
     protected static string $username = "testuser";
     protected static int $medicalRecordId ;
     protected static int $visitId;
@@ -34,15 +41,24 @@ class VisitApiTestCase extends ApiTestCase
         $container = static::getContainer();
         $this->visitPostStateProcessor = $container->get(VisitPostStateProcessor::class);
         $this->visitPutStateProcessor = $container->get(VisitPutStateProcessor::class);
+        $this->visitDeleteStateProcessor = $container->get(VisitDeleteProcessor::class);
+        $this->visitsGetCollectionProvider = $container->get(VisitsGetCollectionProvider::class);
         $this->entityManager = $container->get(EntityManagerInterface::class);
+        $this->paymentRepository = $container->get(PaymentRepository::class);
         $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
 
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
+        $payments = $this->entityManager->getRepository(Payment::class)->findAll();
+        foreach ($payments  as $payments ) {
+            $this->entityManager->remove($payments);
+        }
+        
         $visits = $this->entityManager->getRepository(Visit::class)->findAll();
         foreach ($visits as $visit) {
             $this->entityManager->remove($visit);
         }
+
         $medicalRecords = $this->entityManager->getRepository(MedicalRecord::class)->findAll();
         foreach ($medicalRecords as $medicalRecord) {
             $this->entityManager->remove($medicalRecord);
@@ -52,7 +68,7 @@ class VisitApiTestCase extends ApiTestCase
         foreach ($appointments as $appointment) {
             $this->entityManager->remove($appointment);
         }
-
+        
         // Step 2: Remove Patients
         $patients = $this->entityManager->getRepository(Patient::class)->findAll();
         foreach ($patients as $patient) {
@@ -216,13 +232,115 @@ class VisitApiTestCase extends ApiTestCase
     }
     function saveVisits()
     {
-        $visit =  new Visit();
 
-        $visitDate =  new DateTimeImmutable("2025-02-12");
+        $amount = 300;
+        $payment = new Payment();
+        $payment->setMethod("Virement");
+        $payment->setAmount($amount);
+        $payment->setPaymentDate(new DateTimeImmutable("2025-03-01"));
+        $this->entityManager->persist($payment);
+        $this->entityManager->flush();
+
+        $this->paymentRepository->findLastPayment();
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2023-02-12");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Consultation initiale + radio");
+        $visit->setAmountPaid($amount);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+
+        $visit->setMedicalRecord( $this->medicalRecord );
+        $visit->setCreatedAt($createdAt = $this->clock->now());
+        $visit->setModifiedAt($createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user);
+        $visit->addPayment($this->paymentRepository-> findLastPayment());
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+
+        $amount = 400;
+        $payment = new Payment();
+        $payment->setMethod("Carte");
+        $payment->setAmount($amount);
+        $payment->setPaymentDate(new DateTimeImmutable("2025-03-15"));
+        $this->entityManager->persist($payment);
+        $this->entityManager->flush();
+        $this->paymentRepository->findLastPayment();
+        $visit = new Visit();
+        $visitDate1=  new DateTimeImmutable("2025-03-15");
+        $visit->setVisitDate($visitDate1);
+        $visit->setNotes("Suivi traitement");
+        $visit->setAmountPaid($amount);
+        $visit->setRemainingDueAfterVisit(500);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+
+        $visit->setMedicalRecord( $this->medicalRecord );
+        $visit->setCreatedAt($createdAt = $this->clock->now());
+        $visit->setModifiedAt($createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user);
+        $visit->addPayment($this->paymentRepository-> findLastPayment());
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+
+
+
+
+
+        $amount = 300;
+        $payment = new Payment();
+        $payment->setMethod("Virement");
+        $payment->setAmount($amount);
+        $payment->setPaymentDate(new DateTimeImmutable("2025-03-15"));
+        $this->entityManager->persist($payment);
+        $this->entityManager->flush();
+        $this->paymentRepository->findLastPayment();
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-03-15");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Suivi traitement");
+        $visit->setAmountPaid($amount);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+
+        $visit->setMedicalRecord( $this->medicalRecord );
+        $visit->setCreatedAt($createdAt = $this->clock->now());
+        $visit->setModifiedAt($createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user);
+        $visit->addPayment($this->paymentRepository-> findLastPayment());
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+
+        static::$visitId = $this->entityManager->getRepository(Visit::class)->findOneBy([
+            "visitDate" => $visitDate1
+        ])->getId();
+        
+
+    }
+
+    function saveVisitsForGetCollections()
+    {
+        
+        $visit = new Visit();
+        $visitDate = new DateTimeImmutable("2023-02-12");
         $visit->setVisitDate($visitDate);
         $visit->setNotes("Consultation initiale + radio");
         $visit->setAmountPaid(300);
         $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
         $visit->setMedicalRecord($this->medicalRecord );
         $visit->setCreatedAt( $createdAt = $this->clock->now());
         $visit->setModifiedAt( $createdAt = $this->clock->now());
@@ -231,12 +349,15 @@ class VisitApiTestCase extends ApiTestCase
         $this->entityManager->persist($visit);
         $this->entityManager->flush();
 
-        $visit =  new Visit();
-        $visitDate1 =  new DateTimeImmutable("2025-02-19");
+        $visit = new Visit();
+        $visitDate1 = new DateTimeImmutable("2023-02-19");
         $visit->setVisitDate($visitDate1);
         $visit->setNotes("Dévitalisation");
         $visit->setAmountPaid(400);
         $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
         $visit->setMedicalRecord($this->medicalRecord );
         $visit->setCreatedAt( $createdAt = $this->clock->now());
         $visit->setModifiedAt( $createdAt = $this->clock->now());
@@ -245,12 +366,15 @@ class VisitApiTestCase extends ApiTestCase
         $this->entityManager->persist($visit);
         $this->entityManager->flush();
 
-        $visit =  new Visit();
-        $visitDate =  new DateTimeImmutable("2025-03-01");
+        $visit = new Visit();
+        $visitDate = new DateTimeImmutable("2023-03-01");
         $visit->setVisitDate($visitDate);
         $visit->setNotes("Finalisation traitement");
         $visit->setAmountPaid(300);
         $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
         $visit->setMedicalRecord($this->medicalRecord );
         $visit->setCreatedAt( $createdAt = $this->clock->now());
         $visit->setModifiedAt( $createdAt = $this->clock->now());
@@ -263,6 +387,176 @@ class VisitApiTestCase extends ApiTestCase
             "visitDate" => $visitDate1
         ])->getId();
         
+
+        $visit = new Visit();
+        $visitDate =  new DateTimeImmutable("2023-04-01");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit = new Visit();
+        $visitDate =  new DateTimeImmutable("2024-04-10");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+       $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit = new Visit();
+        $visitDate = new DateTimeImmutable("2024-04-15");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2024-04-28");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-05-01");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-05-10");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-05-20");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-05-27");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-06-01");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
+
+        $visit =  new Visit();
+        $visitDate =  new DateTimeImmutable("2025-06-10");
+        $visit->setVisitDate($visitDate);
+        $visit->setNotes("Finalisation traitement");
+        $visit->setAmountPaid(300);
+        $visit->setRemainingDueAfterVisit(700);
+        $visit->setDurationMinutes(40);
+        $visit->setType("consultation");
+        $visit->setStatus(true);
+        $visit->setMedicalRecord($this->medicalRecord );
+        $visit->setCreatedAt( $createdAt = $this->clock->now());
+        $visit->setModifiedAt( $createdAt = $this->clock->now());
+        $visit->setCreatedBy($this->user);
+        $visit->setModifiedBy($this->user );
+        $this->entityManager->persist($visit);
+        $this->entityManager->flush();
 
     }
 }

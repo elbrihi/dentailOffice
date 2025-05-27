@@ -9,12 +9,21 @@
 
         <defaults autowire="true" autoconfigure="true" public="false" />
 
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitDeleteProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitDeleteProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
         <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor'
         
                 class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor' >
             <argument id="api_platform.doctrine.orm.state.persist_processor" />
             <argument id="api_platform.doctrine.orm.state.remove_processor" />
             <argument id="api_platform.validator" />
+            <argument id="DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository" />
         </service>
 
         <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPutStateProcessor'
@@ -25,12 +34,11 @@
             <argument id="api_platform.validator" />
         </service>
 
+        <service id="DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitsGetCollectionProvider"
+            autowire="true"
+            autoconfigure="true"
+            public="true" />
 
-        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitPostStateProvider'
-        
-                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitPostStateProvider' >
-
-        </service>
 
 
         <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor'
@@ -62,15 +70,24 @@
 
         <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentsGetCollectionProvider'
         
-                class = 'DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository' >
+            class = 'DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository' >
 
         </service>
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitsGetCollectionProvider'
+        
+            class = 'DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository' >
+
+        </service>
+
+
 
         <!-- Listers --> 
         <service id="DentalOffice\AppointmentSchedulingBundle\Application\UseCase\UpdateMedicalRecordOnVisit">
             <tag name="kernel.event_listener"
-                 event="DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent"
-                 method="__invoke" />
+                
+                event="DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent"
+                method="__invoke" />
         </service>
 
         

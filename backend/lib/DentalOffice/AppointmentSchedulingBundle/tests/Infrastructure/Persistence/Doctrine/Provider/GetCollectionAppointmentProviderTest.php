@@ -20,19 +20,7 @@ class GetCollectionAppointmentProviderTest extends ApiTestCase
     private ClockInterface $clock;
     private AppointmentsGetCollectionProvider $appointmentsProvider;
     
-    protected function setUp():void
-    {
-        $container = static::getContainer();
-        $this->entityManager = $container->get(EntityManagerInterface::class);
-        $this->appointmentsProvider = $container->get('DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentsGetCollectionProvider');
-        $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
-        
 
-
-        $this->entityManager->createQuery('DELETE FROM DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment')->execute();
-        $this->entityManager->createQuery('DELETE FROM DentalOffice\PatientBundle\Domain\Entity\Patient')->execute();
-        $this->entityManager->createQuery('DELETE FROM DentalOffice\UserBundle\Domain\Entity\User')->execute();
-    }
 
     public function testGetCollectionAppointment()
     {

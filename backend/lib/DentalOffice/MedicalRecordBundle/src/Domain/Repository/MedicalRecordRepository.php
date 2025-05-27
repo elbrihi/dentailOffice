@@ -20,7 +20,16 @@ class MedicalRecordRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, MedicalRecord::class);
     }
-
+    public function findWithVisits(int $medicalRecordId): ?MedicalRecord
+        {
+            return $this->createQueryBuilder('mr')
+                ->leftJoin('mr.visits', 'v')
+                ->addSelect('v')
+                ->where('mr.id = :id')
+                ->setParameter('id', $medicalRecordId)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
 //    /**
 //     * @return MedicalRecord[] Returns an array of MedicalRecord objects
 //     */

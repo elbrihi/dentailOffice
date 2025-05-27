@@ -18,39 +18,42 @@ class UpdateMedicalRecordOnVisit
     public function __invoke(VisitCreatedEvent $event): void
     {
 
+
         // remaining_due - 
 
-        $medicalRecordId = $event->getVisit()->getMedicalRecord()->getId();
-
+        
+        $medicalRecordId = $event->getMedicalRecordId();
+        
+      
         $medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)->findOneBy([
-                'id' => $medicalRecordId
+              'id' => $medicalRecordId
             ]
         );
-
-       
+ 
         $agreedAmout = $medicalRecord->getAgreedAmout();
         $totalPaid = 0;
         $remainingDue = $agreedAmout;
-       // dd($totalPaid, $remainingDue);
+        // dd($totalPaid, $remainingDue);
+
         $visits = $medicalRecord ->getVisits(); // collections 
 
         $visits = $medicalRecord->getVisits()->toArray();
 
 
         $amountPaidVisits = 0;
+
         foreach ($visits as $visit) 
         {
             $amountPaidVisits = $amountPaidVisits  + $visit->getAmountPaid();
         
         }
 
-        //dd($amountPaidVisits);
+        
         $totalPaid = $totalPaid + $amountPaidVisits ;
         $remainingDue  = $remainingDue - $amountPaidVisits ;
 
         $medicalRecord->setTotalPaid( $totalPaid);
         $medicalRecord->setRemainingDue($remainingDue);
-
         $this->entityManager->persist($medicalRecord);
         $this->entityManager->flush();
    

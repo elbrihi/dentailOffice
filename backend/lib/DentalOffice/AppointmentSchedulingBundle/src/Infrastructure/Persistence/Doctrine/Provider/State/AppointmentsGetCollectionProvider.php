@@ -5,8 +5,6 @@ namespace DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Do
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 
@@ -31,7 +29,7 @@ class AppointmentsGetCollectionProvider implements ProviderInterface
         $page = $context["filters"]["page"] ?? 1;
         $itemsPerPage = $context["filters"]["itemsPerPage"] ?? 30; // default 30 if not set
         
-        dd($page);
+       
         $firstResult = ($page - 1) * $itemsPerPage;
 
         // Set pagination options

@@ -31,10 +31,14 @@ class VisitPutStateProcessor implements ProcessorInterface
     )
     {      
     }
-   public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Visit
+   
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Visit
     {
-        $visitId = $uriVariables["visitId"];
 
+
+        $visitId = $uriVariables["id"];
+
+  
         $visitEntity = $this->entityManager->getRepository(Visit::class)->findOneBy([
             'id' => $visitId
         ]);
@@ -43,11 +47,14 @@ class VisitPutStateProcessor implements ProcessorInterface
             throw new NotFoundHttpException("Visit not found.");
         }
 
+        $paymentEntity = $visitEntity->getPayments()[0];
 
+    
         $createdAt = $visitEntity->getCreatedAt();
         $createdBy = $visitEntity->getCreatedBy();
         $medicalRecord = $visitEntity->getMedicalRecord();
-
+        $medicalRecordId = $visitEntity->getMedicalRecord()->getId();
+        
         $request = $context["request"];
         $user = $this->security->getUser();
 
@@ -55,7 +62,7 @@ class VisitPutStateProcessor implements ProcessorInterface
         $visitData = json_decode($request->getContent(), true);
 
         try {
-            $visitDate = new DateTimeImmutable($visitData["visit_date"]);
+            $paymentDate=$visitDate = new DateTimeImmutable($visitData["visit_date"]);
         } catch (\Exception $e) {
             throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
         }
@@ -63,9 +70,18 @@ class VisitPutStateProcessor implements ProcessorInterface
         /** @var Visit $visit */
         $visit = $data; // This is your Visit object passed in from the caller
 
+        $visiAmout=$visitData["amount_paid"];
+       
+      
+        $paymentEntity->setMethod($visitData["payments"][0]["method"]);
+        $paymentEntity->setPaymentDate($paymentDate);
+        $paymentEntity->setAmount($visiAmout);
+
+       
         $visitEntity->setVisitDate( $visitDate );
         $visitEntity->setNotes($visitData["notes"]);
-        $visitEntity->setAmountPaid($visitData["amount_paid"]);
+        $visitEntity->setAmountPaid($visiAmout);
+        $visitEntity->setDurationMinutes($visitData["duration_minutes"]);
         $visitEntity->setRemainingDueAfterVisit($visitData["remaining_due_after_visit"]);
         $visitEntity->setMedicalRecord($medicalRecord);
         $medicalRecord->getVisits()->add($visitEntity);
@@ -73,13 +89,14 @@ class VisitPutStateProcessor implements ProcessorInterface
         $visitEntity->setModifiedBy($user);
         $visitEntity->setCreatedAt($createdAt);
         $visitEntity->setCreatedBy( $createdBy );
+        $visitEntity->addPayment($paymentEntity);
         // No more setVisitDate here again
        
         // Handle the state...
 
         $visit = $this->persistProcessor->process($visitEntity, $operation, $uriVariables, $context);
 
-        $event = new VisitCreatedEvent($visit);
+        $event = new VisitCreatedEvent($visit,$medicalRecordId);
         
         $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
 
