@@ -87,7 +87,9 @@
             <tag name="kernel.event_listener"
                 
                 event="DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent"
-                method="__invoke" />
+                method="__invoke" 
+                
+                />
         </service>
 
         

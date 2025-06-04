@@ -6,11 +6,12 @@ namespace DentalOffice\MedicalRecordBundle\Tests\Infrastructure\Persistence\Doct
 use ApiPlatform\Metadata\Post;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
-use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPostProcessor;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
-use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
+use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
@@ -38,6 +39,21 @@ class MedicalRecordPostProcessorTest extends KernelTestCase
 
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
+        $invoices = $this->entityManager->getRepository(Invoice::class)->findAll();
+        foreach ($invoices  as $invoice ) {
+            $this->entityManager->remove($invoice);
+        }
+
+        $payments = $this->entityManager->getRepository(Payment::class)->findAll();
+        foreach ($payments  as $payments ) {
+            $this->entityManager->remove($payments);
+        }
+        
+        $visits = $this->entityManager->getRepository(Visit::class)->findAll();
+        foreach ($visits as $visit) {
+            $this->entityManager->remove($visit);
+        }
+
         $medicalRecords = $this->entityManager->getRepository(MedicalRecord::class)->findAll();
         foreach ($medicalRecords as $medicalRecord) {
             $this->entityManager->remove($medicalRecord);
@@ -47,7 +63,7 @@ class MedicalRecordPostProcessorTest extends KernelTestCase
         foreach ($appointments as $appointment) {
             $this->entityManager->remove($appointment);
         }
-
+        
         // Step 2: Remove Patients
         $patients = $this->entityManager->getRepository(Patient::class)->findAll();
         foreach ($patients as $patient) {
@@ -91,7 +107,7 @@ class MedicalRecordPostProcessorTest extends KernelTestCase
         $operation= new Post();
         $context = ["request"=> $request];
         $uriVariables["patientId"] = static::$patientId;
-       $uriVariables["appointmentId"] = static::$appointmentId;
+        $uriVariables["appointmentId"] = static::$appointmentId;
         $medicalRecord = new MedicalRecord();
         
         $this->medicalRecordPostProcessor->process($medicalRecord, $operation, $uriVariables,$context);

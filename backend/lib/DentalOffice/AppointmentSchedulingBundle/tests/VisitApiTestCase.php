@@ -10,6 +10,7 @@ use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPutStateProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitsGetCollectionProvider; // ✅ Correct
+use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
@@ -49,6 +50,13 @@ class VisitApiTestCase extends ApiTestCase
 
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
+
+
+        $invoices = $this->entityManager->getRepository(Invoice::class)->findAll();
+        foreach ($invoices  as $invoice ) {
+            $this->entityManager->remove($invoice);
+        }
+
         $payments = $this->entityManager->getRepository(Payment::class)->findAll();
         foreach ($payments  as $payments ) {
             $this->entityManager->remove($payments);
@@ -81,6 +89,8 @@ class VisitApiTestCase extends ApiTestCase
             $this->entityManager->remove($user);
         }
 
+        
+  
         // Step 4: Apply the deletions
         $this->entityManager->flush();
     }
@@ -233,11 +243,32 @@ class VisitApiTestCase extends ApiTestCase
     function saveVisits()
     {
 
+        $createdAt =new \DateTime();
+        $medicalRecord=$this->medicalRecord ;
+
+        $invoice = new Invoice();
+        $invoice->setInvoiceDate(new \DateTime());
+        $invoice->setMedicalRecord($medicalRecord);
+        $invoice->setTotalPaid($medicalRecord->getTotalPaid());
+        $invoice->setTotalAmount($medicalRecord->getAgreedAmout());
+        $invoice->setRemainingDue($medicalRecord->getRemainingDue());
+        $invoice->setInvoiceNumber($invoice->generateInvoiceNumber());
+
+        $invoiceNumber = $invoice->getInvoiceNumber();
+       
+        $this->entityManager->persist($invoice);
+        $this->entityManager->flush();
+
+        $invoice = $this->entityManager->getRepository(Invoice::class)->
+                    findOneBy([
+                        "invoiceNumber" => $invoiceNumber 
+                    ]);
         $amount = 300;
         $payment = new Payment();
         $payment->setMethod("Virement");
         $payment->setAmount($amount);
         $payment->setPaymentDate(new DateTimeImmutable("2025-03-01"));
+        $payment->setInvoice($invoice);
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
 
@@ -252,7 +283,7 @@ class VisitApiTestCase extends ApiTestCase
         $visit->setType("consultation");
         $visit->setStatus(true);
 
-        $visit->setMedicalRecord( $this->medicalRecord );
+        $visit->setMedicalRecord($medicalRecord );
         $visit->setCreatedAt($createdAt = $this->clock->now());
         $visit->setModifiedAt($createdAt = $this->clock->now());
         $visit->setCreatedBy($this->user);
@@ -262,14 +293,17 @@ class VisitApiTestCase extends ApiTestCase
         $this->entityManager->flush();
 
 
+
         $amount = 400;
         $payment = new Payment();
         $payment->setMethod("Carte");
         $payment->setAmount($amount);
         $payment->setPaymentDate(new DateTimeImmutable("2025-03-15"));
+        $payment->setInvoice($invoice);
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
         $this->paymentRepository->findLastPayment();
+
         $visit = new Visit();
         $visitDate1=  new DateTimeImmutable("2025-03-15");
         $visit->setVisitDate($visitDate1);
@@ -279,7 +313,6 @@ class VisitApiTestCase extends ApiTestCase
         $visit->setDurationMinutes(40);
         $visit->setType("consultation");
         $visit->setStatus(true);
-
         $visit->setMedicalRecord( $this->medicalRecord );
         $visit->setCreatedAt($createdAt = $this->clock->now());
         $visit->setModifiedAt($createdAt = $this->clock->now());
@@ -299,6 +332,7 @@ class VisitApiTestCase extends ApiTestCase
         $payment->setMethod("Virement");
         $payment->setAmount($amount);
         $payment->setPaymentDate(new DateTimeImmutable("2025-03-15"));
+        $payment->setInvoice($invoice);
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
         $this->paymentRepository->findLastPayment();

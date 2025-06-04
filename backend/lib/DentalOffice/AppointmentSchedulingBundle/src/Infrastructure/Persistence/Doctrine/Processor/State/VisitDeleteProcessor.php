@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\InvoiceBundle\Application\Event\InvoiceUpdatedEvent;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
@@ -58,5 +59,9 @@ class VisitDeleteProcessor implements ProcessorInterface
         // Dispatch the event
         $event = new VisitCreatedEvent($visit,  $medicalRecordId);
         $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
+
+
+        $invoiceEvent = new InvoiceUpdatedEvent($medicalRecordId);
+        $this->dispatcher->dispatch($invoiceEvent, InvoiceUpdatedEvent::class);
     }
 }

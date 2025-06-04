@@ -14,6 +14,7 @@
                 class = 'DentalOffice\MedicalRecordBundle\Infrastucture\Persistence\Doctrine\Processor\State\MedicalRecordPostProcessor' >
             <argument id="api_platform.doctrine.orm.state.persist_processor" />
             <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="debug.event_dispatcher" />
             <argument id="api_platform.validator" />
         </service>
 

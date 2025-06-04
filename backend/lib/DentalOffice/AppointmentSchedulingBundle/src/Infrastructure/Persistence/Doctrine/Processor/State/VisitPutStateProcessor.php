@@ -7,6 +7,9 @@ use ApiPlatform\State\ProcessorInterface;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\InvoiceBundle\Application\Event\InvoiceCreatedEvent;
+use DentalOffice\InvoiceBundle\Application\Event\InvoiceUpdatedEvent;
+use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -43,6 +46,7 @@ class VisitPutStateProcessor implements ProcessorInterface
             'id' => $visitId
         ]);
 
+        
         if (!$visitEntity) {
             throw new NotFoundHttpException("Visit not found.");
         }
@@ -54,7 +58,9 @@ class VisitPutStateProcessor implements ProcessorInterface
         $createdBy = $visitEntity->getCreatedBy();
         $medicalRecord = $visitEntity->getMedicalRecord();
         $medicalRecordId = $visitEntity->getMedicalRecord()->getId();
-        
+       
+
+       
         $request = $context["request"];
         $user = $this->security->getUser();
 
@@ -71,13 +77,10 @@ class VisitPutStateProcessor implements ProcessorInterface
         $visit = $data; // This is your Visit object passed in from the caller
 
         $visiAmout=$visitData["amount_paid"];
-       
-      
+ 
         $paymentEntity->setMethod($visitData["payments"][0]["method"]);
         $paymentEntity->setPaymentDate($paymentDate);
         $paymentEntity->setAmount($visiAmout);
-
-       
         $visitEntity->setVisitDate( $visitDate );
         $visitEntity->setNotes($visitData["notes"]);
         $visitEntity->setAmountPaid($visiAmout);
@@ -85,11 +88,14 @@ class VisitPutStateProcessor implements ProcessorInterface
         $visitEntity->setRemainingDueAfterVisit($visitData["remaining_due_after_visit"]);
         $visitEntity->setMedicalRecord($medicalRecord);
         $medicalRecord->getVisits()->add($visitEntity);
+
+        
         $visitEntity->setModifiedAt($this->clock->now());
         $visitEntity->setModifiedBy($user);
         $visitEntity->setCreatedAt($createdAt);
         $visitEntity->setCreatedBy( $createdBy );
         $visitEntity->addPayment($paymentEntity);
+
         // No more setVisitDate here again
        
         // Handle the state...
@@ -100,6 +106,8 @@ class VisitPutStateProcessor implements ProcessorInterface
         
         $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
 
+        $invoiceEvent = new InvoiceUpdatedEvent($medicalRecordId);
+        $this->dispatcher->dispatch($invoiceEvent, InvoiceUpdatedEvent::class);
         return $visit;
     }
 

@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPostProcessor;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPutProcessor;
@@ -165,9 +166,14 @@ class MedicalRecord
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private Collection $visits;
 
+    #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'medicalRecord', cascade: ['persist', 'remove'])]
+    private Collection $invoice;
+
+
     public function __construct()
     {
         $this->visits = new ArrayCollection();
+        $this->invoice = new ArrayCollection();
     }
 
 
@@ -376,6 +382,8 @@ class MedicalRecord
         return $this->visits;
     }
 
+
+
     public function addVisit(Visit $visit): static
     {
         if (!$this->visits->contains($visit)) {
@@ -392,6 +400,34 @@ class MedicalRecord
             // set the owning side to null (unless already changed)
             if ($visit->getMedicalRecord() === $this) {
                 $visit->setMedicalRecord(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    public function getInvoice(): Collection
+    {
+        return $this->invoice;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoice->contains($invoice)) {
+            $this->invoice->add($invoice);
+            $invoice->setMedicalRecord($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoice->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getMedicalRecord() === $this) {
+                $invoice->setMedicalRecord(null);
             }
         }
 

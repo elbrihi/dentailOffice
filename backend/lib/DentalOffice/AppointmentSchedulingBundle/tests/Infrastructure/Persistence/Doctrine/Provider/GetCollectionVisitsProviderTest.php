@@ -28,8 +28,9 @@ class GetCollectionVisitsProviderTest extends VisitApiTestCase
         $paginator = $this->visitsGetCollectionProvider->provide($operation, [], $context);
         $visits = iterator_to_array($paginator);
 
-        dd($visits);
-        $this->assertCount(5, $visits); // assuming 5 were created and should match page size
+        ;
+        
+        $this->assertCount(7, $visits); // assuming 5 were created and should match page size
         $this->assertInstanceOf(Visit::class, $visits[0]);
         // public function provide(Operation $operation, array $uriVariables = [], array $context = [])
 

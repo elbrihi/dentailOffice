@@ -48,6 +48,7 @@
             "DentalOffice\\MedicalRecordBundle\\":"lib/DentalOffice/MedicalRecordBundle/src/",
             "DentalOffice\\AppointmentSchedulingBundle\\":"lib/DentalOffice/AppointmentSchedulingBundle/src/",
             "DentalOffice\\PaymentsBundle\\":"lib/DentalOffice/PaymentsBundle/src/",
+            "DentalOffice\\InvoiceBundle\\":"lib/DentalOffice/InvoiceBundle/src/",
             "DentalOffice\\SharedBundle\\":"lib/DentalOffice/SharedBundle/src/"
 
     
@@ -59,6 +60,7 @@
             "DentalOffice\\PatientBundle\\Tests\\": "lib/DentalOffice/PatientBundle/tests/",
             "DentalOffice\\AppointmentSchedulingBundle\\Tests\\":"lib/DentalOffice/AppointmentSchedulingBundle/tests/",
             "DentalOffice\\MedicalRecordBundle\\":"lib/DentalOffice/MedicalRecordBundle/tests/",
+            "DentalOffice\\InvoiceBundle\\Tests\\":"lib/DentalOffice/InvoiceBundle/tests/",
             "DentalOffice\\PaymentsBundle\\Tests\\":"lib/DentalOffice/PaymentsBundle/tests/"
             
         }

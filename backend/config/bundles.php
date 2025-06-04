@@ -17,7 +17,8 @@ return [
     DentalOffice\AppointmentSchedulingBundle\DentalOfficeAppointmentSchedulingBundle::class => ['all' => true],
     DentalOffice\AppointmentSchedulingBundle\DentalOfficeAppointmentSchedulingBundle::class => ['all' => true],
     DentalOffice\PaymentsBundle\DentalOfficePaymentsBundle::class => ['all' => true],
-    DentalOffice\SharedBundle\DentalOfficeSharedBundle::class => ['all' => true]
+    DentalOffice\SharedBundle\DentalOfficeSharedBundle::class => ['all' => true],
+    DentalOffice\InvoiceBundle\DentalOfficeInvoiceBundle::class => ['all' => true],
 
 
 ];

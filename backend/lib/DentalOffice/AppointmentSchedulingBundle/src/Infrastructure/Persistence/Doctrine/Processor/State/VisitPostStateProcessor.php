@@ -7,6 +7,7 @@ use ApiPlatform\State\ProcessorInterface;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\InvoiceBundle\Application\Event\InvoiceCreatedEvent;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
 use DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository;
@@ -99,9 +100,13 @@ class VisitPostStateProcessor implements ProcessorInterface
 
       
         $event = new VisitCreatedEvent($visit,$medicalRecordId);
-        
-        $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
+        // visit ===> invoice
+        // dispatche invoice  update invoice 
+        $medicalRecord = $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
 
+        $invoiceEvent = new InvoiceCreatedEvent($medicalRecordId);
+        $this->dispatcher->dispatch($invoiceEvent, InvoiceCreatedEvent::class);
+      
         return $visit;
 
         

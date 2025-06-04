@@ -18,10 +18,8 @@ class UpdateMedicalRecordOnVisit
     public function __invoke(VisitCreatedEvent $event): void
     {
 
-
         // remaining_due - 
 
-        
         $medicalRecordId = $event->getMedicalRecordId();
         
       
@@ -29,10 +27,14 @@ class UpdateMedicalRecordOnVisit
               'id' => $medicalRecordId
             ]
         );
+        
  
         $agreedAmout = $medicalRecord->getAgreedAmout();
+
         $totalPaid = 0;
+
         $remainingDue = $agreedAmout;
+        
         // dd($totalPaid, $remainingDue);
 
         $visits = $medicalRecord ->getVisits(); // collections 
@@ -44,16 +46,16 @@ class UpdateMedicalRecordOnVisit
 
         foreach ($visits as $visit) 
         {
-            $amountPaidVisits = $amountPaidVisits  + $visit->getAmountPaid();
+            $amountPaidVisits = $amountPaidVisits + $visit->getAmountPaid();
         
         }
-
         
         $totalPaid = $totalPaid + $amountPaidVisits ;
         $remainingDue  = $remainingDue - $amountPaidVisits ;
 
         $medicalRecord->setTotalPaid( $totalPaid);
         $medicalRecord->setRemainingDue($remainingDue);
+       
         $this->entityManager->persist($medicalRecord);
         $this->entityManager->flush();
    

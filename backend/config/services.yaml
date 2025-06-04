@@ -65,6 +65,16 @@ services:
             #- '../lib/DentalOffice/UserBundle/src/Resources/config/'
             - '../lib/DentalOffice/AppointmentSchedulingBundle/src/DentalOfficeMedicalRecordBundle.php'
 
+    DentalOffice\InvoiceBundle\:
+        resource: '../lib/DentalOffice/InvoiceBundle/src/*'
+        exclude: 
+            - '../lib/DentalOffice/InvoiceBundle/src/Domain/Entity/'
+            #- '../lib/DentalOffice/UserBundle/src/UI/Controller/'
+            #- '../lib/DentalOffice/UserBundle/src/Resources/config/'
+            - '../lib/DentalOffice/InvoiceBundle/src/DentalOfficeInvoiceBundleBundle.php'
+        autowire: true
+        autoconfigure: true
+
     DentalOffice\SharedBundle\:
         resource: '../lib/DentalOffice/SharedBundle/src/*'
         exclude: 

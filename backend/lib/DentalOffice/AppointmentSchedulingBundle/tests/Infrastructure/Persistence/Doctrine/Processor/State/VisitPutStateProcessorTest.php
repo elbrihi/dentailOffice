@@ -37,9 +37,11 @@ class VisitPutStateProcessorTest extends VisitApiTestCase
         $visit = new Visit();
         $context['request'] = $request;
      
-        $uriVariables['id'] =static::$visitId;
+        $visitId = $uriVariables['id'] =static::$visitId;
  
         $this->visitPutStateProcessor->process($visit, $operation, $uriVariables, $context);
-        $this->assertEquals(8,8);
+        
+        
+
     }
 }

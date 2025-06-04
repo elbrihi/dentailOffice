@@ -3,6 +3,7 @@
 namespace DentalOffice\PaymentsBundle\Domain\Entity;
 
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,9 @@ class Payment
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
     private ?Visit $visit = null;
+
+    #[ORM\ManyToOne(targetEntity: Invoice::class, inversedBy: 'payments')]
+    private ?Invoice $invoice = null;
 
     public function getId(): ?int
     {
@@ -78,5 +82,17 @@ class Payment
         $this->visit = $visit;
 
         return $this;
+    }
+
+    public function setInvoice(?Invoice $invoice): static
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function getInvoice(): ?Invoice
+    {
+        return $this->invoice;
     }
 }

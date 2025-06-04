@@ -101,11 +101,11 @@ class Visit
     #[Groups(['visit:read','visit:write'])]
     private ?\DateTimeImmutable $modifiedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'visits')]
+    #[ORM\ManyToOne(inversedBy: 'visits', cascade: ['persist'])]
     #[Groups(['visit:read','visit:write'])]
     private ?User $createdBy = null;
 
-    #[ORM\ManyToOne(inversedBy: 'visits')]
+    #[ORM\ManyToOne(inversedBy: 'visits', cascade: ['persist'])]
     #[Groups(['visit:read','visit:write'])]
     private ?User $modifiedBy = null;
 
@@ -118,7 +118,7 @@ class Visit
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'visit', cascade: ['remove'],)]
+    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'visit', cascade: ['persist', 'remove'])]
     private Collection $payments;
 
     public function __construct()

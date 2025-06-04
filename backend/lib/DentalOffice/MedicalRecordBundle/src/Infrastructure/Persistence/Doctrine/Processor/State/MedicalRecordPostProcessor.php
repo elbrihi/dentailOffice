@@ -6,12 +6,14 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\InvoiceBundle\Application\Event\InvoiceCreatedEvent;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class MedicalRecordPostProcessor implements ProcessorInterface
@@ -25,6 +27,7 @@ class MedicalRecordPostProcessor implements ProcessorInterface
         private Security $security, 
         private EntityManagerInterface $entityManager ,
         private ClockInterface $clock,
+        private EventDispatcherInterface $dispatcher
         
     )
     {
@@ -96,7 +99,10 @@ class MedicalRecordPostProcessor implements ProcessorInterface
         $data->setRemainingDue($remainingDue);
         $data->setAppointment($appointment);
         
-        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        $medicalRecord = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+
+        $this->dispatcher->dispatch(new InvoiceCreatedEvent($medicalRecord->getId()));
+        return  $medicalRecord;
 
         
         
