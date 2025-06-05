@@ -50,17 +50,18 @@ class VisitPostStateProcessor implements ProcessorInterface
         $visiAmout = $visit["amount_paid"];
          ;
       
+       
         try {
             $visitDate =  new DateTimeImmutable($visit["visit_date"]);
         } catch (\Exception $e) {
-            throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
+            throw new BadRequestHttpException("Invalid visitDate format, expected YYYY-MM-DD.");
         }
 
        
         try {
             $paymentDate =  new DateTimeImmutable( $visit["payments"][0]["payment_date"]);
         } catch (\Exception $e) {
-            throw new BadRequestHttpException("Invalid birthDate format, expected YYYY-MM-DD.");
+            throw new BadRequestHttpException("Invalid paymentDate format, expected YYYY-MM-DD.");
         }
 
        

@@ -2,6 +2,7 @@
 
 namespace DentalOffice\AppointmentSchedulingBundle\Domain\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
@@ -20,6 +21,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #
 #[ORM\Entity(repositoryClass: VisitRepository::class)]
@@ -51,7 +53,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(
             security: "is_granted('ROLE_ADMIN')",
             uriTemplate: "/get/visit/{id}",
-            normalizationContext: ['groups'=>'visit:write'],
+            normalizationContext: ['groups'=>'visit:write',  "enable_max_depth"=>"true"],
             denormalizationContext: ['groups'=>'visit:read'],
 
         ),
@@ -72,25 +74,28 @@ class Visit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['visit:read','visit:write'])]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
     private ?\DateTimeInterface $visitDate = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['visit:read','visit:write'])]
+     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
     private ?string $notes = null;
 
     #[ORM\Column]
-    #[Groups(['visit:read','visit:write'])]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
     private ?float $amountPaid = null;
 
     #[ORM\Column]
-    #[Groups(['visit:read','visit:write'])]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
     private ?float $remainingDueAfterVisit = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits')]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
+    #[MaxDepth(1)]
     private ?MedicalRecord $medicalRecord = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -110,6 +115,7 @@ class Visit
     private ?User $modifiedBy = null;
 
     #[ORM\Column]
+     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
     private ?int $durationMinutes = null;
 
     #[ORM\Column]
@@ -119,6 +125,7 @@ class Visit
     private ?string $type = null;
 
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'visit', cascade: ['persist', 'remove'])]
+     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write'])]
     private Collection $payments;
 
     public function __construct()

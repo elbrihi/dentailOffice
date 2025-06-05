@@ -45,9 +45,6 @@ class InvoicesGetCollectionProvider implements ProviderInterface
                 ->setParameter('afterDate', $afterDate);
         }
 
-   
-
-
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $qb->setFirstResult($firstResult)

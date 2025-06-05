@@ -16,14 +16,15 @@ class InvoicesGetCollectionProviderTest extends InvoiceApiTestCase
         $operation = new GetCollection(); 
 
         $context["filters"]["page"] = 1;
-        $context["filters"]["itemsPerPage"] = 5;
+        $context["filters"]["itemsPerPage"] = 1;
         
         $context["filters"]["after_invoice_date"] = '2025-03-12';
-        $context["filters"]["befor_invoice_date"] = '2025-11-12';
+       $context["filters"]["befor_invoice_date"] = '2025-11-12';
         $paginator = $this->invoicesGetCollection->provide($operation,[],$context);
         
         $result = iterator_to_array($paginator);
 
+      //  dd($result);
         // Assert the paginator returns no more than 5 items
         $this->assertLessThanOrEqual(5, count($result));
 

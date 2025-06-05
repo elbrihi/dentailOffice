@@ -5,6 +5,7 @@ namespace DentalOffice\MedicalRecordBundle\Domain\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
@@ -29,6 +30,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: MedicalRecordRepository::class)]
 #[ApiResource(
@@ -93,7 +95,7 @@ class MedicalRecord
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write','payment:write', 'payment:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -163,10 +165,12 @@ class MedicalRecord
 
 
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'medicalRecord' , cascade: ['persist', 'remove'])]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
+    #[Groups(['medical_record:read','medical_record:write'])]
+    #[MaxDepth(1)]
     private Collection $visits;
 
     #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'medicalRecord', cascade: ['persist', 'remove'])]
+    #[Groups(['medical_record:read','medical_record:write'])]
     private Collection $invoice;
 
 

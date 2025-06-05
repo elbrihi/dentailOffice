@@ -1,4 +1,5 @@
 api_platform:
+
     title: Hello API Platform
     version: 1.0.0
     
@@ -11,13 +12,16 @@ api_platform:
             - '%kernel.project_dir%/lib/DentalOffice/PaymentsBundle/src/Domain/Entity'
             - '%kernel.project_dir%/lib/DentalOffice/InvoiceBundle/src/Domain/Entity'
 
-                
+
     formats:
         jsonld: ['application/ld+json']
+
     docs_formats:
         jsonld: ['application/ld+json']
         jsonopenapi: ['application/vnd.openapi+json']
         html: ['text/html']
+    eager_loading:
+        force_eager: false
     defaults:
         stateless: true
         cache_headers:
@@ -26,6 +30,8 @@ api_platform:
             standard_put: true
             rfc_7807_compliant_errors: true
         pagination_client_enabled: true
+
+
     collection:
         pagination:
             items_per_page_parameter_name: itemsPerPage # Default value
