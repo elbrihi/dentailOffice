@@ -13,11 +13,8 @@ import { CategoryListComponent } from './modules/product/components/category-lis
 import { CategoryProductListComponent } from './modules/product/components/product-list/category-product-list.component';
 import { DatatableSubitemComponent } from './modules/product/components/datatable-subitem/datatable-subitem.component';
 import { DatatableTutoComponent } from './modules/product/components/datatable-tuto/datatable-tuto.component';
-import { PatientDetailsComponent } from './modules/patient/components/patient-details/patient-details.component';
-import { MedicalRecordComponent } from './modules/patient/components/medical-record/medical-record.component';
-import { DatabaleTutoComponent } from './modules/patient/components/databale-tuto/databale-tuto.component';
-import { PaginatorConfigurableExampleComponent } from './modules/patient/components/paginator-configurable-example/paginator-configurable-example.component';
 import { PatientListComponent } from './modules/patient/components/patient-list/patient-list.component';
+import { MedicalRecordComponent } from './modules/patient/components/medical-record/medical.record.component';
 
 const routes: Routes = [
   {
@@ -62,59 +59,17 @@ const routes: Routes = [
             path: 'patiens',
             component: PatientListComponent
           },
-          {
-            path: 'datatable-tuto',
-            component: DatabaleTutoComponent
-          },
-          {
-            path: ':patientId/details', 
-            component: PatientDetailsComponent
-          },
+
           {
             path: 'medical-records',
-            component: PaginatorConfigurableExampleComponent
+            component: MedicalRecordComponent
           },
-          {
-            path: 'patient-tuto',
-            component: PatientListComponent
-          },
+
         
         ]
       },
-      {
-        path: 'supplier',
-        children: [
-          {
-            path: 'supplier', // Correct spelling
-            component: SupplierListComponent // Ensure the component name matches
-          },
-          {
-            path: 'analytics',
-            component: AnalyticsComponent
-          }
-        ]
-      },
-      {
-        path: 'category',
-        children: [
-          {
-            path: 'category', // Correct spelling
-            component: CategoryListComponent // Ensure the component name matches
-          },
-          {
-            path: 'product',
-            component: CategoryProductListComponent
-          },
-          {
-            path: 'subitem',
-            component: DatatableSubitemComponent
-          },
-          {
-            path: 'datatabletuto',
-            component: DatatableTutoComponent
-          }
-        ]
-      },
+
+
       {
         path: 'comments',
         component: CommentsComponent

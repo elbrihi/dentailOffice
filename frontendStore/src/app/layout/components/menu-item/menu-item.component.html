@@ -1,14 +1,13 @@
 <a 
-mat-list-item 
-class="menu-item"          
-[routerLink]="item().subItems?.length ? null :  item().route "
-(click)="toggleNested()"
-(click)="test(item().subItems?.length )"
-routerLinkActive="selected-menu-item"
-#rla="routerLinkActive"
-[activated]="rla.isActive"
-(click)="logRla(rla, item())"
-
+  mat-list-item 
+  class="menu-item"          
+  [routerLink]="item().subItems?.length ? null :  item().route "
+  (click)="toggleNested()"
+  (click)="test(item().subItems?.length )"
+  routerLinkActive="selected-menu-item"
+  #rla="routerLinkActive"
+  [activated]="rla.isActive"
+  (click)="logRla(rla, item())"
 >
 
 

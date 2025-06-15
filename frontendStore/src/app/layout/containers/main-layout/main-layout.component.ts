@@ -29,24 +29,31 @@ import { LayoutService } from '../../../core/services/mainLayout/layout.service.
   styles: `
 
       mat-sidenav-container {
+        
         height: calc(100vh - 64px);
+      
       }
       mat-sidenav-container{
+        
       }
       mat-sidenav{
       }
       mat-sidenav-content{
+       
       }
       mat-sidenav,
       mat-sidenav-content{
         transition: all 500ms ease-in-out;
+
   
       }
       app-custom-sidenav{
+
       }
       .content {
         padding: 24px;
-        
+      }
+      mat-sidenav-content{
       }
   
       @media (max-width: 768px) {

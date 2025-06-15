@@ -72,23 +72,23 @@ class Appointment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('appointment:write','appointment:read')]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups('appointment:write','appointment:read')]
+     #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
     private ?\DateTimeInterface $appointmentDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups('appointment:write','appointment:read')]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
     private ?\DateTimeInterface $modifiedAt = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('appointment:write','appointment:read')]
+     #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointment', cascade: ['persist'])]
-    #[Groups('appointment:write','appointment:read')]
+     #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist'])]
@@ -108,15 +108,11 @@ class Appointment
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist', 'remove'])]
-    #[Groups('appointment:write','appointment:read')]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
     private ?Patient $patient = null;
 
     #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'appointment')]
     private Collection $medicalRecord;
-
-
-
-
 
     public function __construct()
     {

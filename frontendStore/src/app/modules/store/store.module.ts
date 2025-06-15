@@ -36,15 +36,12 @@ import { DatatableSubitemComponent } from "../product/components/datatable-subit
 import { DatatableTutoComponent } from "../product/components/datatable-tuto/datatable-tuto.component";
 import { AddProductComponent } from "../product/dialogs/add/add-product/add-product.component";
 import { AddCategoryComponent } from "../product/dialogs/add/add-category/add-category.component";
-import { MedicalRecordComponent } from "../patient/components/medical-record/medical-record.component";
 import { AddPatientComponent } from "../patient/dialogs/patient/add-patient/add-patient.component";
 import { UpdatePatientComponent } from "../patient/dialogs/patient/update-patient/update-patient.component";
 import { AddMedicalRecordComponent } from "../patient/dialogs/medicalRecord/add-medical-record/add-medical-record.component";
 import { UpdateMedicalRecordComponent } from "../patient/dialogs/medicalRecord/update-medical-record/update-medical-record.component";
-import { PatientDetailsComponent } from "../patient/components/patient-details/patient-details.component";
-import { DatabaleTutoComponent } from "../patient/components/databale-tuto/databale-tuto.component";
-import { PaginatorConfigurableExampleComponent } from "../patient/components/paginator-configurable-example/paginator-configurable-example.component";
 import { PatientListComponent } from "../patient/components/patient-list/patient-list.component";
+import { MedicalRecordComponent } from "../patient/components/medical-record/medical.record.component";
 
 @NgModule({
     declarations: [
@@ -77,15 +74,12 @@ import { PatientListComponent } from "../patient/components/patient-list/patient
         DatatableTutoComponent,
         AddProductComponent,
         AddCategoryComponent,
-        MedicalRecordComponent,
         AddPatientComponent,
         UpdatePatientComponent,
         AddMedicalRecordComponent,
         UpdateMedicalRecordComponent,
-        PatientDetailsComponent,
-        DatabaleTutoComponent,
-        PaginatorConfigurableExampleComponent,
-        PatientListComponent
+        PatientListComponent,
+        MedicalRecordComponent
 
     ],
     imports:[
@@ -131,9 +125,7 @@ import { PatientListComponent } from "../patient/components/patient-list/patient
         AddPatientComponent,
         AddMedicalRecordComponent,
         UpdateMedicalRecordComponent,
-        PatientDetailsComponent,
-        DatabaleTutoComponent,
-        PaginatorConfigurableExampleComponent,
+        MedicalRecordComponent
 
     ],
 

@@ -102,7 +102,6 @@ class Patient
 
     #[ORM\Column(length: 255)]
     #[Groups(['patient:read','patient:write'])]
-
     private ?string $bloodType = null;
 
     #[ORM\Column(length: 255)]
@@ -130,24 +129,21 @@ class Patient
     #[Groups(['patient:read','patient:write'])]
     private ?\DateTimeInterface $modified_at = null;
 
-
     #[ORM\Column]
     #[Groups(['patient:read','patient:write'])]
     private ?bool $status = null;
-
-
 
     #[ORM\Column(length: 255)]
     #[Groups(['patient:read','patient:write'])]
     private ?string $cni = null;
 
-    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'patient')]
+    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]
     #[Groups(['patient:read','patient:write'])]
     private Collection $medicalRecord;
 
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'patient' , cascade: ['persist', 'remove'])]
+    #[Groups(['patient:read','patient:write'])] 
     private Collection $appointments;
-
 
     public function __construct()
     {

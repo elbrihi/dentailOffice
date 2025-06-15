@@ -1,0 +1,129 @@
+<div class="theme-container">
+    <div class="title">title</div>
+  
+    <!-- Filter Card -->
+    <div class="searchFiler">
+      <mat-card class="filter-card">
+        <mat-card-title>Filtres avancés</mat-card-title>
+  
+        <div *ngFor="let filter of filters; let i = index" class="filter-row">
+          <!-- Field Filter -->
+          <mat-form-field appearance="fill">
+            <mat-label>Champ</mat-label>
+            <mat-select [(ngModel)]="filter.field">
+              <mat-option *ngFor="let field of availableFields" [value]="field.value">
+                {{ field.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <!-- Operator Filter -->
+          <mat-form-field appearance="fill">
+            <mat-label>Opérateur</mat-label>
+            <mat-select [(ngModel)]="filter.operator" (selectionChange)="onOperatorChange(filter)">
+              <mat-option value="equals">Égale</mat-option>
+              <mat-option value="contains">Contient</mat-option>
+              <mat-option  *ngIf="filter.field === 'visit_date' ||
+                                filter.field === 'birthDate'" value="between">
+                Entre
+              </mat-option>
+              
+            </mat-select>
+          </mat-form-field>
+  
+          <!-- Value Input -->
+          <ng-container [ngSwitch]="filter.operator">
+            <mat-form-field *ngSwitchCase="'between'" appearance="fill">
+              <input matInput [(ngModel)]="filter.value.start_date" type="date" placeholder="Début" />
+            </mat-form-field>
+            <mat-form-field *ngSwitchCase="'between'" appearance="fill">
+              <input matInput [(ngModel)]="filter.value.end_date" type="date" placeholder="Fin" />
+            </mat-form-field>
+            <mat-form-field *ngSwitchDefault appearance="fill">
+              <input matInput [(ngModel)]="filter.value" placeholder="Valeur" />
+            </mat-form-field>
+          </ng-container>
+  
+          <button mat-icon-button color="warn" (click)="removeFilter(i)">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+  
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+          <button mat-button color="primary" (click)="addFilter()">
+            <mat-icon>add</mat-icon> Ajouter un filtre
+          </button>
+          <button mat-raised-button color="accent" (click)="applyFilters()">Rechercher</button>
+          <button mat-raised-button (click)="resetFilters()">Réinitialiser</button>
+        </div>
+      </mat-card>
+    </div>
+  
+    <!-- Table and Paginator -->
+    <div class="scrollable">
+     
+  
+      <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="listMedicalRecords" class="full-width-table" matSort multiTemplateDataRows>
+
+          <ng-container *ngFor="let column of displayedMedicalRecordsColumns" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{columnLabels[column]  | titlecase }}</th>
+            <td mat-cell *matCellDef="let medicalRecord">
+              <ng-container [ngSwitch]="column">
+                <span *ngSwitchCase="'id'">{{ medicalRecord.id }}</span>
+                <span *ngSwitchCase="'visitDate'">{{ medicalRecord.visit_date }}</span>
+                <span *ngSwitchCase="'chiefComplaint'">{{ medicalRecord.chief_complaint }}</span>
+                <span *ngSwitchCase="'clinicalDiagnosis'">{{ medicalRecord.clinical_diagnosis }}</span>
+                <span *ngSwitchCase="'cree par'">{{ medicalRecord.createdBy.username }}</span>
+                <span *ngSwitchCase="'cree a'">{{ medicalRecord.createdAt }}</span>
+                <span *ngSwitchCase="'reatmentPlan'">{{ medicalRecord.treatment_plan }}</span>
+                <span *ngSwitchCase="'follow_up_date'">{{ medicalRecord.follow_up_date }}</span>
+                <span *ngSwitchCase="'notes'">{{ medicalRecord.clinical_diagnosis }}</span>
+                <span *ngSwitchCase="'actions'">
+                  <button mat-icon-button color="primary"><mat-icon>visibility</mat-icon></button>
+                  <button mat-icon-button color="accent"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+                </span>
+              </ng-container>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="detailsPrescriptions">
+            <td mat-cell *matCellDef="let medicalRecord" [attr.colspan]="patientColSpan">
+              <table mat-table [dataSource]="medicalRecord.prescriptions">
+                <ng-container matColumnDef="medication">
+                  <th mat-header-cell *matHeaderCellDef>medication</th>
+                  <td mat-cell *matCellDef="let sub">{{ sub.medication }}</td>
+                </ng-container>
+                <ng-container matColumnDef="dosage">
+                  <th mat-header-cell *matHeaderCellDef>dosage</th>
+                  <td mat-cell *matCellDef="let sub">{{ sub.dosage }}</td>
+                </ng-container>
+                <ng-container matColumnDef="notes">
+                  <th mat-header-cell *matHeaderCellDef>notes</th>
+                  <td mat-cell *matCellDef="let sub">{{ sub.notes }}</td>
+                </ng-container>
+  
+                <tr mat-header-row *matHeaderRowDef="displayedPrescriptionColumns"></tr>
+                <tr mat-row *matRowDef="let prescriptions; columns: displayedPrescriptionColumns"></tr>
+              </table>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedMedicalRecordsColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedMedicalRecordsColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['detailsPrescriptions']"></tr>
+        </table>
+      </div>
+  
+      <mat-paginator 
+      [length]="totalMedicalRecordItem"
+      [pageSize]="3"
+      [pageSizeOptions]="[1,2,3,5, 10, 25, 100]"
+      aria-label="Select page"
+      (page)="onMedicalRecordPageChange($event)"
+      >
+</mat-paginator>
+    </div>
+  </div>

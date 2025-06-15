@@ -5,8 +5,9 @@
 
 .theme-container {
  
-  flex-direction: column;
   display: flex;
+  flex-direction: column;
+
   .title{
     font-size: 1.8rem;
     font-weight: 600;
@@ -58,7 +59,7 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
-
+   
     .full-width-table {
       width: 100%;
       border-collapse: collapse;
@@ -82,6 +83,7 @@
   }
 
   .scrollable {
+
     background-color: var(--scrollable-bg);
     border: 1px solid var(--scrollable-border);
     border-radius: 8px;
@@ -104,6 +106,8 @@
     }
   }
 
+
+
   .scrollable::-webkit-scrollbar {
     width: 8px;
   }
@@ -121,7 +125,7 @@
     background-color: var(--paginator-bg);
     color: var(--paginator-text);
     border: 1px solid var(--paginator-border);
-
+    padding: 10px;
     .mat-paginator-navigation-next,
     .mat-paginator-navigation-previous {
       color: var(--paginator-text);

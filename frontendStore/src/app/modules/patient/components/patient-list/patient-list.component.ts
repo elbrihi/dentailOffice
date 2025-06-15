@@ -13,7 +13,6 @@ import { PatientDTO } from '../../models/patient-dto.service';
 import { UpdateMedicalRecordComponent } from '../../dialogs/medicalRecord/update-medical-record/update-medical-record.component';
 import { MedicalRecordDto } from '../../models/medical-record-dto';
 import { Router } from '@angular/router';
-import { PatientListDataSource, PatientListItem } from '../patient-list-/patient-list-datasource';
 
 @Component({
   selector: 'app-patient-list',
@@ -32,11 +31,11 @@ export class PatientListComponent implements AfterViewInit, OnInit {
  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<PatientListItem>;
+  //@ViewChild(MatTable) table!: MatTable<PatientListItem>;
 
   lengthOfDisplayedPatientColumns: number = 0; 
 
-  dataSource = new PatientListDataSource();
+  //dataSource = new PatientListDataSource();
 
   columnLabels: { [key: string]: string } = {
     id: 'ID',
@@ -46,10 +45,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
     createdBy: 'Créé par',
     sex: 'Sexe',
     phone: 'Téléphone',
-    email: 'Email',
-    address: 'Adresse',
     bloodGroup: 'Groupe sanguin',
-    medicalHistory: 'Antécédents médicaux',
     notes: 'Notes',
     createdAt: 'Date de création',
     actions: 'Actions',
@@ -61,8 +57,8 @@ export class PatientListComponent implements AfterViewInit, OnInit {
   };
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'name']
-  displayedPatientColumns = ['id','lastName', 'firstName','cni', 'cree par', 'gender','phone','email',
-                              'address','bloodType','medicalHistory','notes','createdAt','actions'
+  displayedPatientColumns = ['id','lastName', 'firstName','cni', 'gender','phone',
+                              'createdAt','actions'
                           ]
   displayedMedicalRecordColumns = ['id','chief_complaint','clinical_diagnos', 'follow_up_date',
     'notes','treatment_plan','visit_date','actions'
@@ -130,6 +126,8 @@ export class PatientListComponent implements AfterViewInit, OnInit {
     .subscribe({
       next: (response: any) =>{
 
+
+        console.log("Patiens",response['hydra:member'] );
         const data = response['hydra:member'] || [];
         const total = response['hydra:totalItems'] || data.length; // Prefer 'hydra:totalItems' if available
 
@@ -139,7 +137,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
 
         console.log("Fetched Medical Records:", data.length);
         console.log("Total Medical Records:", total);
-        console.log("Medical Records:", data);
+        console.log("Patiens:", data);
       },
       error: (err) => {
         console.error('Error updating patient:', err);
