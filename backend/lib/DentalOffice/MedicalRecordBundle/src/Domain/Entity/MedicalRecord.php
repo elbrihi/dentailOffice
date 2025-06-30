@@ -160,12 +160,9 @@ class MedicalRecord
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?float $remainingDue = null;
 
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
-    private ?Appointment $appointment = null;
-
 
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'medicalRecord' , cascade: ['persist', 'remove'])]
-    #[Groups(['medical_record:read','medical_record:write'])]
+    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     #[MaxDepth(1)]
     private Collection $visits;
 
@@ -173,11 +170,16 @@ class MedicalRecord
     #[Groups(['medical_record:read','medical_record:write'])]
     private Collection $invoice;
 
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'medicalRecord')]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
+    private Collection $appointment;
+
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
         $this->invoice = new ArrayCollection();
+        $this->appointment = new ArrayCollection();
     }
 
 
@@ -366,17 +368,6 @@ class MedicalRecord
         return $this;
     }
 
-    public function getAppointment(): ?Appointment
-    {
-        return $this->appointment;
-    }
-
-    public function setAppointment(?Appointment $appointment): static
-    {
-        $this->appointment = $appointment;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Visit>
@@ -432,6 +423,36 @@ class MedicalRecord
             // set the owning side to null (unless already changed)
             if ($invoice->getMedicalRecord() === $this) {
                 $invoice->setMedicalRecord(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointment(): Collection
+    {
+        return $this->appointment;
+    }
+
+    public function addAppointment(Appointment $appointment): static
+    {
+        if (!$this->appointment->contains($appointment)) {
+            $this->appointment->add($appointment);
+            $appointment->setMedicalRecord($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): static
+    {
+        if ($this->appointment->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getMedicalRecord() === $this) {
+                $appointment->setMedicalRecord(null);
             }
         }
 

@@ -3,9 +3,15 @@
     <form class="patient-form" [formGroup]="addMedicalDiscoredForm" (ngSubmit)="submitMedicalRecord($event)">
       <div class="mat-form-fields">
   
+
         <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Visit Date</mat-label>
-          <input matInput formControlName="visit_date" type="date" />
+          <mat-label>La date de la visite</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="visit_date">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
   
         <mat-form-field appearance="outline" class="form-field">
@@ -22,16 +28,40 @@
           <mat-label>Treatment Plan</mat-label>
           <input matInput formControlName="treatment_plan" />
         </mat-form-field>
-  
+
+
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Follow Up Date</mat-label>
-          <input matInput formControlName="follow_up_date" type="date" />
+            <input matInput [matDatepicker]="picker" formControlName="follow_up_date">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-  
+    
+        <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Montant convenu</mat-label>
+            <input matInput formControlName="agreedAmout" />
+        </mat-form-field>
+
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Notes</mat-label>
           <textarea matInput formControlName="notes" rows="3"></textarea>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Raison</mat-label>
+          <mat-select formControlName="appointments">
+            @for (appointment of appointments; track appointment) {
+              <mat-option [value]="appointment.id" >
+                {{ appointment.appointmentDate | date: 'yyyy-MM-dd' }} — {{ appointment.reason }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+
   
       </div>
   
@@ -46,7 +76,9 @@
             <mat-label>Dosage</mat-label>
             <input matInput formControlName="dosage" />
           </mat-form-field>
-  
+
+
+
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Notes</mat-label>
             <input matInput formControlName="notes" />
@@ -62,7 +94,7 @@
         <button mat-button color="primary" type="button" (click)="addPrescription()">+ Add Prescription</button>
 
         <button mat-raised-button (click)="reset()" color="warn">Rest</button>
-        <button mat-raised-button color="primary">Save</button>
+        <button mat-raised-button color="primary"  [disabled]="addMedicalDiscoredForm.invalid">Save</button>
         <button mat-raised-button type="button" color="warn" (click)="cancel()">Cancel</button>
       </div>
     </form>

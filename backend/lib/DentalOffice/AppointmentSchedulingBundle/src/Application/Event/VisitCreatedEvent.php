@@ -11,7 +11,8 @@ final class VisitCreatedEvent
         private readonly Visit $visit,
         private int $medicalRecordID
     )
-    {}
+    {
+    }
 
     public function getVisit(): Visit
     {

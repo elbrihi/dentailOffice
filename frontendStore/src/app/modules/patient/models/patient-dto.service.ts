@@ -1,6 +1,6 @@
+import { AppointmentDto } from '../../appointment/models/appointment-dto';
 import { User } from '../../user/models/user';
 import { MedicalRecordDto } from './medical-record-dto';
-import { MedicalRecord } from './medical.record.model.service';
 
 export interface PatientDTO {
   id: number;
@@ -21,4 +21,5 @@ export interface PatientDTO {
   modifiedAt: Date;
   modifiedBy: User;
   medicalRecord: MedicalRecordDto[] ;
+  appointments: AppointmentDto[];
 }

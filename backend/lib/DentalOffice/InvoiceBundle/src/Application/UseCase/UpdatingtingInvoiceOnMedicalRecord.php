@@ -15,13 +15,14 @@ class UpdatingtingInvoiceOnMedicalRecord
         private readonly EntityManagerInterface $entityManager
     )
     {
-      
+    
     }
 
     public function __invoke(InvoiceCreatedEvent $event)
     {
         $medicalRecordId = $event->getMedicalRecordId();
 
+       
         /** @var MedicalRecord $medicalRecord */
         $medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)
             ->find($medicalRecordId);
@@ -30,26 +31,54 @@ class UpdatingtingInvoiceOnMedicalRecord
             throw new \Exception("MedicalRecord not found");
         }
 
-        $invoice = new Invoice();
-        $invoice->setInvoiceDate(new \DateTime());
-        $invoice->setMedicalRecord($medicalRecord);
-        $invoice->setTotalPaid($medicalRecord->getTotalPaid());
-        $invoice->setTotalAmount($medicalRecord->getAgreedAmout());
-        $invoice->setRemainingDue($medicalRecord->getRemainingDue());
-        $invoice->setInvoiceNumber($invoice->generateInvoiceNumber());
 
-       
-        $visits = $medicalRecord->getVisits();
-       
-        foreach ($visits as $visit) {
-            foreach ($visit->getPayments() as $payment) {
-                // Clone or use directly — assuming you want the same payment entity linked to invoice
-                $invoice->addPayment($payment);
+        $invoices = $medicalRecord->getInvoice();
+
+        if (!$invoices->isEmpty()) {
+            $invoice = $invoices->first();
+            $invoice->setInvoiceDate(new \DateTime());
+            $invoice->setMedicalRecord($medicalRecord);
+            $invoice->setTotalPaid($medicalRecord->getTotalPaid());
+            $invoice->setTotalAmount($medicalRecord->getAgreedAmout());
+            $invoice->setRemainingDue($medicalRecord->getRemainingDue());
+            $invoice->setInvoiceNumber($invoice->generateInvoiceNumber());
+            $visits = $medicalRecord->getVisits();
+        
+            foreach ($visits as $visit) {
+                foreach ($visit->getPayments() as $payment) {
+                    // Clone or use directly — assuming you want the same payment entity linked to invoice
+                    $invoice->addPayment($payment);
+                }
             }
-        }
 
-        $this->entityManager->persist($invoice);
-        $this->entityManager->flush();
+            $this->entityManager->persist($invoice);
+            $this->entityManager->flush();
+            $invoice->setMedicalRecord($medicalRecord);
+            $medicalRecord->addInvoice($invoice); // ✅ keep the collection in sync
+        } else {
+            $invoice = new Invoice();
+            $invoice->setInvoiceDate(new \DateTime());
+            $invoice->setMedicalRecord($medicalRecord);
+            $invoice->setTotalPaid($medicalRecord->getTotalPaid());
+            $invoice->setTotalAmount($medicalRecord->getAgreedAmout());
+            $invoice->setRemainingDue($medicalRecord->getRemainingDue());
+            $invoice->setInvoiceNumber($invoice->generateInvoiceNumber());
+            $visits = $medicalRecord->getVisits();
+        
+            foreach ($visits as $visit) {
+                foreach ($visit->getPayments() as $payment) {
+                    // Clone or use directly — assuming you want the same payment entity linked to invoice
+                    $invoice->addPayment($payment);
+                }
+            }
+
+            $this->entityManager->persist($invoice);
+            $this->entityManager->flush();
+            $invoice->setMedicalRecord($medicalRecord);
+            $medicalRecord->addInvoice($invoice); // ✅ keep the collection in sync
+        }
+    
+
         
     }
 }

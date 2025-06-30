@@ -97,7 +97,7 @@ class MedicalRecordPostProcessor implements ProcessorInterface
         $data->setAgreedAmout($agreededAmount);
         $data->setTotalPaid($totalPaid);
         $data->setRemainingDue($remainingDue);
-        $data->setAppointment($appointment);
+        $data->addAppointment($appointment);
         
         $medicalRecord = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 

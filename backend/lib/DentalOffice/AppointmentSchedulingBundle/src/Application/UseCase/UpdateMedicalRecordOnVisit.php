@@ -13,13 +13,15 @@ class UpdateMedicalRecordOnVisit
     public function __construct(
         private readonly EntityManagerInterface $entityManager
     )
-    {}
+    {
+       
+    }
 
     public function __invoke(VisitCreatedEvent $event): void
     {
 
         // remaining_due - 
-
+        
         $medicalRecordId = $event->getMedicalRecordId();
         
       
@@ -28,31 +30,33 @@ class UpdateMedicalRecordOnVisit
             ]
         );
         
- 
+        
+
         $agreedAmout = $medicalRecord->getAgreedAmout();
 
         $totalPaid = 0;
 
         $remainingDue = $agreedAmout;
         
-        // dd($totalPaid, $remainingDue);
-
-        $visits = $medicalRecord ->getVisits(); // collections 
+        //  dd($totalPaid, $remainingDue);
+        $visits = $medicalRecord->getVisits(); // collections 
 
         $visits = $medicalRecord->getVisits()->toArray();
 
 
         $amountPaidVisits = 0;
 
+       
         foreach ($visits as $visit) 
         {
+            
             $amountPaidVisits = $amountPaidVisits + $visit->getAmountPaid();
         
         }
         
         $totalPaid = $totalPaid + $amountPaidVisits ;
         $remainingDue  = $remainingDue - $amountPaidVisits ;
-
+    
         $medicalRecord->setTotalPaid( $totalPaid);
         $medicalRecord->setRemainingDue($remainingDue);
        

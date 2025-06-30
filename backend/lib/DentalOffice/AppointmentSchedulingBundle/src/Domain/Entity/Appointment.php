@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use DentalOffice\AppointmentSchedulingBundle\Application\Dto\VisitInputDto;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentPutProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor;
@@ -76,47 +77,49 @@ class Appointment
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-     #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?\DateTimeInterface $appointmentDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?\DateTimeInterface $modifiedAt = null;
 
     #[ORM\Column(length: 255)]
-     #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointment', cascade: ['persist'])]
-     #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist'])]
-    #[Groups('appointment:write','appointment:read')]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?User $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist'])]
-    #[Groups('appointment:write','appointment:read')]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?User $modifiedBy = null;
 
     #[ORM\Column]
-    #[Groups('appointment:write','appointment:read')]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?bool $status = null;
 
     #[ORM\Column]
-    #[Groups('appointment:write','appointment:read')]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments', cascade: ['persist', 'remove'])]
-    #[Groups(['appointment:write','appointment:read','patient:read','patient:write'])]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?Patient $patient = null;
 
-    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'appointment')]
-    private Collection $medicalRecord;
+    #[ORM\ManyToOne(inversedBy: 'appointment', cascade: ['persist', 'remove'])]
+     #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
+    private ?MedicalRecord $medicalRecord = null;
+
+
 
     public function __construct()
     {
-        $this->medicalRecord = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -235,35 +238,16 @@ class Appointment
         return $this;
     }
 
-    /**
-     * @return Collection<int, MedicalRecord>
-     */
-    public function getMedicalRecord(): Collection
+    public function getMedicalRecord(): ?MedicalRecord
     {
         return $this->medicalRecord;
     }
 
-    public function addMedicalRecord(MedicalRecord $medicalRecord): static
+    public function setMedicalRecord(?MedicalRecord $medicalRecord): static
     {
-        if (!$this->medicalRecord->contains($medicalRecord)) {
-            $this->medicalRecord->add($medicalRecord);
-            $medicalRecord->setAppointment($this);
-        }
+        $this->medicalRecord = $medicalRecord;
 
         return $this;
     }
-
-    public function removeMedicalRecord(MedicalRecord $medicalRecord): static
-    {
-        if ($this->medicalRecord->removeElement($medicalRecord)) {
-            // set the owning side to null (unless already changed)
-            if ($medicalRecord->getAppointment() === $this) {
-                $medicalRecord->setAppointment(null);
-            }
-        }
-
-        return $this;
-    }
-
 
 }

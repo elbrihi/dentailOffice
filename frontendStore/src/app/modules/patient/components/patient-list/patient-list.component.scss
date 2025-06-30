@@ -2,7 +2,9 @@
   --scrollable-bg: #f0f0f0;
   --scrollable-border: #ccc;
 }
-
+.expanded-row.hidden {
+  display: none;
+}
 .theme-container {
  
   display: flex;
@@ -135,4 +137,44 @@
       background-color: var(--paginator-hover-bg);
     }
   }
+}
+.prescription-table {
+  margin: 10px 0;
+  width: 100%;
+  background-color: var(--scrollable-bg);
+  border-left: 4px solid var(--scrollable-border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mat-header-cell,
+.mat-cell {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.mat-icon-button {
+  margin: 0 2px;
+}
+
+
+
+.no-data-container {
+  padding: 16px;
+  background-color: var(--scrollable-bg, #f9f9f9);
+  border-left: 4px solid #ff9800;
+  margin-top: 8px;
+}
+
+.create-visit-cta {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.create-visit-cta button {
+  font-weight: bold;
 }

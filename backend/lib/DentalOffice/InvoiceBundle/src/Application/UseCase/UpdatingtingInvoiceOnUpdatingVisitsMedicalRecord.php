@@ -15,7 +15,6 @@ class UpdatingtingInvoiceOnUpdatingVisitsMedicalRecord
         private readonly EntityManagerInterface $entityManager
     )
     {
-      
     }
 
     public function __invoke(InvoiceUpdatedEvent $event)
@@ -26,7 +25,7 @@ class UpdatingtingInvoiceOnUpdatingVisitsMedicalRecord
         $medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)
             ->find($medicalRecordId);
 
-       
+        
         if (!$medicalRecord) {
             throw new \Exception("MedicalRecord not found");
         }
@@ -36,7 +35,8 @@ class UpdatingtingInvoiceOnUpdatingVisitsMedicalRecord
             "medicalRecord" => $medicalRecord
         ]);
        
-   
+        
+        
         $invoice->setInvoiceDate($invoice->getInvoiceDate());
         $invoice->setMedicalRecord($medicalRecord);
         $invoice->setTotalPaid($medicalRecord->getTotalPaid());
@@ -54,6 +54,7 @@ class UpdatingtingInvoiceOnUpdatingVisitsMedicalRecord
             }
         }
 
+        
         $this->entityManager->persist($invoice);
         $this->entityManager->flush();
         

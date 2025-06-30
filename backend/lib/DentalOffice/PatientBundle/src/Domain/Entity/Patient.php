@@ -139,10 +139,12 @@ class Patient
 
     #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]
     #[Groups(['patient:read','patient:write'])]
+    #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $medicalRecord;
 
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'patient' , cascade: ['persist', 'remove'])]
     #[Groups(['patient:read','patient:write'])] 
+    #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $appointments;
 
     public function __construct()

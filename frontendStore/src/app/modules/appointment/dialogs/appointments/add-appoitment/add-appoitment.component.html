@@ -1,0 +1,29 @@
+<div class="appointment-container mat-elevation-z4">
+  <h2 class="patient-title">Les informations du patient</h2>
+
+  <form class="appointment-form" [formGroup]="FormAppointmentBuilder" (ngSubmit)="submitAppointment($event)">
+    <div class="mat-form-fields">
+      <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="appointment_date">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker">
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Raison</mat-label>
+        <input matInput formControlName="reason" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" 
+            [disabled]="FormAppointmentBuilder.invalid">
+      Enregistrer</button>
+      <button mat-raised-button color="warn" type="reset" (click)="close()">Annuler</button>
+    </div>
+  </form>
+</div>

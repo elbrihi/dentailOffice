@@ -4,6 +4,47 @@
 
 @include mat.core();
 
+
+:root {
+  --patient-bg: var(--sys-primary-container);         // Light blue
+  --patient-border: var(--sys-on-primary-container);  // Deep blue text
+
+  --record-bg: var(--sys-tertiary-container);         // Light purple
+  --record-border: var(--sys-on-tertiary-container);  // Deep purple
+
+  --appointment-bg: var(--sys-secondary-container);       // Light gray-blue
+  --appointment-border: var(--sys-on-secondary-container); // Navy gray
+}
+
+// Section-specific styles
+.patient-section {
+  background-color: var(--patient-bg);
+  border-left: 6px solid var(--patient-border);
+}
+
+.medical-record-section {
+  background-color: var(--record-bg);
+  border-left: 6px solid var(--record-border);
+}
+
+.appointment-section {
+  background-color: var(--appointment-bg);
+  border-left: 6px solid var(--appointment-border);
+}
+
+// Shared title styling
+.section-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--sys-outline-variant);
+  color: var(--sys-on-surface);
+}
+
+
+
 /* Global styles */
 html, body {
   height: 100%;

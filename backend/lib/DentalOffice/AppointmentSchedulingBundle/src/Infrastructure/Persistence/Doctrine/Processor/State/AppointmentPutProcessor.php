@@ -31,6 +31,7 @@ class AppointmentPutProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Appointment
     {
 
+
         $request = $context["request"];
 
         $user = $this->security->getUser();
@@ -43,7 +44,7 @@ class AppointmentPutProcessor implements ProcessorInterface
             ['id' => $uriVariables["id"]]
         );
          
-
+       
         try {
             $appointmentDate =  new DateTimeImmutable($appointmentToUpdate["appointment_date"]);
         } catch (\Exception $e) {
@@ -58,7 +59,7 @@ class AppointmentPutProcessor implements ProcessorInterface
         $data->setStatus($appointmentToUpdate["status"]);
         $data->setPatient($appointment->getPatient());
         $data->setUser($appointment->getUser());
-
+        
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
     }

@@ -223,7 +223,7 @@ class VisitApiTestCase extends ApiTestCase
         $medicalRecord->setAgreedAmout(1000);
         $medicalRecord->setTotalPaid(0);
         $medicalRecord->setRemainingDue(1000);
-        $medicalRecord->setAppointment($appointment);
+       // $medicalRecord->setAppointment($appointment);
 
         $this->entityManager->persist($medicalRecord);
         $this->entityManager->flush();

@@ -16,10 +16,13 @@ export class MedicalRecordDataSourceService extends RestDataSource {
     super(http)
   }
 
-  postMedicalRecord(medicalRecord: MedicalRecordDto,id:number)
+  postMedicalRecord(medicalRecord: any,patientId:number,appintmentId:number)
   {
+
+      console.log(medicalRecord);
       // /api/create/patient/4/medicalRecords
-      const url = `${this.baseUrl}/create/patient/${id}/medicalRecords`
+      //http://localhost:8181/api/create/patient/4/appointment/20/medicalRecords
+      const url = `${this.baseUrl}/create/patient/${patientId}/appointment/${appintmentId}/medicalRecords`
 
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
