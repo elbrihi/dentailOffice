@@ -47,13 +47,13 @@ export class AddMedicalRecordComponent {
   submitMedicalRecord(event:Event)
   {
 
-
-  
+    // 
       event.preventDefault();
 
       const formValue = this.addMedicalDiscoredForm.value;
 
       let appointmentId =formValue.appointments;
+      console.log("AppointmentID",formValue);
       const medicalRecordDto = {
         visit_date: new Date(formValue.visit_date).toISOString().slice(0, 10),
         chief_complaint: formValue.chief_complaint,
@@ -68,7 +68,7 @@ export class AddMedicalRecordComponent {
       } ;
 
 
-      console.log("formValue",formValue.appointments )
+      console.log("formValue",medicalRecordDto )
      this.medicalRecordDataSource.postMedicalRecord(medicalRecordDto,this.data.patientId,appointmentId).subscribe({
 
       next: () => {

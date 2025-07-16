@@ -34,4 +34,39 @@ export class VisitDataSourceService extends RestDataSource{
           );
   }
 
+  putVisit(visitData: any, visitId: any) {
+    const url = `${this.baseUrl}/update/visit/${visitId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+      'Content-Type': 'application/ld+json',
+    });
+
+    return this.http.put<any>(url, visitData, { headers }).pipe(
+      catchError(err => {
+        console.error('Error during visit update:', err);
+        return throwError(() => new Error('Failed to update visit.'));
+      })
+    );
+  }
+
+  deleteVisit(visitedID:any)
+  {
+    const url = `${this.baseUrl}/delete/visit/${visitedID}`;
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+      'Content-Type': 'application/ld+json',
+    });
+
+    return this.http.delete(url,{headers}).pipe(
+      catchError(err => {
+        console.error('Error during visit update:', err);
+        return throwError(() => new Error('Failed to update visit.'));
+      })
+    );
+
+  }
+
+
+  
+
 }

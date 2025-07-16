@@ -1,8 +1,7 @@
 import { Component, Inject, inject, OnInit } from '@angular/core';
 import { MedicalRecordDataSourceService } from '../../../services/medical-record-data-source.service';
 import { MedicalRecordDto } from '../../../models/medical-record-dto';
-import { DialogRef } from '@angular/cdk/dialog';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -16,12 +15,12 @@ export class UpdateMedicalRecordComponent implements OnInit {
 
   medicalRecordForm: FormGroup;
   fb = inject(FormBuilder)
-
+  dialog = inject(MatDialogRef);
   medicalRecordDatasource = inject(MedicalRecordDataSourceService)
 
   constructor(
-    public dialogRef: DialogRef<UpdateMedicalRecordComponent>,
-          @Inject(MAT_DIALOG_DATA) public medicalRecord:  MedicalRecordDto,
+    public dialogRef: MatDialogRef<UpdateMedicalRecordComponent>,
+    @Inject(MAT_DIALOG_DATA) public medicalRecord:  MedicalRecordDto,
   )
   {
       this.medicalRecordForm = this.fb.group({
@@ -31,6 +30,7 @@ export class UpdateMedicalRecordComponent implements OnInit {
         treatment_plan: [''],
         follow_up_date: [''],
         prescriptions: this.fb.array([]),
+        agreedAmout:[''],
         notes: [''],
       })
   }
@@ -40,7 +40,7 @@ export class UpdateMedicalRecordComponent implements OnInit {
     this.medicalRecordDatasource.getMedicalRecodById(this.medicalRecord.id).subscribe({
       
       next: (medicalRecord: any) => {
-        console.log("follow_up_date",medicalRecord.follow_up_date);
+      
         this.medicalRecordForm.patchValue({
           visit_date: new Date(medicalRecord.visit_date).toISOString().substring(0, 10),
           chief_complaint: medicalRecord.chief_complaint,
@@ -48,11 +48,12 @@ export class UpdateMedicalRecordComponent implements OnInit {
           treatment_plan: medicalRecord.treatment_plan,
           follow_up_date: new Date(medicalRecord.follow_up_date).toISOString().substring(0, 10),
           prescriptions: medicalRecord.prescriptions,
+          agreedAmout: medicalRecord.agreedAmout,
           notes: medicalRecord.notes
           
         })
 
-              // Clear existing prescriptions
+        // Clear existing prescriptions
         this.prescriptions.clear();
 
         // Patch prescriptions properly into the FormArray
@@ -94,22 +95,36 @@ export class UpdateMedicalRecordComponent implements OnInit {
     this.prescriptions.removeAt(index);
   }
 
-  updateMedicalRecord()
+  updateMedicalRecord(event:Event)
   {
-    this.medicalRecordDatasource.putMedicalRecord(this.medicalRecordForm.value, this.medicalRecord.id).subscribe(
+
+    const MedicalRecord = {
+      visit_date:  new Date(this.medicalRecordForm.value.visit_date).toISOString().substring(0, 10),
+      chief_complaint: this.medicalRecordForm.value.chief_complaint,
+      clinical_diagnosis: this.medicalRecordForm.value.clinical_diagnosis,
+      treatment_plan: this.medicalRecordForm.value.treatment_plan,
+      follow_up_date:  new Date(this.medicalRecordForm.value.follow_up_date).toISOString().substring(0, 10),
+      prescriptions: this.medicalRecordForm.value.prescriptions,
+      notes: this.medicalRecordForm.value.notes,
+      agreedAmout: parseFloat(this.medicalRecordForm.value.agreedAmout) ,
+      
+    } as MedicalRecordDto
+
+    console.log(MedicalRecord);
+    this.medicalRecordDatasource.putMedicalRecord(MedicalRecord, this.medicalRecord.id).subscribe(
       {
 
         next: () => {
-          console.log('Patient updated successfully!');
-          //this.dialogRef.close(true); // Close dialog and return success flag
+          console.log('Medical Record updated successfully!');
+          this.dialogRef.close(true); // Close dialog and return success flag
         },
         error: (err) => {
-          console.error('Error updating patient:', err);
-          alert('Error updating patient. Please try again.'); // Or use a snackbar
+          console.error('Error updating medical record:', err);
+          alert('Error updating medical record. Please try again.'); // Or use a snackbar
         }
       }
     )
-    this.dialogRef.close(); 
+    
   }
 
   reset(): void {

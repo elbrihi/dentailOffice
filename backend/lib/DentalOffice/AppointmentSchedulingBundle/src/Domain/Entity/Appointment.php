@@ -113,7 +113,7 @@ class Appointment
     private ?Patient $patient = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointment', cascade: ['persist', 'remove'])]
-     #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
+    #[Groups(['appointment:write','appointment:read','patient:read','patient:write','medical_record:read','medical_record:write'])]
     private ?MedicalRecord $medicalRecord = null;
 
 

@@ -18,6 +18,11 @@ import { AddAppoitmentComponent } from '../../../appointment/dialogs/appointment
 import { UpdateAppoitmentComponent } from '../../../appointment/dialogs/update-appoitment/update-appoitment.component';
 import { VisitAddComponent } from '../../../appointment/dialogs/visit/visit-add/visit-add.component';
 import { VisitDto } from '../../../appointment/models/visit-dto';
+import { VisitEditComponent } from '../../../appointment/dialogs/visit/visit-edit/visit-edit.component';
+import { VisitDeleteComponent } from '../../../appointment/dialogs/visit/visit-delete/visit-delete.component';
+import { Invoice } from '../../../invoice/models/invoice.model';
+import { PaymentDto } from '../../../payment/models/payment-dto';
+import { InvoiceDto } from '../../../invoice/models/invoiceDto';
 
 @Component({
   selector: 'app-patient-list',
@@ -36,6 +41,11 @@ export class PatientListComponent implements AfterViewInit, OnInit {
 
   expandedRecord: MedicalRecordDto | null = null;
 
+  expandedInvoice: InvoiceDto | null = null;
+
+  isAppointmentRow = (index: number, row: any) => row.hasOwnProperty('appointmentsRow');
+
+  isMedicalRecordRow = (index: number, row: any) => row.hasOwnProperty('medicalRecordRow');
 
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -46,6 +56,8 @@ export class PatientListComponent implements AfterViewInit, OnInit {
 
   expandedPatientElement = signal<string | undefined>(undefined);
 
+
+
   //dataSource = new PatientListDataSource();
 
   columnLabels: { [key: string]: string } = {
@@ -53,7 +65,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
     lastName: 'Nom',
     firstName: 'Prénom',
     medicalRecord: 'Dossier Médical',
-    appointment:'rendez-vous',
+    appointment: 'Rendez-vous',
     cni: 'Numéro de CNI',
     createdBy: 'Créé par',
     sex: 'Sexe',
@@ -67,23 +79,41 @@ export class PatientListComponent implements AfterViewInit, OnInit {
     follow_up_date: 'Date de suivi',
     treatment_plan: 'Plan de traitement',
     visit_date: 'Date de visite',
-    appointmentDate:'La date de rendez-vous',
-    reason:'la cause'
+    appointmentDate: 'Date de rendez-vous',
+    reason: 'Cause',
+    visits: 'Les visites',
+    visitDate: 'Date de visite',
+    amountPaid: 'Montant payé',
+    remainingDueAfterVisit: 'Reste dû après visite',
+    agreedAmout: 'Montant convenu',
+    totalPaid: 'Total payé',
+    remainingDue: 'Reste dû',
+    invoiceDate: 'Date de la facture',
+    invoiceNumber: 'Numéro de facture',
+    totalAmount: 'Montant total',
+    payments: 'Paiements',
+    
   };
+
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'name']
   displayedPatientColumns = ['patient','id','lastName', 'firstName','cni', 'gender','phone',
                               'createdAt','actions'
                           ]
               
-  displayedMedicalRecordColumns = ['medicalRecord','id','prescription','chief_complaint','clinical_diagnosis', 'follow_up_date',
-                                    'notes','treatment_plan','visit_date','actions']
+  displayedMedicalRecordColumns = ['medicalRecord','id','prescription','chief_complaint','clinical_diagnosis',
+                                 'follow_up_date',
+                                   'agreedAmout','totalPaid','remainingDue', 'notes','treatment_plan','actions']
 
   displayedAppointmentColumns = ['appointment','id','appointmentDate','reason','actions']
 
-  displayedPrescriptionColumns= ['id','medication','dosage','notes']
+  displayedPrescriptionColumns = ['id','medication','dosage','notes']
 
-  displayedVisitsColumns= ['visits','visitDate','notes','amountPaid','remainingDueAfterVisit','actions']
+  displayedVisitsColumns = ['visits','visitDate','notes','amountPaid','actions']
+
+  displayedInvoiceColumns = ['La facture ', 'payments','invoiceDate', 'invoiceNumber', 'remainingDue', 'totalAmount', 'totalPaid'];
+
+  displayedPaymentColumns = ['payments','id','amount','method','paymentDate'];
 
   /***
   displayedMedicalRecordColumns = ['id','chief_complaint','clinical_diagnos',
@@ -131,10 +161,12 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
 
   ngOnInit(): void {
 
+   
     effect(() => {
      // console.log('expandedPatientElement changed to:', this.expandedPatientElement());
     });
     this.lengthOfDisplayedPatientColumns = this.displayedMedicalRecordColumns.length
+   
     this.loadPatiens(); 
   }
 
@@ -159,7 +191,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
       next: (response: any) =>{
 
 
-        console.log("Patiens",response['hydra:member'] );
+       // console.log("Patiens",response['hydra:member'] );
         const data = response['hydra:member'] || [];
         const total = response['hydra:totalItems'] || data.length; // Prefer 'hydra:totalItems' if available
 
@@ -167,8 +199,8 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
         this.totalPatientItem = total;
 
 
-        console.log("Fetched Medical Records:", data.length);
-        console.log("Total Medical Records:", total);
+       // console.log("Fetched Medical Records:", data.length);
+       // console.log("Total Medical Records:", total);
         console.log("Patiens:", data);
       },
       error: (err) => {
@@ -197,7 +229,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          console.log("result",result)
+          //console.log("result",result)
           this.loadPatiens() 
         }
       });
@@ -228,26 +260,26 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
 
-        console.log("result",result)
+      //  console.log("result",result)
         this.loadPatiens() 
       }
     });
   }
 
-  openMedicalRecordDialog(appointment:any,patientId:number,event:Event)
+  openMedicalRecordDialog(appointments:AppointmentDto,patientId:number,event:Event)
   {
 
     event.preventDefault();
 
-    console.log("Patient:",appointment)
+  
     const dialogRef = this.dialog.open(AddMedicalRecordComponent,{
-      width: '60vw',   // 98% of the viewport width
+      width: '60vw',  // 98% of the viewport width
       height: '95h',  // 95% of the viewport height
       maxWidth: '98vw',
       maxHeight: '98vh',
       data:{
         patientId:patientId,
-        appointment:appointment
+        appointment:appointments
        }
     })
 
@@ -276,13 +308,22 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
               id:id as MedicalRecordDto} 
           }
       )
-         this.loadPatiens() 
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log("result",result)
+        if (result) {
+          console.log("hello visits");       
+          this.loadPatiens() 
+        }
+      });
+      
+      this.loadPatiens() 
   }
 
   openAppointmentDialog(patientId:number)
   {
       
-       const dialogRef = this.dialog.open(AddAppoitmentComponent,{      
+      const dialogRef = this.dialog.open(AddAppoitmentComponent,{      
           width: '60vw',   // 98% of the viewport width
           height: '95h',  // 95% of the viewport height
           maxWidth: '98vw',
@@ -296,7 +337,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
 
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log("result",result)
+        //console.log("result",result)
         if (result) {
                     
           this.loadPatiens() 
@@ -306,7 +347,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
 
   openUpdateAppointmentDialog(event:Event, appointmentId: number)
   {
-          const dialogRef = this.dialog.open(UpdateAppoitmentComponent,{      
+      const dialogRef = this.dialog.open(UpdateAppoitmentComponent,{      
           width: '60vw',   // 98% of the viewport width
           height: '95h',  // 95% of the viewport height
           maxWidth: '98vw',
@@ -318,7 +359,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
       )
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log("result",result)
+        //console.log("result",result)
         if (result) {
                     
           this.loadPatiens() 
@@ -335,7 +376,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
   
     //const val = new Date("2024-12-30");
     //const strVal = val.toISOString().split('T')[0]; // "2024-12-30"
-    console.log("filters", this.filters);
+    //console.log("filters", this.filters);
     const queryParams: any = {};
     this.filters.forEach(({ field, value }) => {
       if (typeof value === "object" && value !== null && !Array.isArray(value)) {
@@ -359,21 +400,22 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
 
       },
       error: (err) => {
-        console.error('Error updating patient:', err);
+        //console.error('Error updating patient:', err);
         alert('Error updating patient. Please try again.'); // Or use a snackbar
       }
     }))
    // this.patientDataSource.getFilterPatientByParms(queryParams)
   }
+  
   removeFilter(index: number) {
     this.filters.splice(index, 1);
   }
   
-
   resetFilters() {
     this.filters = [];
     this.applyFilters();
   }
+
   goToDetails(patientId: number) {
     this.router.navigate(['store', 'patients', patientId, 'details']);
   }
@@ -389,7 +431,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
 
   openCreateVisitDialog(medicalRecord:MedicalRecordDto){
    
-   console.log(medicalRecord);
+    console.log(medicalRecord);
     const dialog = this.dialog.open(VisitAddComponent,({
                 width: '60vw',   // 98% of the viewport width
           height: '95h',  // 95% of the viewport height
@@ -399,6 +441,75 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
             medicalRecord:medicalRecord as MedicalRecordDto
           }
     })) 
+
+    dialog.afterClosed().subscribe(result => {
+      console.log("result",result)
+      if (result) {
+        console.log("hello visits");       
+        this.loadPatiens() 
+      }
+    });
+  }
+
+  openUpdateVisitDialog(medicalRecord:MedicalRecordDto,visit:VisitDto){
+   
+      console.log("visit",visit);
+      const dialog = this.dialog.open(VisitEditComponent,({
+            width: '60vw',   // 98% of the viewport width
+            height: '95h',  // 95% of the viewport height
+            maxWidth: '98vw',
+            maxHeight: '98vh',
+            data: {
+              visit:visit as VisitDto,
+              medicalRecord:medicalRecord as  MedicalRecordDto
+            }
+      })) 
+
+      dialog.afterClosed().subscribe(result => {
+        console.log("result",result)
+        if (result) {
+          console.log("hello visits");       
+          this.loadPatiens() 
+        }
+      });
+  }
+  openDeleteVistiDialog(visitId:any){
+    const dialogRef = this.dialog.open(VisitDeleteComponent, {
+        width: '400px',
+        data:{
+          visitId:visitId
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // ✅ Perform delete logic here
+          this.loadPatiens();
+        }
+      });
   }
   
+
+
+
+  th(invCol:any)
+  {
+      console.log("hello",invCol)
+  }
+
+
+  toggleExpandedPayment(invoice: Invoice) {
+
+  
+   // invoice.showPayments = !invoice.showPayments;
+    console.log("invoice",invoice)
+  }
+
+  isExpandedPayment(index: number, invoice: Invoice) {
+    return true
+    return invoice.showPayments === true;
+  }
+
+  
+
 }

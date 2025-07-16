@@ -27,7 +27,8 @@ export class VisitAddComponent {
     public dialogRefer: MatDialogRef<VisitAddComponent>,
     public visitDataSourceService: VisitDataSourceService,
     @Inject(MAT_DIALOG_DATA) public medicalRecord: any
-  ) {
+  ) 
+  {
     // Assign values from the dialog data
     this.totalPaidFromDb = this.medicalRecord.medicalRecord.totalPaid;
     this.totalAgreedAmount = this.medicalRecord.medicalRecord.remainingDue + this.totalPaidFromDb;
@@ -50,19 +51,20 @@ export class VisitAddComponent {
       this.updatedTotalPaid = this.totalPaidFromDb + Number(paid || 0);
       this.updatedRemainingDue = this.totalAgreedAmount - this.updatedTotalPaid;
     });
+    
   }
 
-  onSubmit(event:Event): void {
-
+  onSubmit(event: Event): void {
     event.preventDefault();
+
     if (this.formVisitBuilder.valid) {
       const formValue = this.formVisitBuilder.value;
       const payload = {
-        visit_date:  new Date(formValue.visit_date).toISOString().slice(0, 10),
+        visit_date: new Date(formValue.visit_date).toISOString().slice(0, 10),
         type: formValue.type,
-        duration_minutes:parseFloat(formValue.duration_minutes) ,
-        amount_paid: parseFloat(formValue.amount_paid) ,
-        remaining_due_after_visit:  700,
+        duration_minutes: parseInt(formValue.duration_minutes),
+        amount_paid: parseFloat(formValue.amount_paid),
+        remaining_due_after_visit: this.updatedRemainingDue,
         notes: formValue.notes,
         payments: [
           {
@@ -70,23 +72,23 @@ export class VisitAddComponent {
             payment_date: new Date(formValue.payment_date).toISOString().slice(0, 10)
           }
         ]
-      } ;
+      };
 
-      this.visitDataSourceService.postVisit(payload,this.medicalRecordId).subscribe({
+      this.visitDataSourceService.postVisit(payload, this.medicalRecordId).subscribe({
+        next: () => {
+          this.dialogRefer.close(true); // ✅ Close once with true
+        },
+        error: (err) => {
+          console.error('Error creating Visited:', err);
+          alert('Error updating patient. Please try again.');
+        }
+      });
 
-      next: () => {
-        console.log('Visited successfully!');
-        this.dialogRefer.close(true); // Close dialog and return success flag
-      },
-      error: (err) => {
-        console.error('Error creating Visited:', err);
-        alert('Error updating patient. Please try again.'); // Or use a snackbar
-      }
-    })
-      console.log('Visit Submitted:', payload);
-      this.dialogRefer.close(payload); // Optionally close modal
+      // ❌ REMOVE this:
+      // this.dialogRefer.close(payload);
     } else {
       this.formVisitBuilder.markAllAsTouched();
     }
   }
+
 }

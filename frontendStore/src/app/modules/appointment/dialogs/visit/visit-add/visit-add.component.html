@@ -8,19 +8,19 @@
       <h3>Calculateur de paiement</h3>
       <div class="calc-grid">
         <div><strong>Montant total convenu :</strong></div>
-        <div>{{ totalAgreedAmount | currency:'MAD' }}</div>
+        <div>{{ totalAgreedAmount | currency:' MAD ' }}</div>
 
         <div><strong>Total déjà payé :</strong></div>
-        <div>{{ totalPaidFromDb | currency:'MAD' }}</div>
+        <div>{{ totalPaidFromDb | currency:' MAD ' }}</div>
 
         <div><strong>Montant payé maintenant :</strong></div>
-        <div>{{ formVisitBuilder.get('amount_paid')?.value || 0 | currency:'MAD' }}</div>
+        <div>{{ formVisitBuilder.get('amount_paid')?.value || 0 | currency:' MAD ' }}</div>
 
         <div><strong>Nouveau total payé :</strong></div>
-        <div>{{ updatedTotalPaid | currency:'MAD' }}</div>
+        <div>{{ updatedTotalPaid | currency:' MAD ' }}</div>
 
         <div><strong>Reste après visite :</strong></div>
-        <div class="highlight">{{ updatedRemainingDue | currency:'MAD' }}</div>
+        <div class="highlight">{{ updatedRemainingDue | currency:' MAD ' }}</div>
       </div>
     </div>
 

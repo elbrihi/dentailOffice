@@ -20,12 +20,12 @@ export class UpdateAppoitmentComponent implements OnInit{
 
   )
   {
-         this.FormAppointmentBuilder = this.fb.group({
-                id: [''],
-                appointmentDate: ['', Validators.required],
-                reason:['',Validators.required],
-                status: [true]
-              });
+    this.FormAppointmentBuilder = this.fb.group({
+      id: [''],
+      appointmentDate: ['', Validators.required],
+      reason:['',Validators.required],
+      status: [true]
+    });
   }
 
     public appointmentDataSource = inject(AppointmentDataSource);

@@ -163,11 +163,12 @@ class MedicalRecord
 
     #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'medicalRecord' , cascade: ['persist', 'remove'])]
     #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[ORM\OrderBy(['id' => 'DESC'])]
     #[MaxDepth(1)]
     private Collection $visits;
 
     #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'medicalRecord', cascade: ['persist', 'remove'])]
-    #[Groups(['medical_record:read','medical_record:write'])]
+    #[Groups(['patient:read','patient:write','medical_record:read','medical_record:write'])]
     private Collection $invoice;
 
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'medicalRecord')]

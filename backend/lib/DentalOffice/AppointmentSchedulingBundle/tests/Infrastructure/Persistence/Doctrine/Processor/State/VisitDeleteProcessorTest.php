@@ -22,7 +22,7 @@ class VisitDeleteProcessorTest extends VisitApiTestCase
 
         $context['request'] = $request;
      
-        $uriVariables['visitId'] =static::$visitId;
+        $uriVariables['id'] =static::$visitId;
 
 
         $this->visitDeleteStateProcessor->process($visit, $operation, $uriVariables, $context);

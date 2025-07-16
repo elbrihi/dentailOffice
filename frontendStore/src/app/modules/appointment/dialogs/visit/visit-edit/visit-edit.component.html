@@ -1,0 +1,79 @@
+<div class="appointment-container mat-elevation-z4">
+  <h2 class="patient-title">Les informations du patient</h2>
+
+  <form class="appointment-form" [formGroup]="visitFormBuilder" (ngSubmit)="updateVisit()">
+    
+      <!-- 📊 CALCULATOR -->
+    <div class="visit-calculator mat-elevation-z2">
+      <h3>Calculateur de paiement</h3>
+      <div class="calc-grid">
+        <div><strong>Montant total convenu :</strong></div>
+
+        <div> {{totalAgreedAmount | currency:' MAD '}}</div>
+
+        <div><strong>Total déjà payé :</strong></div>
+        <div>{{ totalPaidFromDb | currency:' MAD ' }}</div>
+
+        <div><strong>Montant payé maintenant :</strong></div>
+        <div>{{ visitFormBuilder.get('amount_paid')?.value || 0 | currency:' MAD ' }}</div>
+
+        <div><strong>Nouveau total payé :</strong></div>
+        <div>{{ updatedTotalPaid | currency:' MAD ' }}</div>
+
+        <div><strong>Reste après visite :</strong></div>
+        <div class="highlight">{{ updatedRemainingDue | currency:' MAD ' }}</div>
+      </div>
+    </div>
+
+
+    <div class="mat-form-fields">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Date de la visite</mat-label>
+          <input matInput [matDatepicker]="visitDatePicker" formControlName="visit_date">
+          <mat-datepicker-toggle matIconSuffix [for]="visitDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #visitDatePicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Type de visite</mat-label>
+          <input matInput formControlName="type" placeholder="consultation / traitement ...">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Durée (minutes)</mat-label>
+          <input matInput type="number" formControlName="duration_minutes">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Montant payé</mat-label>
+          <input matInput type="number" formControlName="amount_paid">
+        </mat-form-field>
+
+
+        <mat-form-field appearance="outline" class="form-field" appearance="fill">
+          <mat-label>Notes</mat-label>
+          <textarea matInput formControlName="notes" rows="3"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Méthode de paiement</mat-label>
+          <input matInput formControlName="payment_method">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Date de paiement</mat-label>
+          <input matInput [matDatepicker]="paymentDatePicker" formControlName="payment_date">
+          <mat-datepicker-toggle matIconSuffix [for]="paymentDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #paymentDatePicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" 
+      
+            >
+      Enregistrer</button>
+      <button mat-raised-button color="warn" type="reset" >Annuler</button>
+    </div>
+  </form>
+</div>

@@ -167,14 +167,26 @@
                 <!--  Medical Records -->
                 <ng-container matColumnDef="detailsMatRecord">
                   <td mat-cell [attr.colspan]="medicalRecordColSpan" *matCellDef="let patient">
-                    <table mat-table class="full-width-table medical-record-table"
+                    <div class="sub-table-wrapper">
+                      <table mat-table class="full-width-table medical-record-table"
                           [dataSource]="patient.medicalRecord"
                           multiTemplateDataRows
                           class="mat-elevation-z1">
 
                       <!-- Columns -->
                       <ng-container *ngFor="let column of displayedMedicalRecordColumns" [matColumnDef]="column">
-                        <th mat-header-cell *matHeaderCellDef>{{ columnLabels[column] || column }}</th>
+                        <!-- normalHeader -->
+                        <th mat-header-cell *matHeaderCellDef>
+                          <ng-container *ngIf="column === 'actions'; else normalHeader">
+                            <button mat-icon-button color="primary" (click)="openMedicalRecordDialog(patient.appointments,patient.id,$event)">
+                              <mat-icon>add</mat-icon>
+                            </button>
+                          </ng-container>
+                          <ng-template #normalHeader>
+                            {{ columnLabels[column] || column }}
+                          </ng-template>
+                        </th>
+
                         <td mat-cell *matCellDef="let record">
                           <ng-container [ngSwitch]="column">
                             <ng-container *ngSwitchCase="'actions'">
@@ -193,7 +205,7 @@
                                   <button mat-icon-button color="warn">
                                     <mat-icon aria-label="Delete medicalRecord">delete</mat-icon>
                                   </button>
-                                </ng-container>
+                              </ng-container>
                             </ng-container>
 
                             <ng-container *ngSwitchCase="'prescription'">
@@ -202,7 +214,7 @@
                               </button>
                             </ng-container>
                             <ng-container *ngSwitchDefault>
-                             {{ record[column] }}
+                              {{ record[column] }}
                             </ng-container>
                           </ng-container>
                         </td>
@@ -220,6 +232,8 @@
                       <tr mat-row *matRowDef="let record; columns: ['expandedVisitDetail']" class="expanded-row"
                           [class.hidden]="expandedRecord !== record"></tr>
 
+                      <tr mat-row *matRowDef="let record; columns:['expandedInvoiceDetail'] " class="expanded-row"
+                             [class.hidden]="expandedRecord !== record" ></tr>
                       <!-- Extra column to hold prescription table -->
                       <ng-container matColumnDef="expandedDetail">
                         <td mat-cell *matCellDef="let record" [attr.colspan]="displayedMedicalRecordColumns.length">
@@ -250,17 +264,28 @@
                             <table mat-table [dataSource]="record.visits" class="prescription-table mat-elevation-z1">
 
                               <ng-container *ngFor="let vCol of displayedVisitsColumns" [matColumnDef]="vCol">
-                                <th mat-header-cell *matHeaderCellDef>{{ columnLabels[vCol] || vCol }}</th>
+                                <!--  Visits -->
+                                <th mat-header-cell *matHeaderCellDef>
+                                    
+                                  <ng-container *ngIf="vCol === 'actions'; else normalHeader">
+                                    <button mat-icon-button color="primary" (click)="openCreateVisitDialog(record)">
+                                      <mat-icon>add</mat-icon>
+                                    </button>
+                                  </ng-container>
+                                  <ng-template  #normalHeader>
+                                      {{ columnLabels[vCol] || vCol }}
+                                  </ng-template>                                
+                                </th>
                                 <td mat-cell *matCellDef="let visit">
                                   <ng-container [ngSwitch]="vCol">
                                     <ng-container *ngSwitchCase="'actions'">
                                       <button mat-icon-button color="primary" >
                                         <mat-icon>visibility</mat-icon>
                                       </button>
-                                      <button mat-icon-button color="accent" >
+                                      <button mat-icon-button color="accent" (click)="openUpdateVisitDialog(record,visit)" >
                                         <mat-icon>edit</mat-icon>
                                       </button>
-                                      <button mat-icon-button color="warn">
+                                      <button mat-icon-button color="warn" (click)="openDeleteVistiDialog(visit.id)" >
                                         <mat-icon>delete</mat-icon>
                                       </button>
                                     </ng-container>
@@ -289,8 +314,72 @@
 
                         </td>
                       </ng-container>
+
+                      <ng-container matColumnDef="expandedInvoiceDetail">
+                        <td mat-cell *matCellDef="let record" [attr.colspan]="displayedMedicalRecordColumns.length">
+                          <!-- ✅ If there are invoices -->
+                          <ng-container *ngIf="record.invoice?.length; else noInvoices">
+                            <table mat-table [dataSource]="record.invoice" class="prescription-table mat-elevation-z1" multiTemplateDataRows>
+
+                              <!-- ✅ Invoice Columns -->
+                              <ng-container *ngFor="let invCol of displayedInvoiceColumns" [matColumnDef]="invCol">
+                                <th mat-header-cell *matHeaderCellDef>{{ invCol }}</th>
+                                <td mat-cell *matCellDef="let invoice">
+                                  <ng-container [ngSwitch]="invCol">
+                                    <!-- ✅ Toggle button in 'payments' column -->
+                                    <ng-container *ngSwitchCase="'payments'">
+                                      <button mat-icon-button (click)="toggleExpandedPayment(invoice)">
+                                        <mat-icon>{{ invoice.showPayments ? 'expand_less' : 'expand_more' }}</mat-icon>
+                                      </button>
+                                    </ng-container>
+
+                                    <!-- ✅ Normal cell -->
+                                    <ng-container *ngSwitchDefault>
+                                      {{ invoice[invCol] }}
+                                    </ng-container>
+                                  </ng-container>
+                                </td>
+                              </ng-container>
+
+                              <!-- ✅ Normal header and row -->
+                              <tr mat-header-row *matHeaderRowDef="displayedInvoiceColumns"></tr>
+                              <tr mat-row *matRowDef="let invoice; columns: displayedInvoiceColumns"></tr>
+
+                              <!-- ✅ Payments expanded row with WHEN condition -->
+                              <tr mat-row *matRowDef="let invoice; columns: ['expandedPaymDetail']; when: isExpandedPayment"></tr>
+
+                              <!-- ✅ Expanded Payment Column -->
+                              <ng-container matColumnDef="expandedPaymDetail">
+                                <td mat-cell *matCellDef="let invoice" [attr.colspan]="displayedInvoiceColumns.length">
+                                  <table mat-table [dataSource]="invoice.payments" class="payments-table mat-elevation-z1" multiTemplateDataRows>
+                                    <!-- Payment columns -->
+                                    <ng-container *ngFor="let payCol of displayedPaymentColumns" [matColumnDef]="payCol">
+                                      <th mat-header-cell *matHeaderCellDef>{{ payCol }}</th>
+                                      <td mat-cell *matCellDef="let payment">{{ payment[payCol] }}</td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedPaymentColumns"></tr>
+                                    <tr mat-row *matRowDef="let payment; columns: displayedPaymentColumns"></tr>
+                                  </table>
+                                </td>
+                              </ng-container>
+                            </table>
+                          </ng-container>
+
+                          <!-- ✅ No invoices fallback -->
+                          <ng-template #noInvoices>
+                            <div class="no-data-container">
+                              <em>No invoices created yet</em>
+                            </div>
+                          </ng-template>
+
+                        </td>
+                      </ng-container>
+
                      
                     </table>
+                    </div>
+
                   </td>
                 </ng-container>
 

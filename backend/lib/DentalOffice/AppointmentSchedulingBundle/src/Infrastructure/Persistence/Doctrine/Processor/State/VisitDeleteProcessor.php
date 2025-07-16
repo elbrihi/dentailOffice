@@ -36,7 +36,7 @@ class VisitDeleteProcessor implements ProcessorInterface
     }
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        $visitId = $uriVariables['visitId'] ?? null;
+        $visitId = $uriVariables['id'] ?? null;
 
         if (!$visitId) {
             throw new BadRequestHttpException('Missing visitId.');
@@ -48,18 +48,12 @@ class VisitDeleteProcessor implements ProcessorInterface
         }
 
         $medicalRecord = $visit->getMedicalRecord();
-
         $medicalRecordId = $medicalRecord->getId();
-        
-
 
         $this->removeProcessor->process($visit, $operation, $uriVariables, $context);
 
-               
-        // Dispatch the event
-        $event = new VisitCreatedEvent($visit,  $medicalRecordId);
+        $event = new VisitCreatedEvent($visit, $medicalRecordId);
         $this->dispatcher->dispatch($event, VisitCreatedEvent::class);
-
 
         $invoiceEvent = new InvoiceUpdatedEvent($medicalRecordId);
         $this->dispatcher->dispatch($invoiceEvent, InvoiceUpdatedEvent::class);

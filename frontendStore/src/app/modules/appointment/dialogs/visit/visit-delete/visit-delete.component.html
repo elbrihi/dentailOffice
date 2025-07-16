@@ -1,0 +1,16 @@
+<div class="delete-dialog mat-elevation-z4">
+  <h2 class="delete-dialog__title">Supprimer La visite</h2>
+  <p class="delete-dialog__message">
+    Cette action est irréversible.<br>
+    Êtes-vous sûr de vouloir continuer ?
+  </p>
+
+  <div class="delete-dialog__actions">
+    <button mat-flat-button color="warn" (click)="confirmDelete()">
+      Supprimer
+    </button>
+    <button mat-stroked-button color="primary" (click)="close()">
+      Annuler
+    </button>
+  </div>
+</div>

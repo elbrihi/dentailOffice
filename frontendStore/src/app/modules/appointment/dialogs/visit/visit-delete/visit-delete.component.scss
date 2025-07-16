@@ -1,0 +1,60 @@
+:root {
+  --sys-primary: #1e88e5;
+  --sys-surface-container: #1a1a1a; // Slightly lighter for contrast
+  --sys-on-surface: #f0f0f0;
+  --sys-border: #333;
+}
+
+.delete-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: var(--sys-surface-container);
+  color: var(--sys-on-surface);
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+  &__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid var(--sys-border);
+    padding-bottom: 12px;
+  }
+
+  &__message {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    button {
+      min-width: 120px;
+      font-weight: 500;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .delete-dialog {
+    padding: 24px;
+
+    &__actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
