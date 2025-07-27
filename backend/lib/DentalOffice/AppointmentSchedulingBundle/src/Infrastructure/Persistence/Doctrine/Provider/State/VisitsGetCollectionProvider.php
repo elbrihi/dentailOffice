@@ -16,7 +16,7 @@ class VisitsGetCollectionProvider implements ProviderInterface
     {
 
     }
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): Paginator
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable 
     {
 
     //dd($qb->getQuery()->getSQL(), $qb->getParameters());
@@ -27,25 +27,45 @@ class VisitsGetCollectionProvider implements ProviderInterface
         $page = $context["filters"]["page"] ?? 1;
         $itemsPerPage = $context["filters"]["itemsPerPage"] ?? 30;
 
-        if (isset($context["filters"]["befor_vist_date"])) {
+        if(isset($context["filters"]["befor_visit_date"]) &&
+        isset($context["filters"]["after_visit_date"]))
+        {
+            $afterDate = new \DateTimeImmutable($context["filters"]["after_visit_date"]);
+            $beforeDate = new \DateTimeImmutable($context['filters']['befor_visit_date'] . ' 23:59:59'); // End of day
 
-            
-            $beforeDate = new \DateTime($context['filters']['befor_vist_date']);
-            $qb->andWhere('v.visitDate <= :beforeDate')
-            ->setParameter('beforeDate', $beforeDate->format('Y-m-d') . ' 23:59:59');
-        }
+            $qb->andWhere('v.visitDate BETWEEN :afterDate AND :beforeDate')
+                ->setParameter('afterDate', $afterDate)
+                ->setParameter('beforeDate', $beforeDate);
 
-        if (isset($context["filters"]["after_vist_date"])) {
-            $afterDate = new \DateTime($context['filters']['after_vist_date']);
+
+        }elseif(isset($context["filters"]["after_visit_date"]))
+        {
+            $afterDate = new \DateTimeImmutable($context["filters"]["after_visit_date"]);
+
             $qb->andWhere('v.visitDate >= :afterDate')
-            ->setParameter('afterDate', $afterDate->format('Y-m-d') . ' 00:00:00');
+                ->setParameter('afterDate', $afterDate);
+        }
+        elseif(isset($context["filters"]["befor_visit_date"]))
+        {
+            $beforDate = new \DateTimeImmutable($context["filters"]["befor_visit_date"] . ' 23:59:59');
+
+            $qb->andWhere('v.visitDate <= :beforDate') // ✅ Corrigé ici
+            ->setParameter('beforDate', $beforDate);
         }
 
+        
+        
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $qb->setFirstResult($firstResult)
         ->setMaxResults($itemsPerPage);
 
-        return new Paginator($qb->getQuery());
+        $paginator = new Paginator($qb->getQuery());
+
+
+        return $paginator ;
+     //   return iterator_to_array($paginator); // <-- returns only current page items
     }
 }
+
+// iterable

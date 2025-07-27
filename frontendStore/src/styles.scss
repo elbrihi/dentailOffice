@@ -14,6 +14,8 @@
 
   --appointment-bg: var(--sys-secondary-container);       // Light gray-blue
   --appointment-border: var(--sys-on-secondary-container); // Navy gray
+
+  
 }
 
 // Section-specific styles
@@ -178,6 +180,10 @@ html {
   --sys-surface-container-highest: rgb(226 226 233);
   --scrollable-bg: var(--sys-surface);
   --scrollable-border: var(--sys-outline);
+
+
+    --patient-row-bg: #bbdefb; /* light blue */
+  --patient-row-text: #0d47a1; /* optional */
 }
 
 .dark {
@@ -230,5 +236,9 @@ html {
   --sys-surface-container: rgb(29 32 36);
   --sys-surface-container-high: rgb(40 42 47);
   --sys-surface-container-highest: rgb(51 53 58);
+
+
+  --patient-row-bg: var(--sys-primary-container); /* uses Material blue for dark */
+  --patient-row-text: var(--sys-on-primary-container); /* readable light text */
 }
 

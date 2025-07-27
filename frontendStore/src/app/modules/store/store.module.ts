@@ -1,8 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 
 import { RouterModule } from "@angular/router";
-
-
 import { CommonModule } from "@angular/common";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -47,6 +45,9 @@ import { UpdateAppoitmentComponent } from "../appointment/dialogs/update-appoitm
 import { VisitAddComponent } from "../appointment/dialogs/visit/visit-add/visit-add.component";
 import { VisitEditComponent } from "../appointment/dialogs/visit/visit-edit/visit-edit.component";
 import { VisitDeleteComponent } from "../appointment/dialogs/visit/visit-delete/visit-delete.component";
+import { PatientDetailsComponent } from "../patient/components/patient-details/patient-details.component";
+import { InvoicesListComponent } from "../invoice/components/invoices-list/invoices-list.component";
+import { VisitListComponent } from '../appointment/visit/components/visit-list/visit-list.component';
 
 @NgModule({
     declarations: [
@@ -90,6 +91,9 @@ import { VisitDeleteComponent } from "../appointment/dialogs/visit/visit-delete/
         VisitAddComponent,
         VisitEditComponent,
         VisitDeleteComponent,
+        PatientDetailsComponent,
+        InvoicesListComponent,
+        VisitListComponent,
 
 
 
@@ -143,6 +147,10 @@ import { VisitDeleteComponent } from "../appointment/dialogs/visit/visit-delete/
         VisitAddComponent,
         VisitEditComponent,
         VisitDeleteComponent,
+        PatientDetailsComponent,
+        InvoicesListComponent,
+        VisitListComponent,
+
 
 
     ],

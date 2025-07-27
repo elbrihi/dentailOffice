@@ -1,3 +1,4 @@
+import { MedicalRecordDto } from "../../patient/models/medical-record-dto";
 import { PaymentDto } from "../../payment/models/payment-dto";
 
 export interface InvoiceDto
@@ -9,6 +10,7 @@ export interface InvoiceDto
     totalPaid: number;
     expandedPrescriptions?: boolean;
     payments: PaymentDto[];
+    medicalRecord: MedicalRecordDto[];
 
 }
 

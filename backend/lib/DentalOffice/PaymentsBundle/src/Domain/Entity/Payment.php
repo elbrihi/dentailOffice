@@ -27,19 +27,19 @@ class Payment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write'])]
+    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write','invoice:write','invoice:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write'])]
+    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write','invoice:write','invoice:read'])]
     private ?float $amount = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write'])]
+    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write','invoice:write','invoice:read'])]
     private ?string $method = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write'])]
+    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write','invoice:write','invoice:read'])]
     private ?\DateTimeInterface $paymentDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]

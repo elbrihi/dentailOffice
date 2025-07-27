@@ -1,6 +1,10 @@
 :root {
   --scrollable-bg: #f0f0f0;
   --scrollable-border: #ccc;
+  --patient-row-bg: #bbdefb; /* light blue */
+
+
+  
 }
 .expanded-row.hidden {
   display: none;
@@ -187,4 +191,14 @@
 
 .create-visit-cta button {
   font-weight: bold;
+}
+
+.patient-row td {
+  background-color: var(--patient-row-bg);
+  color: var(--patient-row-text); // optional if you need contrast
+  font-weight: bold;
+}
+
+.hidden {
+  display: none !important;
 }

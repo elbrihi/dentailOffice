@@ -35,7 +35,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
   patients: any[] = []
   totalPatientItem: number = 4;
   currentPatientPage: number = 1;
-  itemsPatientPerPage: number = 1;
+  itemsPatientPerPage: number = 4;
   readonly id = signal(0);
  
 
@@ -97,7 +97,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'name']
-  displayedPatientColumns = ['patient','id','lastName', 'firstName','cni', 'gender','phone',
+  displayedPatientColumns = ['patient','id','lastName', 'firstName','cni', 
                               'createdAt','actions'
                           ]
               
@@ -150,7 +150,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
     return row && Array.isArray(row.prescriptions) && row.prescriptions.length > 0;
 };
 
-medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
+medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length + 4;
 
   constructor(){}
 
@@ -195,6 +195,7 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
         const data = response['hydra:member'] || [];
         const total = response['hydra:totalItems'] || data.length; // Prefer 'hydra:totalItems' if available
 
+        console.log("hello patient", data)
         this.listPatient.data = data;
         this.totalPatientItem = total;
 
@@ -510,6 +511,24 @@ medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length;
     return invoice.showPayments === true;
   }
 
+
+
+  // Track the hidden state of each patient
+hiddenPatients: Set<number> = new Set();
+
+// Toggle function
+togglePatientVisibility(patient: PatientDTO): void {
+  if (this.hiddenPatients.has(patient.id)) {
+    this.hiddenPatients.delete(patient.id);
+  } else {
+    this.hiddenPatients.add(patient.id);
+  }
+}
+
+// Helper function to check visibility
+isPatientVisible(patient: PatientDTO): boolean {
+  return !this.hiddenPatients.has(patient.id);
+}
   
 
 }

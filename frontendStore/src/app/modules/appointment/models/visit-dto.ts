@@ -1,14 +1,18 @@
+import { MedicalRecordDto } from "../../patient/models/medical-record-dto";
+import { PaymentDto } from "../../payment/models/payment-dto";
+
 export interface VisitDto
 {
     id: number;
-    visit_date: any;
+    visitDate: any;
     notes: string;
-    amount_paid: number;
-    remaining_due_after_visit: number;
-    duration_minutes: number;
+    amountPaid: number;
+    remainingDueAfterVisit: number;
+    durationMinutes: number;
     type: string;
     createdAt:any;
-    modifiedAt:any;
     createdBy:any;
+    payments: PaymentDto[];
+    medicalRecord: MedicalRecordDto[];
 
 }

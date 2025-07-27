@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RestDataSource } from '../../../core/services/rest-data-source.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { VisitDto } from '../models/visit-dto';
 import { catchError, throwError } from 'rxjs';
 
@@ -66,7 +66,59 @@ export class VisitDataSourceService extends RestDataSource{
 
   }
 
+  getVisitsByPagination(page: number,itemsPerPage:number)
+  {
+      console.log("hello world!");
+      const url = `${this.baseUrl}/get/visits/by/paginations`;
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+        'Content-Type': 'application/ld+json', // Ensure this is set correctly
+      })
+      const params = new HttpParams()
+            .set('itemsPerPage',itemsPerPage.toString())
+            .set('page',page.toString());
+      return this.http.get<VisitDto[]>(url, 
+        {params:params,
+        headers: headers
+        }).pipe(
+          catchError(err =>{
+             console.error('API error:', err);
+        return throwError(() => new Error('Unable to get vists.'));
+          })
+        )
+  }
 
-  
+  getVisitsByParams(page: number,itemsPerPage:number,queryParams: { [param: string]: any })
+  {
+      const url = `${this.baseUrl}/get/visits/by/paginations`;
+            const headers = new HttpHeaders({
+        'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+        'Content-Type': 'application/ld+json', // Ensure this is set correctly
+      })
+     
+        // Start with page and itemsPerPage
+      let params = new HttpParams()
+        .set('page', page.toString())
+        .set('itemsPerPage', itemsPerPage.toString());
+
+      // Add custom filter query parameters
+      Object.entries(queryParams || {}).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          params = params.set(key, value);
+        }
+      });
+
+      
+      return this.http.get<any>(url, {
+          params: params, // ✅ Final combined HttpParams
+          headers: headers
+        }).pipe(
+          catchError(err => {
+            console.error('API error:', err);
+            return throwError(() => new Error('Unable to get visits.'));
+          })
+      );
+
+  }
 
 }

@@ -1,0 +1,153 @@
+<div class="theme-container">
+    <div class="title">title</div>
+  
+    <!--- Filter card  -->
+
+    <div class="searchFiler">
+      <mat-card class="filter-card">
+        <mat-card-title>Filtres avancés</mat-card-title>
+  
+        
+        <div *ngFor="let filter of filters, let i = index" class="filter-row">
+          <!-- Field Filter -->
+          <mat-form-field>
+            <mat-label>Champ</mat-label>
+            <mat-select  [(ngModel)]="filter.field"  (click)="onSelect(filter.field)">
+                <mat-option *ngFor="let field of availableFields" [value]="field.value">
+                  {{field.label}}
+                </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Opérateur</mat-label>
+            <mat-select [(ngModel)]="filter.operator" (selectionChange)="onOperatorChange(filter)">
+              <mat-option value="equals">Égale</mat-option>
+              <mat-option values="contains">Contient</mat-option>
+              <mat-option *ngIf="filter.field==='visit_date'"
+                value="befor"
+              >
+                Apres
+              </mat-option>
+              <mat-option *ngIf="filter.field==='visit_date'"
+              
+                value="after"
+              >
+                Avant
+              </mat-option>
+              <mat-option *ngIf="filter.field==='visit_date'"
+              
+                value="between"
+              >
+                Entre
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <!-- Value Input -->
+          <ng-container [ngSwitch]="filter.operator">
+            
+            <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'befor'">
+                 <mat-label>Choose a date</mat-label>
+                  <input matInput [matDatepicker]="picker"  [(ngModel)]="filter.value.befor_visit_date" placeholder="Début"/>
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'after'">
+                  <mat-label>Choose a date</mat-label>
+                  <input matInput [matDatepicker]="picker"  [(ngModel)]="filter.value.after_visit_date" placeholder="Début"/>
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'between'">
+                 <mat-label>Choose a date</mat-label>
+                  <input matInput [matDatepicker]="picker"  [(ngModel)]="filter.value.befor_visit_date" placeholder="Début"/>
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'between'">
+                  <mat-label>Choose a date</mat-label>
+                  <input matInput [matDatepicker]="picker"  [(ngModel)]="filter.value.after_visit_date" placeholder="Début"/>
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            
+          </ng-container>
+
+          <button mat-icon-button color="warn" (click)="removeFilter(i)">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        
+        
+        </div>
+  
+      <!-- Filter Buttons -->
+      <div class="filter-buttons">
+        <button mat-button color="primary" (click)="addFilter()">
+          <mat-icon>add</mat-icon> Ajouter un filtre
+        </button>
+        <button mat-raised-button color="accent" (click)="applyFilters()" >Rechercher</button>
+        <button mat-raised-button  (click)="resetFilters()" >Réinitialiser</button>
+      </div>
+      </mat-card>
+    </div>
+    <!-- Table and Paginator -->
+    <div class="scrollable">
+     
+  
+      <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="listVisits" class="full-width-table" matSort multiTemplateDataRows>
+
+          <ng-container *ngFor="let column of displayedVisitsColumns" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{columnLabels[column]  | titlecase }}</th>
+            <td mat-cell *matCellDef="let visit">
+              <ng-container [ngSwitch]="column">
+                <span *ngSwitchCase="'id'">{{ visit.id }}</span>
+                <span *ngSwitchCase="'visitors'">{{visit.medicalRecord.patient.firstName}}  {{visit.medicalRecord.patient.lastName}}</span>
+                <span *ngSwitchCase="'cni'">{{ visit.cni}}</span>
+                <span *ngSwitchCase="'visitDate'">{{ visit.visitDate }}</span>
+                <span *ngSwitchCase="'durationMinutes'">{{visit.durationMinutes}} mins</span>
+                <span *ngSwitchCase="'notes'">{{visit.notes}}</span>
+
+                <span *ngSwitchCase="'actions'">
+                  <button mat-icon-button color="primary"><mat-icon>visibility</mat-icon></button>
+                  <button mat-icon-button color="accent"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+                </span>
+              </ng-container>
+            </td>
+          </ng-container>
+
+  
+          <tr mat-header-row *matHeaderRowDef="displayedVisitsColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedVisitsColumns"></tr>
+        </table>
+      </div>
+  
+      <mat-paginator 
+        [length]="totalVisitsItem"
+        [pageSize]="3"
+        [pageSizeOptions]="[1,2,3,5, 10, 25, 100]"
+        aria-label="Select page"
+        (page)="onVisitPageChange($event)"
+       
+      >
+    </mat-paginator>
+    </div>
+  </div>

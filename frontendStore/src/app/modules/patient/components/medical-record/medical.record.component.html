@@ -24,7 +24,9 @@
               <mat-option value="equals">Égale</mat-option>
               <mat-option value="contains">Contient</mat-option>
               <mat-option  *ngIf="filter.field === 'visit_date' ||
-                                filter.field === 'birthDate'" value="between">
+                                filter.field === 'birthDate'" 
+                                value="between"
+                >
                 Entre
               </mat-option>
               

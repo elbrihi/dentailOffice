@@ -1,3 +1,4 @@
+import { MedicalRecordDto } from "../../patient/models/medical-record-dto";
 import { PaymentDto } from "../../payment/models/payment-dto";
 import { InvoiceDto } from "./invoiceDto";
 
@@ -9,7 +10,8 @@ export class Invoice implements InvoiceDto
     totalAmount: number = 0;
     totalPaid: number = 0;
     payments: PaymentDto[] = [];
+    medicalRecord: MedicalRecordDto[]=[]
 
-   showPayments: boolean = false; // ✅ ADD THIS!
+    showPayments: boolean = false; // ✅ ADD THIS!
 
 }

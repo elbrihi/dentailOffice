@@ -74,6 +74,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
             provider: VisitsGetCollectionProvider::class,
             normalizationContext: ['groups'=>'visit:write'],
             denormalizationContext: ['groups'=>'visit:read'],
+            paginationClientEnabled: true, // ✅ Allow clients to use `page`
             paginationClientItemsPerPage: true,
             paginationItemsPerPage: true,
         ),

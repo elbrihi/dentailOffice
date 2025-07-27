@@ -129,10 +129,9 @@ export class MedicalRecordComponent implements OnInit, AfterViewInit{
   }
 
 
-  addFilter() {
-    this.filters.push({ field: '', operator: '', value: '' });
-
-  
+  addFilter() 
+  {
+    this.filters.push({ field: '', operator: '', value: '' }); 
   }
 
 
@@ -143,21 +142,17 @@ export class MedicalRecordComponent implements OnInit, AfterViewInit{
         width: '60vw',   // 98% of the viewport width
         height: '95h',  // 95% of the viewport height
         maxWidth: '98vw',
-        maxHeight: '98vh',
-      
-  
+        maxHeight: '98vh',    
       })
-  
-
-
       this.loadMedicalRecords() 
-    }
+  }
   
   applyFilters() {
   
     //const val = new Date("2024-12-30");
     //const strVal = val.toISOString().split('T')[0]; // "2024-12-30"
    // this.filters = this.data
+   
    console.log("filters", this.filters);
     const queryParams: any = {};
     const queryParams1: any = {};
@@ -186,6 +181,7 @@ export class MedicalRecordComponent implements OnInit, AfterViewInit{
       }
     }
   
+    console.log("queryParams",queryParams)
     console.log(this.medicalRecordDataSource.getFilterMedicalRecordByParms(queryParams).subscribe({
       next: (response:any) =>{
 

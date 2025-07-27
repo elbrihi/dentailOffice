@@ -19,17 +19,19 @@ class GetCollectionVisitsProviderTest extends VisitApiTestCase
 
         $context["filters"]["page"] = 1;
         $context["filters"]["itemsPerPage"] = 8;
-        $context["filters"]["befor_vist_date"] = '2024-05-15';
-        $context["filters"]["after_vist_date"] = '2023-01-01';
+        $context["filters"]["befor_visit_date"] = '2024-05-15';
+       // $context["filters"]["after_visit_date"] = '2023-01-01';
+
 
      
 
         //$this->visitsGetCollectionProvider->provide($operation,[],$context);
-        $paginator = $this->visitsGetCollectionProvider->provide($operation, [], $context);
-        $visits = iterator_to_array($paginator);
-
-        ;
+         $visits = $this->visitsGetCollectionProvider->provide($operation, [], $context);
+       
         
+      //  $visits = iterator_to_array($paginator);
+
+      ;
         $this->assertCount(7, $visits); // assuming 5 were created and should match page size
         $this->assertInstanceOf(Visit::class, $visits[0]);
         // public function provide(Operation $operation, array $uriVariables = [], array $context = [])

@@ -69,18 +69,18 @@ class Patient
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','appointment:write','appointment:read'])]
+    #[Groups(['patient:read','patient:write','appointment:write','appointment:read','invoice:write','invoice:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['patient:read','patient:write','medical_record:read','medical_record:write','appointment:write','appointment:read'])]
+    #[Groups(['visit:read','visit:write','patient:read','patient:write','medical_record:read','medical_record:write','appointment:write','appointment:read','invoice:write','invoice:read'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['patient:read','patient:write','appointment:write','appointment:read'])]
+    #[Groups(['visit:read','visit:write','patient:read','patient:write','appointment:write','appointment:read','invoice:write','invoice:read'])]
     private ?string $firstName = null;
 
 
@@ -134,7 +134,7 @@ class Patient
     private ?bool $status = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['patient:read','patient:write'])]
+    #[Groups(['visit:read','visit:write','patient:read','patient:write','invoice:write','invoice:read'])]
     private ?string $cni = null;
 
     #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]

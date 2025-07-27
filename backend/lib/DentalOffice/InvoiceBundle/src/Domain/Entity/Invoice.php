@@ -10,6 +10,7 @@ use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -24,6 +25,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 normalizationContext:['groups' => 'invoice:write'],
                 denormalizationContext: ['groups' => 'invoice:read'],
                 provider: InvoicesGetCollectionProvider::class
+            ),
+            new Get(
+                security: "is_granted('ROLE_ADMIN')",
+                uriTemplate: "get/invoice/{id}",
+                normalizationContext:['groups' => 'invoice:write'],
+                denormalizationContext: ['groups' => 'invoice:read'],
             )
         ],
         paginationPartial: false,
@@ -67,6 +74,7 @@ class Invoice
     private Collection $payments;
 
     #[ORM\ManyToOne(inversedBy: 'invoice')]
+    #[Groups('invoice:write','invoice:read')]
     private ?MedicalRecord $medicalRecord = null;
 
     public function __construct()

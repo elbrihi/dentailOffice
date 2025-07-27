@@ -63,3 +63,7 @@ https://stackblitz.com/edit/data-table?file=app%2Fapp.component.ts
 https://stackblitz.com/edit/angular-nested-mat-table?file=app%2Ftable-expandable-rows-example.ts,app%2Ftable-expandable-rows-example.html
 
 https://stackblitz.com/edit/ngx-material-nested-tables?file=src%2Fapp%2Fapp.component.ts
+
+
+
+https://excalidraw.com/#json=ALPBt_l4Kc5vaqok5synR,YwmN9YJnbWOKcU5DImVN5A

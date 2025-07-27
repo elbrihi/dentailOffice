@@ -129,7 +129,7 @@ class MedicalRecord
     private ?\DateTimeInterface $follow_up_date = null;
 
     #[ORM\ManyToOne(inversedBy: 'medicalRecord')]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write','invoice:write','invoice:read'])]
     private ?Patient $patient = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

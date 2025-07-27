@@ -106,6 +106,18 @@ export class CustomSidenavComponent {
             
         ]
       },
+      {
+        icon: 'visibility',
+        label: 'Visites',
+        route: 'visits', // you may use something like 'medical-records/:id/visits'
+        subItems: []
+      },
+      {
+        icon: 'receipt_long',
+        label: 'Factures',
+        route: 'invoices', // you may use something like 'medical-records/:id/invoices'
+        subItems: []
+      }
      
     ]);
 

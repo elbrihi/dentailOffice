@@ -68,7 +68,7 @@
             
                  <!-- Dynamic Columns -->
                 <ng-container *ngFor="let column of displayedPatientColumns" [matColumnDef]="column">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header  class="patient-header"   >
                     {{ columnLabels[column] || (column | titlecase) }}
                   </th>
                     <td mat-cell *matCellDef="let patient">
@@ -118,6 +118,11 @@
                             <button mat-icon-button color="warn">
                               <mat-icon>delete</mat-icon>
                             </button>
+                            <button mat-icon-button (click)="togglePatientVisibility(patient)">
+                              <mat-icon>
+                                {{ isPatientVisible(patient) ? 'visibility_off' : 'visibility' }}
+                              </mat-icon>
+                            </button>
                         </span>
                     </ng-container>
                     </td>
@@ -126,42 +131,56 @@
                 <!-- Appointments -->
                 <ng-container matColumnDef="detailsAppointment">
                   <td mat-cell [attr.colspan]="medicalRecordColSpan" *matCellDef="let patient">
-                    <table mat-table class="full-width-table appointment-table" [dataSource]="getAllAppointments(patient)" *ngIf="patient.appointments?.length">
+                    <div *ngIf="patient.appointments?.length">
+                      <table mat-table class="full-width-table appointment-table" [dataSource]="getAllAppointments(patient)" *ngIf="patient.appointments?.length">
 
-                      <!-- Dynamic columns using *ngFor -->
-                      <ng-container *ngFor="let column of displayedAppointmentColumns" [matColumnDef]="column">
-                        <th mat-header-cell *matHeaderCellDef>
-                          <ng-container *ngIf="column === 'actions'; else normalHeader">
-                            <button mat-icon-button color="primary" (click)="openAppointmentDialog(patient.id)">
-                              <mat-icon aria-label="Add Appointment">add</mat-icon>
-                            </button>
-                          </ng-container>
-                          <ng-template #normalHeader>
-                            {{ columnLabels[column] || column }}
-                          </ng-template>
-                        </th>
+                        <!-- Dynamic columns using *ngFor -->
+                        <ng-container *ngFor="let column of displayedAppointmentColumns" [matColumnDef]="column">
+                          <th mat-header-cell *matHeaderCellDef>
+                            <ng-container *ngIf="column === 'actions'; else normalHeader">
+                              <button mat-icon-button color="primary" (click)="openAppointmentDialog(patient.id)">
+                                <mat-icon aria-label="Add Appointment">add</mat-icon>
+                              </button>
+                            </ng-container>
+                            <ng-template #normalHeader>
+                              {{ columnLabels[column] || column }}
+                            </ng-template>
+                          </th>
 
-                        <td mat-cell *matCellDef="let appointment">
-                          <ng-container *ngIf="column === 'actions'; else normalCell">
-                            <button mat-icon-button color="primary" >
-                              <mat-icon aria-label="View Appointment">visibility</mat-icon>
-                            </button>
-                            <button mat-icon-button color="accent" (click)="openUpdateAppointmentDialog($event,appointment.id)" >
-                              <mat-icon aria-label="Edit Appointment">edit</mat-icon>
-                            </button>
-                            <button mat-icon-button color="warn" >
-                              <mat-icon aria-label="Delete Appointment">delete</mat-icon>
-                            </button>
-                          </ng-container>
-                          <ng-template #normalCell>
-                            {{ appointment[column] }}
-                          </ng-template>
-                        </td>
-                      </ng-container>
+                          <td mat-cell *matCellDef="let appointment">
+                            <ng-container *ngIf="column === 'actions'; else normalCell">
+                              <button mat-icon-button color="primary" >
+                                <mat-icon aria-label="View Appointment">visibility</mat-icon>
+                              </button>
+                              <button mat-icon-button color="accent" (click)="openUpdateAppointmentDialog($event,appointment.id)" >
+                                <mat-icon aria-label="Edit Appointment">edit</mat-icon>
+                              </button>
+                              <button mat-icon-button color="warn" >
+                                <mat-icon aria-label="Delete Appointment">delete</mat-icon>
+                              </button>
+                            </ng-container>
+                            <ng-template #normalCell>
+                              {{ appointment[column] }}
+                            </ng-template>
+                          </td>
+                        </ng-container>
 
-                      <tr mat-header-row *matHeaderRowDef="displayedAppointmentColumns"></tr>
-                      <tr mat-row *matRowDef="let appointment; columns: displayedAppointmentColumns"></tr>
-                    </table>
+                        <tr mat-header-row *matHeaderRowDef="displayedAppointmentColumns" class="patient-row"></tr>
+                        <tr mat-row *matRowDef="let appointment; columns: displayedAppointmentColumns" ></tr>
+                      </table>
+                    </div>
+                    <div *ngIf="!patient.appointments?.length" class="no-data-container">
+                      <em>No visits recorded</em>
+
+                            <div class="create-visit-cta">
+                              <p>Do you want to create a new visit?</p>
+                              <button mat-raised-button color="primary" (click)="openAppointmentDialog(patient.id)">
+                                <mat-icon>add</mat-icon>
+                                Creation La Raison de la rendez-vous
+                              </button>
+                            </div>
+                    </div>
+
                   </td>
                 </ng-container>
                 <!--  Medical Records -->
@@ -182,6 +201,7 @@
                               <mat-icon>add</mat-icon>
                             </button>
                           </ng-container>
+                          <!--- sino1 -->
                           <ng-template #normalHeader>
                             {{ columnLabels[column] || column }}
                           </ng-template>
@@ -300,17 +320,17 @@
                               <tr mat-row *matRowDef="let visit; columns: displayedVisitsColumns"></tr>
                             </table>
                           </div>
-                        <div *ngIf="!record.visits?.length" class="no-data-container">
-                          <em>No visits recorded</em>
+                          <div *ngIf="!record.visits?.length" class="no-data-container">
+                            <em>No visits recorded</em>
 
-                          <div class="create-visit-cta">
-                            <p>Do you want to create a new visit?</p>
-                            <button mat-raised-button color="primary" (click)="openCreateVisitDialog(record)">
-                              <mat-icon>add</mat-icon>
-                              Create Visit
-                            </button>
+                            <div class="create-visit-cta">
+                              <p>Do you want to create a new visit?</p>
+                              <button mat-raised-button color="primary" (click)="openCreateVisitDialog(record)">
+                                <mat-icon>add</mat-icon>
+                                Create Visit
+                              </button>
+                            </div>
                           </div>
-                        </div>
 
                         </td>
                       </ng-container>
@@ -323,7 +343,9 @@
 
                               <!-- ✅ Invoice Columns -->
                               <ng-container *ngFor="let invCol of displayedInvoiceColumns" [matColumnDef]="invCol">
-                                <th mat-header-cell *matHeaderCellDef>{{ invCol }}</th>
+
+                                <!-- sino1-->
+                                <th mat-header-cell *matHeaderCellDef>  {{ columnLabels[invCol] || invCol}}</th>
                                 <td mat-cell *matCellDef="let invoice">
                                   <ng-container [ngSwitch]="invCol">
                                     <!-- ✅ Toggle button in 'payments' column -->
@@ -337,6 +359,7 @@
                                     <ng-container *ngSwitchDefault>
                                       {{ invoice[invCol] }}
                                     </ng-container>
+                                    
                                   </ng-container>
                                 </td>
                               </ng-container>
@@ -384,9 +407,13 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedPatientColumns"></tr>
-                <tr mat-row *matRowDef="let patient; columns:displayedPatientColumns"></tr>
-                <tr mat-row class="full-width-table" *matRowDef="let row; columns: ['detailsAppointment']" ></tr>
-                <tr mat-row class="full-width-table"  *matRowDef="let row; columns: ['detailsMatRecord']" ></tr>
+                <tr mat-row *matRowDef="let patient; columns:displayedPatientColumns"   class="patient-row"
+           
+                
+                
+                ></tr>
+                <tr mat-row class="full-width-table" *matRowDef="let row; columns: ['detailsAppointment']" [class.hidden]="isPatientVisible(row)"></tr>
+                <tr mat-row class="full-width-table"  *matRowDef="let row; columns: ['detailsMatRecord']"  [class.hidden]="isPatientVisible(row)"></tr>
             </table>
         </div>
             <mat-paginator class="paginator"
