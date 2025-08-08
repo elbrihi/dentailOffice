@@ -2,6 +2,8 @@
 
 namespace DentalOffice\InvoiceBundle\Domain\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use DentalOffice\InvoiceBundle\Domain\Repository\InvoiceRepository;
@@ -31,11 +33,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 uriTemplate: "get/invoice/{id}",
                 normalizationContext:['groups' => 'invoice:write'],
                 denormalizationContext: ['groups' => 'invoice:read'],
-            )
+            ),
+            new Get(
+                security: "is_granted('ROLE_ADMIN')",
+                uriTemplate: "get/invoice/{id}",
+                normalizationContext:['groups' => 'invoice:write'],
+                denormalizationContext: ['groups' => 'invoice:read'],
+            ),
+
         ],
+        
         paginationPartial: false,
 
 )]
+#[ApiFilter(SearchFilter::class, properties: [
+    'invoiceNumber' => 'exact', 
+   
+])]
 class Invoice
 {
     #[ORM\Id]

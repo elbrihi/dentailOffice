@@ -19,7 +19,7 @@ export class UpdatePatientComponent implements OnInit{
   fb  = inject(FormBuilder)
   patientDataSource=inject(PatientDataSource)
   constructor(
-        public dialogRef: DialogRef<UpdatePatientComponent>,
+        public dialogRef: MatDialogRef<UpdatePatientComponent>,
         @Inject(MAT_DIALOG_DATA) public patient: Patient,
         
   ){
@@ -75,7 +75,7 @@ export class UpdatePatientComponent implements OnInit{
      this.patientDataSource.putPatient(patient, this.patient.id).subscribe({
       next: () => {
         console.log(' updated successfully!');
-        //this.dialogRef.close(true); // Close dialog and return success flag
+         this.dialogRef.close(true); // Close dialog and return success flag
       },
       error: (err) => {
         console.error('Error updating patient:', err);

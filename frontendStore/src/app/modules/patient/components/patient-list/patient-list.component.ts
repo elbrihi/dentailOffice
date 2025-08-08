@@ -111,7 +111,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
 
   displayedVisitsColumns = ['visits','visitDate','notes','amountPaid','actions']
 
-  displayedInvoiceColumns = ['La facture ', 'payments','invoiceDate', 'invoiceNumber', 'remainingDue', 'totalAmount', 'totalPaid'];
+  displayedInvoiceColumns = ['La facture ', 'payments','invoiceDate', 'invoiceNumber', 'remainingDue', 'totalAmount', 'totalPaid','actions'];
 
   displayedPaymentColumns = ['payments','id','amount','method','paymentDate'];
 
@@ -131,6 +131,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
   filters: any[] = [];
 
   availableFields = [
+    
     { value: 'lastName', label: 'Nom' },
     { value: 'firstName', label: 'Prénom' },
     { value: 'cni', label: 'CNI' },
@@ -148,7 +149,7 @@ export class PatientListComponent implements AfterViewInit, OnInit {
 
   isPrescriptionRow = (index: number, row: any): boolean => {
     return row && Array.isArray(row.prescriptions) && row.prescriptions.length > 0;
-};
+  };
 
 medicalRecordColSpan: number = this.displayedMedicalRecordColumns.length + 4;
 

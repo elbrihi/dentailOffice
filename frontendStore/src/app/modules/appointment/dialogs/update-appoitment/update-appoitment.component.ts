@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppointmentDataSource } from '../../services/appointment.data.source';
 import { AppointmentDto } from '../../models/appointment-dto';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DateUtilsServiceTsService } from '../../../../shared/services/date-utils.service.ts.service';
 
 @Component({
   selector: 'app-update-appoitment',
@@ -14,6 +15,7 @@ export class UpdateAppoitmentComponent implements OnInit{
 
   FormAppointmentBuilder: FormGroup;
   fb = inject(FormBuilder);
+  dateUtils = inject(DateUtilsServiceTsService);
   constructor(
         public dialogRef: MatDialogRef<UpdateAppoitmentComponent>,
          @Inject(MAT_DIALOG_DATA) public appointment: AppointmentDto 
@@ -39,11 +41,13 @@ export class UpdateAppoitmentComponent implements OnInit{
 
           this.FormAppointmentBuilder.patchValue({
             id: appointment.id,
-            appointmentDate: new Date(appointment.appointmentDate),
+            appointmentDate: this.dateUtils.getNextDayFromStringToDate(appointment.appointmentDate),
             reason: appointment.reason,
             status: appointment.status
           })
 
+
+     
         }
       });
 
@@ -52,27 +56,37 @@ export class UpdateAppoitmentComponent implements OnInit{
 
     submitAppointment(event:Event)
     {
-      event.preventDefault();
-
-      const formValue = this.FormAppointmentBuilder.value;
-
-
-        const appointmentDto = {
-          appointment_date: new Date(formValue.appointmentDate).toISOString().slice(0, 10),
-          reason: formValue.reason,
-          status: formValue.status
-      };
-
-      console.log(appointmentDto);
+          event.preventDefault();
+          const dateControl = this.FormAppointmentBuilder.get('appointmentDate');
+          let appointmentDto = {}
+          const formValue = this.FormAppointmentBuilder.value;
+          if (!dateControl?.dirty) {
+                appointmentDto = {
+                  appointment_date: new Date(formValue.appointmentDate).toISOString().slice(0, 10)  ,
+                  reason: formValue.reason,
+                  status: formValue.status
+          }
+          }else{
+              
+              appointmentDto = {
+                  appointment_date: this.dateUtils.getNextDayFromDateToString(formValue.appointmentDate) ,
+                  reason: formValue.reason,
+                  status: formValue.status
+             };
+        
+          }
+ 
+        
       this.appointmentDataSource.upateAppointment(appointmentDto,this.appointment.id).subscribe({
+          
           next: () =>{
             console.log('Appointment saved updated!');
             this.dialogRef.close(true); // ✅ Correct type
           },
 
-      }
+        }
     
-    )
+      )
 
     }
 

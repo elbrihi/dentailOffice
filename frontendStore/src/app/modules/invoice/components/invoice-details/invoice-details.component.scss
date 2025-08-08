@@ -1,0 +1,81 @@
+.invoice-card {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+
+  mat-card-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  mat-card-subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 12px;
+  }
+
+  .invoice-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    padding: 8px;
+
+    > div {
+      font-size: 0.95rem;
+      color: var(--text-color);
+      strong {
+        color: #444;
+      }
+    }
+  }
+
+  h4 {
+    margin-top: 16px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .mat-elevation-z1 {
+    background-color: var(--sys-surface);
+    margin-top: 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 400px;
+
+      th, td {
+        padding: 10px;
+        font-size: 0.875rem;
+        background-color: var(--sys-surface-container);
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+      }
+
+      th {
+        background-color: var(--sys-surface-container);
+        font-weight: 600;
+        border-bottom: 1px solid #ccc;
+      }
+
+      td:hover {
+        background-color: var(--sys-surface-container-highest);
+      }
+    }
+  }
+}
+#invoice-content {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 20mm;
+  background: white;
+}

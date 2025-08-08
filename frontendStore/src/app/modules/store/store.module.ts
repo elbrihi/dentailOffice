@@ -48,6 +48,7 @@ import { VisitDeleteComponent } from "../appointment/dialogs/visit/visit-delete/
 import { PatientDetailsComponent } from "../patient/components/patient-details/patient-details.component";
 import { InvoicesListComponent } from "../invoice/components/invoices-list/invoices-list.component";
 import { VisitListComponent } from '../appointment/visit/components/visit-list/visit-list.component';
+import { InvoiceDetailsComponent } from "../invoice/components/invoice-details/invoice-details.component";
 
 @NgModule({
     declarations: [
@@ -94,6 +95,8 @@ import { VisitListComponent } from '../appointment/visit/components/visit-list/v
         PatientDetailsComponent,
         InvoicesListComponent,
         VisitListComponent,
+        InvoicesListComponent,
+        InvoiceDetailsComponent
 
 
 
@@ -150,6 +153,8 @@ import { VisitListComponent } from '../appointment/visit/components/visit-list/v
         PatientDetailsComponent,
         InvoicesListComponent,
         VisitListComponent,
+        InvoicesListComponent,
+        InvoiceDetailsComponent
 
 
 

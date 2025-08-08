@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {VisitDataSourceService} from '../../../services/visit-data-source.service';
 import { VisitDto } from '../../../models/visit-dto';
+import { DateUtilsServiceTsService } from '../../../../../shared/services/date-utils.service.ts.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class VisitAddComponent {
   updatedTotalPaid = 0;
   updatedRemainingDue: number = 0;
 
-
+  dateUtils = inject(DateUtilsServiceTsService);
   medicalRecordId: number = 0;
   fb = inject(FormBuilder);
 
@@ -55,12 +56,11 @@ export class VisitAddComponent {
   }
 
   onSubmit(event: Event): void {
-    event.preventDefault();
 
     if (this.formVisitBuilder.valid) {
       const formValue = this.formVisitBuilder.value;
       const payload = {
-        visit_date: new Date(formValue.visit_date).toISOString().slice(0, 10),
+        visit_date: this.dateUtils.getNextDayFromDateToString(formValue.visit_date) ,
         type: formValue.type,
         duration_minutes: parseInt(formValue.duration_minutes),
         amount_paid: parseFloat(formValue.amount_paid),
@@ -69,14 +69,16 @@ export class VisitAddComponent {
         payments: [
           {
             method: formValue.payment_method,
-            payment_date: new Date(formValue.payment_date).toISOString().slice(0, 10)
+            payment_date:  this.dateUtils.getNextDayFromDateToString(formValue.payment_date) ,
           }
         ]
       };
 
-      this.visitDataSourceService.postVisit(payload, this.medicalRecordId).subscribe({
+
+      console.log("payload",payload)
+     this.visitDataSourceService.postVisit(payload, this.medicalRecordId).subscribe({
         next: () => {
-          this.dialogRefer.close(true); // ✅ Close once with true
+          this.dialogRefer.close(true); //  Close once with true
         },
         error: (err) => {
           console.error('Error creating Visited:', err);
@@ -84,8 +86,7 @@ export class VisitAddComponent {
         }
       });
 
-      // ❌ REMOVE this:
-      // this.dialogRefer.close(payload);
+
     } else {
       this.formVisitBuilder.markAllAsTouched();
     }

@@ -3,6 +3,7 @@ import { MedicalRecordDataSourceService } from '../../../services/medical-record
 import { MedicalRecordDto } from '../../../models/medical-record-dto';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { DateUtilsServiceTsService } from '../../../../../shared/services/date-utils.service.ts.service';
 
 @Component({
   selector: 'app-update-medical-record',
@@ -16,7 +17,9 @@ export class UpdateMedicalRecordComponent implements OnInit {
   medicalRecordForm: FormGroup;
   fb = inject(FormBuilder)
   dialog = inject(MatDialogRef);
-  medicalRecordDatasource = inject(MedicalRecordDataSourceService)
+  medicalRecordDatasource = inject(MedicalRecordDataSourceService);
+  
+  dateUtils = inject(DateUtilsServiceTsService);
 
   constructor(
     public dialogRef: MatDialogRef<UpdateMedicalRecordComponent>,
@@ -42,11 +45,11 @@ export class UpdateMedicalRecordComponent implements OnInit {
       next: (medicalRecord: any) => {
       
         this.medicalRecordForm.patchValue({
-          visit_date: new Date(medicalRecord.visit_date).toISOString().substring(0, 10),
+          visit_date: this.dateUtils.getNextDayFromStringToDate(medicalRecord.visit_date),
           chief_complaint: medicalRecord.chief_complaint,
           clinical_diagnosis: medicalRecord.clinical_diagnosis,
           treatment_plan: medicalRecord.treatment_plan,
-          follow_up_date: new Date(medicalRecord.follow_up_date).toISOString().substring(0, 10),
+          follow_up_date:this.dateUtils.getNextDayFromStringToDate(medicalRecord.follow_up_date),
           prescriptions: medicalRecord.prescriptions,
           agreedAmout: medicalRecord.agreedAmout,
           notes: medicalRecord.notes
@@ -98,19 +101,22 @@ export class UpdateMedicalRecordComponent implements OnInit {
   updateMedicalRecord(event:Event)
   {
 
-    const MedicalRecord = {
-      visit_date:  new Date(this.medicalRecordForm.value.visit_date).toISOString().substring(0, 10),
-      chief_complaint: this.medicalRecordForm.value.chief_complaint,
-      clinical_diagnosis: this.medicalRecordForm.value.clinical_diagnosis,
-      treatment_plan: this.medicalRecordForm.value.treatment_plan,
-      follow_up_date:  new Date(this.medicalRecordForm.value.follow_up_date).toISOString().substring(0, 10),
-      prescriptions: this.medicalRecordForm.value.prescriptions,
-      notes: this.medicalRecordForm.value.notes,
-      agreedAmout: parseFloat(this.medicalRecordForm.value.agreedAmout) ,
-      
-    } as MedicalRecordDto
+      const dateControl = this.medicalRecordForm.get('appointmentDate');
+      const MedicalRecord = {
 
-    console.log(MedicalRecord);
+        visit_date:  new Date(this.medicalRecordForm.value.visit_date).toISOString().substring(0, 10),
+        chief_complaint: this.medicalRecordForm.value.chief_complaint,
+        clinical_diagnosis: this.medicalRecordForm.value.clinical_diagnosis,
+        treatment_plan: this.medicalRecordForm.value.treatment_plan,
+        follow_up_date:  new Date(this.medicalRecordForm.value.follow_up_date).toISOString().substring(0, 10),
+        prescriptions: this.medicalRecordForm.value.prescriptions,
+        notes: this.medicalRecordForm.value.notes,
+        agreedAmout: parseFloat(this.medicalRecordForm.value.agreedAmout) ,
+      
+     } as MedicalRecordDto
+
+    console.log("MedicalRecord",MedicalRecord);
+
     this.medicalRecordDatasource.putMedicalRecord(MedicalRecord, this.medicalRecord.id).subscribe(
       {
 

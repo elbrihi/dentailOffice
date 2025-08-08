@@ -26,6 +26,31 @@ class InvoicesGetCollectionProvider implements ProviderInterface
         $itemsPerPage = $context["filters"]["itemsPerPage"] ?? 30;
 
 
+       
+
+       
+        if(isset($context["filters"]["invoiceNumber"]))
+        {
+            $invoiceNumber = $context["filters"]["invoiceNumber"] ;
+            $qb->andWhere('i.invoiceNumber= :invoiceNumber')
+            ->setParameter('invoiceNumber',$invoiceNumber);
+
+            $firstResult = ($page - 1) * $itemsPerPage;
+
+            $qb->setFirstResult($firstResult)
+            ->setMaxResults($itemsPerPage);
+
+            //dd($qb->getQuery()->getSQL(), $qb->getParameters());
+
+            $paginator = new Paginator($qb->getQuery());
+            
+            //dd(iterator_to_array($paginator));
+
+
+            return new Paginator($qb->getQuery());
+
+          
+        }
         if (isset($context["filters"]["after_invoice_date"]) && isset($context["filters"]["befor_invoice_date"])) {
             $afterDate = new \DateTimeImmutable($context['filters']['after_invoice_date']);
             $beforeDate = new \DateTimeImmutable($context['filters']['befor_invoice_date'] . ' 23:59:59'); // End of day

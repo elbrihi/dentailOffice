@@ -1,7 +1,5 @@
-import { DialogRef } from '@angular/cdk/dialog';
 import { Component,Inject,inject } from '@angular/core';
 import { FormBuilder,FormGroup, Validators } from '@angular/forms';
-import { AppointmentDto } from '../../../models/appointment-dto';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppointmentDataSource } from '../../../services/appointment.data.source';
 import { PatientDTO } from '../../../../patient/models/patient-dto.service';
@@ -31,7 +29,7 @@ export class AddAppoitmentComponent{
       
         this.FormAppointmentBuilder = this.fb.group({
           appointment_date:['',Validators.required],
-          reason:[''],
+          reason:['',Validators.required],
           status: true
         })
     }
@@ -41,12 +39,19 @@ export class AddAppoitmentComponent{
 
       const formValue = this.FormAppointmentBuilder.value;
 
+      let appointmentDate =  this.FormAppointmentBuilder.value.appointment_date
+      
+      appointmentDate.setDate(appointmentDate.getDate() +1)
+
+
       const appointmentDto = {
-        appointment_date: new Date(formValue.appointment_date).toISOString().slice(0, 10),
+        appointment_date: new Date(appointmentDate).toISOString().slice(0, 10),
         reason: formValue.reason,
         status: formValue.status
       };
 
+      
+      console.log("appointmentDto",appointmentDto)
       const patientId = this.patient?.id; // this might be undefined if you're creating
 
       this.appintementDataSource.saveAppointment(appointmentDto, patientId).subscribe({

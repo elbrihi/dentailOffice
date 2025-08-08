@@ -7,6 +7,7 @@ import { PatientDTO } from '../../../models/patient-dto.service';
 import { from } from 'rxjs';
 import { MedicalRecordDto } from '../../../models/medical-record-dto';
 import { AppointmentDto } from '../../../../appointment/models/appointment-dto';
+import { DateUtilsServiceTsService } from '../../../../../shared/services/date-utils.service.ts.service';
 
 @Component({
   selector: 'app-add-medical-record',
@@ -22,6 +23,7 @@ export class AddMedicalRecordComponent {
 
   dialog= inject(MatDialogRef);
   fb = inject(FormBuilder)
+  dateUtils = inject(DateUtilsServiceTsService);
   medicalRecordDataSource = inject(MedicalRecordDataSourceService);
 
 
@@ -32,13 +34,13 @@ export class AddMedicalRecordComponent {
   {
     console.log("data",data);
     this.addMedicalDiscoredForm  = this.fb.group({
-        visit_date:[this.formatDate('2024-03-19'), Validators.required],
-        chief_complaint:[''],
-        clinical_diagnosis:[''],
-        treatment_plan:[''],
-        follow_up_date:['2024-03-19'],
+        visit_date:['', Validators.required],
+        chief_complaint:['', Validators.required],
+        clinical_diagnosis:['', Validators.required],
+        treatment_plan:['', Validators.required],
+        follow_up_date:['', Validators.required],
         prescriptions: this.fb.array([]),  // ✅ this is critical
-        agreedAmout:[''],
+        agreedAmout:['', Validators.required],
         notes:[''],
         appointments:['',Validators.required]
 
@@ -52,34 +54,34 @@ export class AddMedicalRecordComponent {
 
       const formValue = this.addMedicalDiscoredForm.value;
 
-      let appointmentId =formValue.appointments;
+      let appointmentId = formValue.appointments;
       console.log("AppointmentID",formValue);
       const medicalRecordDto = {
-        visit_date: new Date(formValue.visit_date).toISOString().slice(0, 10),
+        visit_date: this.dateUtils.getNextDayFromDateToString(formValue.visit_date),
         chief_complaint: formValue.chief_complaint,
         status: true,
-        clinical_diagnosis:  formValue.clinical_diagnosis,
+        clinical_diagnosis: formValue.clinical_diagnosis,
         treatment_plan: formValue.treatment_plan,
-        follow_up_date: new Date(formValue.follow_up_date).toISOString().slice(0, 10),
+        follow_up_date: this.dateUtils.getNextDayFromDateToString(formValue.follow_up_date),
         prescriptions: formValue.prescriptions,
         notes: formValue.notes,
-        agreedAmout: parseFloat (formValue.agreedAmout),
+        agreedAmout: parseFloat(formValue.agreedAmout),
 
       } ;
 
 
       console.log("formValue",medicalRecordDto )
-     this.medicalRecordDataSource.postMedicalRecord(medicalRecordDto,this.data.patientId,appointmentId).subscribe({
+      this.medicalRecordDataSource.postMedicalRecord(medicalRecordDto,this.data.patientId,appointmentId).subscribe({
 
-      next: () => {
-        console.log('Patient updated successfully!');
-        this.dialogRef.close(true); // Close dialog and return success flag
-      },
-      error: (err) => {
-        console.error('Error updating patient:', err);
-        alert('Error updating patient. Please try again.'); // Or use a snackbar
-      }
-    })
+          next: () => {
+            console.log('Patient updated successfully!');
+            this.dialogRef.close(true); // Close dialog and return success flag
+          },
+          error: (err) => {
+            console.error('Error updating patient:', err);
+            alert('Error updating patient. Please try again.'); // Or use a snackbar
+          }
+      })
   }
   
   get prescriptions(): FormArray {

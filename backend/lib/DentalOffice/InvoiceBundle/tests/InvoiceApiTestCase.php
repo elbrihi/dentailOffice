@@ -276,7 +276,7 @@ class InvoiceApiTestCase extends ApiTestCase
             $this->entityManager->flush();
 
             
-            $medicalRecord->setAppointment($appointment);
+           // $medicalRecord->setAppointment($appointment);
 
             
         }
@@ -412,7 +412,7 @@ class InvoiceApiTestCase extends ApiTestCase
         $medicalRecord->setAgreedAmout(1000);
         $medicalRecord->setTotalPaid(0);
         $medicalRecord->setRemainingDue(1000);
-        $medicalRecord->setAppointment($appointment);
+        //$medicalRecord->setAppointment($appointment);
 
         $this->entityManager->persist($medicalRecord);
         $this->entityManager->flush();
@@ -884,7 +884,7 @@ class InvoiceApiTestCase extends ApiTestCase
         $medicalRecord->setAgreedAmout(1000);
         $medicalRecord->setTotalPaid(0);
         $medicalRecord->setRemainingDue(1000);
-        $medicalRecord->setAppointment($appointment);
+       // $medicalRecord->setAppointment($appointment);
 
         $totalPaid = 0;
 
@@ -1084,7 +1084,7 @@ class InvoiceApiTestCase extends ApiTestCase
         $medicalRecord->setAgreedAmout(1000);
         $medicalRecord->setTotalPaid(0);
         $medicalRecord->setRemainingDue(1000);
-        $medicalRecord->setAppointment($appointment);
+        //$medicalRecord->setAppointment($appointment);
 
         $totalPaid = 0;
 

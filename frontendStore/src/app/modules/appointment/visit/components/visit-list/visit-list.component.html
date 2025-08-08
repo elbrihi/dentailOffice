@@ -12,7 +12,7 @@
           <!-- Field Filter -->
           <mat-form-field>
             <mat-label>Champ</mat-label>
-            <mat-select  [(ngModel)]="filter.field"  (click)="onSelect(filter.field)">
+            <mat-select  [(ngModel)]="filter.field" (click)="onSelect(filter.field)" >
                 <mat-option *ngFor="let field of availableFields" [value]="field.value">
                   {{field.label}}
                 </mat-option>
@@ -57,6 +57,7 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+            
             <mat-form-field appearance="outline" class="form-field" *ngSwitchCase="'after'">
                   <mat-label>Choose a date</mat-label>
                   <input matInput [matDatepicker]="picker"  [(ngModel)]="filter.value.after_visit_date" placeholder="Début"/>

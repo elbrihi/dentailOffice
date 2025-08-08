@@ -18,6 +18,7 @@ import { MedicalRecordComponent } from './modules/patient/components/medical-rec
 import { PatientDetailsComponent } from './modules/patient/components/patient-details/patient-details.component';
 import { VisitListComponent } from './modules/appointment/visit/components/visit-list/visit-list.component';
 import { InvoicesListComponent } from './modules/invoice/components/invoices-list/invoices-list.component';
+import { InvoiceDetailsComponent } from './modules/invoice/components/invoice-details/invoice-details.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,19 @@ const routes: Routes = [
         path: 'dashboard',
         component: DashboardComponent
       },
+      {
+      path: 'invoices',
+      children: [
+        {
+          path: '',
+          component: InvoicesListComponent
+        },
+        {
+          path: ':invoiceId/details',
+          component: InvoiceDetailsComponent
+        }
+      ]
+    },
       {
         path: 'content',
         children: [
@@ -80,15 +94,13 @@ const routes: Routes = [
         path: 'visits',
         component: VisitListComponent
       },
-      {
-        path: 'invoices',
-        component: InvoicesListComponent
-      },
 
       {
         path: 'comments',
-        component: CommentsComponent
+        component: CommentsComponent,
+
       }
+      
     ]
   },
   { 
@@ -101,7 +113,9 @@ const routes: Routes = [
   }
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, { enableTracing: true }) 
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

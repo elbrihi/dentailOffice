@@ -18,8 +18,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { AddDialogComponent } from './modules/supplier/dialogs/add/add.dialog/add-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UpdateCategoryComponent } from './modules/product/dialogs/update/update-category/update-category.component';
-import { InvoicesListComponent } from './modules/invoice/components/invoices-list/invoices-list.component';
-import { VisitListComponent } from './modules/appointment/visit/components/visit-list/visit-list.component';
+
 
 
 
@@ -30,7 +29,6 @@ import { VisitListComponent } from './modules/appointment/visit/components/visit
     TestComponent,
     AddDialogComponent,
     UpdateCategoryComponent,
-
 
   ],
   imports: [

@@ -10,7 +10,6 @@ export class RestDataSource {
   protected readonly headers = new HttpHeaders({
     Authorization: localStorage.getItem('token') || '',
     'Content-Type': 'application/ld+json', // Updated content-type
-    'My-Custom-Header': 'foobar',
   });
 
   constructor(protected http: HttpClient) {}
