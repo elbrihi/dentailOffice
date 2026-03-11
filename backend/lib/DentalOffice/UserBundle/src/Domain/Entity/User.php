@@ -3,18 +3,15 @@
 namespace DentalOffice\UserBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\Post;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Stock\ProductBundle\Domain\Entity\Category;
-use Stock\ProductBundle\Domain\Entity\Lot;
-use Stock\ProductBundle\Domain\Entity\Product;
-use Stock\SupplierBundle\Domain\Entity\Supplier;
+
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -89,13 +86,13 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'modifiedBy')]
     private Collection $medicalRecordsModifier;
 
-    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: AppointmentOrmEntity::class, mappedBy: 'user')]
     private Collection $appointment;
 
-    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'createdBy')]
+    #[ORM\OneToMany(targetEntity: AppointmentOrmEntity::class, mappedBy: 'createdBy')]
     private Collection $appointments;
 
-    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'createdBy')]
+    #[ORM\OneToMany(targetEntity: VisitOrmEntity::class, mappedBy: 'createdBy')]
     private Collection $visits;
 
 
@@ -345,7 +342,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this->appointment;
     }
 
-    public function addAppointment(Appointment $appointment): static
+    public function addAppointment(AppointmentOrmEntity $appointment): static
     {
         if (!$this->appointment->contains($appointment)) {
             $this->appointment->add($appointment);
@@ -355,7 +352,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeAppointment(Appointment $appointment): static
+    public function removeAppointment(AppointmentOrmEntity $appointment): static
     {
         if ($this->appointment->removeElement($appointment)) {
             // set the owning side to null (unless already changed)
@@ -368,7 +365,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Appointment>
+     * @return Collection<int, AppointmentOrmEntity>
      */
     public function getAppointments(): Collection
     {
@@ -383,7 +380,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this->visits;
     }
 
-    public function addVisit(Visit $visit): static
+    public function addVisit(VisitOrmEntity $visit): static
     {
         if (!$this->visits->contains($visit)) {
             $this->visits->add($visit);
@@ -393,7 +390,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeVisit(Visit $visit): static
+    public function removeVisit(VisitOrmEntity $visit): static
     {
         if ($this->visits->removeElement($visit)) {
             // set the owning side to null (unless already changed)

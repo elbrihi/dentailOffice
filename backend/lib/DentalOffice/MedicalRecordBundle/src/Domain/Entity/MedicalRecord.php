@@ -2,25 +2,21 @@
 
 namespace DentalOffice\MedicalRecordBundle\Domain\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPostProcessor;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor\State\MedicalRecordPutProcessor;
-use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\GetMedicalRecordByPatient;
-use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\GetMedicalRecordByPatientProvider;
-use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\GetPatientByMedicalRecord;
+
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\MedicalRecordCollectionProvider;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider\State\PostMedicalRecordProvider;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
@@ -45,7 +41,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
                         toProperty: 'patient'
                     ),
                     'appointmentId' => new Link(
-                        fromClass: Appointment::class,
+                        fromClass: AppointmentOrmEntity::class,
                         toProperty: 'appointment'
                     ),
                 ],
@@ -161,7 +157,7 @@ class MedicalRecord
     private ?float $remainingDue = null;
 
 
-    #[ORM\OneToMany(targetEntity: Visit::class, mappedBy: 'medicalRecord' , cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: VisitOrmEntity::class, mappedBy: 'medicalRecord' , cascade: ['persist', 'remove'])]
     #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     #[ORM\OrderBy(['id' => 'DESC'])]
     #[MaxDepth(1)]
@@ -171,16 +167,12 @@ class MedicalRecord
     #[Groups(['patient:read','patient:write','medical_record:read','medical_record:write'])]
     private Collection $invoice;
 
-    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'medicalRecord')]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
-    private Collection $appointment;
 
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
         $this->invoice = new ArrayCollection();
-        $this->appointment = new ArrayCollection();
     }
 
 
@@ -380,7 +372,7 @@ class MedicalRecord
 
 
 
-    public function addVisit(Visit $visit): static
+    public function addVisit(VisitOrmEntity $visit): static
     {
         if (!$this->visits->contains($visit)) {
             $this->visits->add($visit);
@@ -390,7 +382,7 @@ class MedicalRecord
         return $this;
     }
 
-    public function removeVisit(Visit $visit): static
+    public function removeVisit(VisitOrmEntity $visit): static
     {
         if ($this->visits->removeElement($visit)) {
             // set the owning side to null (unless already changed)
@@ -430,35 +422,7 @@ class MedicalRecord
         return $this;
     }
 
-    /**
-     * @return Collection<int, Appointment>
-     */
-    public function getAppointment(): Collection
-    {
-        return $this->appointment;
-    }
 
-    public function addAppointment(Appointment $appointment): static
-    {
-        if (!$this->appointment->contains($appointment)) {
-            $this->appointment->add($appointment);
-            $appointment->setMedicalRecord($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAppointment(Appointment $appointment): static
-    {
-        if ($this->appointment->removeElement($appointment)) {
-            // set the owning side to null (unless already changed)
-            if ($appointment->getMedicalRecord() === $this) {
-                $appointment->setMedicalRecord(null);
-            }
-        }
-
-        return $this;
-    }
 
 
 }

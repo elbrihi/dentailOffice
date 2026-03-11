@@ -39,16 +39,56 @@
             autoconfigure="true"
             public="true" />
 
-
-
-        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor'
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentProcessor'
         
-                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentStateProcessor' >
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentProcessor' >
             <argument id="api_platform.doctrine.orm.state.persist_processor" />
             <argument id="api_platform.doctrine.orm.state.remove_processor" />
             <argument id="api_platform.validator" />
         </service>
 
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentScheduledProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentScheduledProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentRescheduledProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentRescheduledProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentConfirmProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentConfirmProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentNoShowProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentNoShowProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
+
+
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentCancelledProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentCancelledProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
 
         <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentPutProcessor'
         
@@ -88,8 +128,7 @@
                 
                 event="DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent"
                 method="__invoke" 
-                
-                />
+            />
         </service>
 
         

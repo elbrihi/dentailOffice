@@ -67,3 +67,7 @@ https://stackblitz.com/edit/ngx-material-nested-tables?file=src%2Fapp%2Fapp.comp
 
 
 https://excalidraw.com/#json=ALPBt_l4Kc5vaqok5synR,YwmN9YJnbWOKcU5DImVN5A
+
+
+https://stackblitz.com/edit/angular-appointment-booking-widget?file=src%2Fmain.ts
+http://stackblitz.com/edit/angular-scheduler-appointments-filtering-sample?file=main.ts

@@ -45,12 +45,11 @@ doctrine:
                 dir: '%kernel.project_dir%/lib/DentalOffice/MedicalRecordBundle/src/Domain/Entity'
                 prefix: 'DentalOffice\MedicalRecordBundle\Domain\Entity'
                 alias: DentalOfficeMedicalRecordBundle
-
             DentalOfficeAppointmentSchedulingBundle:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/lib/DentalOffice/AppointmentSchedulingBundle/src/Domain/Entity'
-                prefix: 'DentalOffice\AppointmentSchedulingBundle\Domain\Entity'
+                dir: '%kernel.project_dir%/lib/DentalOffice/AppointmentSchedulingBundle/src/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity'
                 alias: DentalOfficeDentalAppointmentSchedulingBundle
 
             DentalOfficePaymentsBundle:

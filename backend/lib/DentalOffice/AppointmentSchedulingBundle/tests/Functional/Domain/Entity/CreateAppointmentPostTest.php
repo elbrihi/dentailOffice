@@ -5,7 +5,7 @@ namespace DentalOffice\AppointmentSchedulingBundle\Tests\Functional\Domail\Entit
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Response;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,9 +24,10 @@ class CreateAppointmentPostTest extends ApiTestCase
         $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
 
         // Clear existing data
-        $this->entityManager->createQuery('DELETE FROM DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment')->execute();
+        $this->entityManager->createQuery('DELETE FROM DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity')->execute();
         $this->entityManager->createQuery('DELETE FROM DentalOffice\PatientBundle\Domain\Entity\Patient')->execute();
-        $this->entityManager->createQuery('DELETE FROM DentalOffice\UserBundle\Domain\Entity\User')->execute();
+
+    
     }
     public function testAppointmentProcessPersists(): void
     {
@@ -56,7 +57,8 @@ class CreateAppointmentPostTest extends ApiTestCase
         $patient->setMedicalHistory("Asthma");
         $patient->setNotes("Test patient");
         $patient->setCreatedAt($this->clock->now());
-        
+
+       
 
         if (!$user instanceof \DentalOffice\UserBundle\Domain\Entity\User) {
             throw new \LogicException('Authenticated user must be an instance of DentalOffice\UserBundle\Domain\Entity\User.');
@@ -87,10 +89,15 @@ class CreateAppointmentPostTest extends ApiTestCase
             ],
         ]);
 
+        
+       
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
 
-        $appointmentRepo = $this->getEntityManager()->getRepository(Appointment::class);
+        $appointmentRepo = $this->getEntityManager()->getRepository(AppointmentOrmEntity::class);
+       
         $appointments = $appointmentRepo->findAll();
+
+        
        // $this->assertCount(1, $appointments);
         $this->assertEquals('Dental Cleaning', $appointments[0]->getReason());
         $this->assertEquals($user->getId(), $appointments[0]->getUser()->getId());

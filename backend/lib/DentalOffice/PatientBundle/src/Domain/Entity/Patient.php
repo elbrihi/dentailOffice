@@ -2,14 +2,13 @@
 
 namespace DentalOffice\PatientBundle\Domain\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;use ApiPlatform\Metadata\ApiFilter;
+
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPostProcessor;
@@ -142,7 +141,7 @@ class Patient
     #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $medicalRecord;
 
-    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'patient' , cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: AppointmentOrmEntity::class, mappedBy: 'patient' , cascade: ['persist'])]
     #[Groups(['patient:read','patient:write'])] 
     #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $appointments;
@@ -395,7 +394,7 @@ class Patient
         return $this->appointments;
     }
 
-    public function addAppointment(Appointment $appointment): static
+    public function addAppointment(AppointmentOrmEntity $appointment): static
     {
         if (!$this->appointments->contains($appointment)) {
             $this->appointments->add($appointment);
@@ -405,7 +404,7 @@ class Patient
         return $this;
     }
 
-    public function removeAppointment(Appointment $appointment): static
+    public function removeAppointment(AppointmentOrmEntity $appointment): static
     {
         if ($this->appointments->removeElement($appointment)) {
             // set the owning side to null (unless already changed)

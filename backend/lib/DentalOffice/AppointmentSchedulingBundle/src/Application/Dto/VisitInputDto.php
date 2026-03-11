@@ -7,7 +7,6 @@ use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Symfony\Component\Serializer\Annotation\Context;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 class VisitInputDto

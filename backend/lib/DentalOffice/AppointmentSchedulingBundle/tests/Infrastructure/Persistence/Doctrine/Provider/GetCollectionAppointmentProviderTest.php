@@ -25,6 +25,7 @@ class GetCollectionAppointmentProviderTest extends ApiTestCase
     public function testGetCollectionAppointment()
     {
 
+       
 
         $operation = new GetCollection(); 
       
@@ -46,11 +47,14 @@ class GetCollectionAppointmentProviderTest extends ApiTestCase
 
 
     private function  savaData()
-    {
+    {  
+
         $em = $this->getEntityManager();
+        
         // entering user 
         $client = static::createClient();
 
+        $createdAt = new DateTimeImmutable();
         // Create user and persist to DB
         $user = new User();
         $user->setUsername('admin');
@@ -82,14 +86,14 @@ class GetCollectionAppointmentProviderTest extends ApiTestCase
         $patient->setBloodType("O+");
         $patient->setMedicalHistory("Asthma");
         $patient->setNotes("Test patient");
-        $patient->setCreatedAt($this->clock->now());
+        $patient->setCreatedAt($createdAt);
         
 
         if (!$user instanceof \DentalOffice\UserBundle\Domain\Entity\User) {
             throw new \LogicException('Authenticated user must be an instance of DentalOffice\UserBundle\Domain\Entity\User.');
         }
         $patient->setCreatedBy($user);
-        $patient->setModifiedAt($this->clock->now());
+        $patient->setModifiedAt($createdAt);
         $patient->setModifiedBy($user);
         $patient->setStatus(true);
         
@@ -105,8 +109,8 @@ class GetCollectionAppointmentProviderTest extends ApiTestCase
             $appointment = new Appointment();
             $appointment->setReason("Jane update _".$i);
             $appointment->setAppointmentDate($appointmentDate);
-            $appointment->setModifiedAt($this->clock->now());
-            $appointment->setCreatedAt($this->clock->now());
+            $appointment->setModifiedAt($createdAt);
+            $appointment->setCreatedAt($createdAt);
             $appointment->setCreatedBy($user );
             $appointment->setModifiedBy($user );
             $appointment->setUser($user);
@@ -117,7 +121,7 @@ class GetCollectionAppointmentProviderTest extends ApiTestCase
         }
 
 
-        $this->entityManager->flush();
+        $em->flush();
     }
 
     private function getEntityManager()

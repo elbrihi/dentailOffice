@@ -4,7 +4,7 @@ namespace DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Do
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Repository\AppointmentRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 

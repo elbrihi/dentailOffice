@@ -4,7 +4,7 @@ namespace DentalOffice\PaymentsBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository;
 use Doctrine\DBAL\Types\Types;
@@ -43,7 +43,7 @@ class Payment
     private ?\DateTimeInterface $paymentDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
-    private ?Visit $visit = null;
+    private ?VisitOrmEntity $visit = null;
 
     #[ORM\ManyToOne(targetEntity: Invoice::class, inversedBy: 'payments')]
     private ?Invoice $invoice = null;
@@ -89,12 +89,12 @@ class Payment
         return $this;
     }
 
-    public function getVisit(): ?Visit
+    public function getVisit(): ?VisitOrmEntity
     {
         return $this->visit;
     }
 
-    public function setVisit(?Visit $visit): static
+    public function setVisit(?VisitOrmEntity $visit): static
     {
         $this->visit = $visit;
 

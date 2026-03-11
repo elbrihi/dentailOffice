@@ -19,7 +19,8 @@ maker:
 
     #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Domain'
     #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor'
-    root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider'
+    #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider'
+    root_namespace:   'DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor'
     #root_namespace: 'Stock\'
     #root_namespace: 'App'
 

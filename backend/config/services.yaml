@@ -60,7 +60,7 @@ services:
     DentalOffice\AppointmentSchedulingBundle\:
         resource: '../lib/DentalOffice/AppointmentSchedulingBundle/src/*'
         exclude: 
-            - '../lib/DentalOffice/AppointmentSchedulingBundle/src/Domain/Entity/'
+            - '../lib/DentalOffice/AppointmentSchedulingBundle/src//Infrastructure/Persistence/Doctrine/Entity'
             #- '../lib/DentalOffice/UserBundle/src/UI/Controller/'
             #- '../lib/DentalOffice/UserBundle/src/Resources/config/'
             - '../lib/DentalOffice/AppointmentSchedulingBundle/src/DentalOfficeMedicalRecordBundle.php'
