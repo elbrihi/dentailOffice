@@ -12,12 +12,12 @@ use ApiPlatform\Metadata\GetCollection;
 use DentalOffice\AppointmentSchedulingBundle\Application\Dto\VisitInputDto;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Repository\VisitRepository;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitDeleteProcessor;
-use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPutStateProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitPostProvider;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\VisitsGetCollectionProvider;
-use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
-use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
+use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\VisitPostStateProcessor;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\PrescriptionOrmEntity;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -26,7 +26,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
-#
+#[ORM\Table(
+    name: "visit",
+    indexes: [
+       
+    ]
+)]
 #[ORM\Entity(repositoryClass: VisitRepository::class)]
 
 #[ApiResource(
@@ -38,7 +43,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
             uriTemplate: "/create/medicalRecord/{medicalRecordId}/visit",
             uriVariables: [
                 'medicalRecordId' => new Link( // ✅ fixed spelling
-                    fromClass: MedicalRecord::class,
+                    fromClass: MedicalRecordOrmEntity::class,
                     toProperty: 'medicalRecord'
                 ),
                 
@@ -92,10 +97,6 @@ class VisitOrmEntity
      #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
-    private ?\DateTimeInterface $visitDate = null;
-
     #[ORM\Column(length: 255)]
     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?string $notes = null;
@@ -104,14 +105,14 @@ class VisitOrmEntity
     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?float $amountPaid = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?float $remainingDueAfterVisit = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits')]
      #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     #[MaxDepth(1)]
-    private ?MedicalRecord $medicalRecord = null;
+    private ?MedicalRecordOrmEntity $medicalRecord = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
@@ -129,9 +130,7 @@ class VisitOrmEntity
     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?User $modifiedBy = null;
 
-    #[ORM\Column]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
-    private ?int $durationMinutes = null;
+
 
     #[ORM\Column]
     private ?bool $status = null;
@@ -140,13 +139,22 @@ class VisitOrmEntity
     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?string $type = null;
 
-    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'visit', cascade: ['persist', 'remove'])]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
-    private Collection $payments;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $start = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $end = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?AppointmentOrmEntity $appointment = null;
+
+    #[ORM\OneToMany(targetEntity: PrescriptionOrmEntity::class, mappedBy: 'visitOrmEntity')]
+    private Collection $prescription;
 
     public function __construct()
     {
-        $this->payments = new ArrayCollection();
+        $this->prescription = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,17 +162,7 @@ class VisitOrmEntity
         return $this->id;
     }
 
-    public function getVisitDate(): ?\DateTimeInterface
-    {
-        return $this->visitDate;
-    }
 
-    public function setVisitDate(\DateTimeInterface $visitDate): static
-    {
-        $this->visitDate = $visitDate;
-
-        return $this;
-    }
 
     public function getNotes(): ?string
     {
@@ -202,12 +200,12 @@ class VisitOrmEntity
         return $this;
     }
 
-    public function getMedicalRecord(): ?MedicalRecord
+    public function getMedicalRecord(): ?MedicalRecordOrmEntity
     {
         return $this->medicalRecord;
     }
 
-    public function setMedicalRecord(?MedicalRecord $medicalRecord): static
+    public function setMedicalRecord(?MedicalRecordOrmEntity $medicalRecord): static
     {
         $this->medicalRecord = $medicalRecord;
 
@@ -262,17 +260,6 @@ class VisitOrmEntity
         return $this;
     }
 
-    public function getDurationMinutes(): ?int
-    {
-        return $this->durationMinutes;
-    }
-
-    public function setDurationMinutes(int $durationMinutes): static
-    {
-        $this->durationMinutes = $durationMinutes;
-
-        return $this;
-    }
 
     public function isStatus(): ?bool
     {
@@ -298,30 +285,68 @@ class VisitOrmEntity
         return $this;
     }
 
-    /**
-     * @return Collection<int, Payment>
-     */
-    public function getPayments(): Collection
+
+
+    public function getStart(): ?\DateTimeInterface
     {
-        return $this->payments;
+        return $this->start;
     }
 
-    public function addPayment(Payment $payment): static
+    public function setStart(\DateTimeInterface $start): static
     {
-        if (!$this->payments->contains($payment)) {
-            $this->payments->add($payment);
-            $payment->setVisit($this);
+        $this->start = $start;
+
+        return $this;
+    }
+
+    public function getEnd(): ?\DateTimeInterface
+    {
+        return $this->end;
+    }
+
+    public function setEnd(\DateTimeInterface $end): static
+    {
+        $this->end = $end;
+
+        return $this;
+    }
+
+    public function getAppointment(): ?AppointmentOrmEntity
+    {
+        return $this->appointment;
+    }
+
+    public function setAppointment(?AppointmentOrmEntity $appointment): static
+    {
+        $this->appointment = $appointment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PrescriptionOrmEntity>
+     */
+    public function getPrescription(): Collection
+    {
+        return $this->prescription;
+    }
+
+    public function addPrescription(PrescriptionOrmEntity $prescription): static
+    {
+        if (!$this->prescription->contains($prescription)) {
+            $this->prescription->add($prescription);
+            $prescription->setVisitOrmEntity($this);
         }
 
         return $this;
     }
 
-    public function removePayment(Payment $payment): static
+    public function removePrescription(PrescriptionOrmEntity $prescription): static
     {
-        if ($this->payments->removeElement($payment)) {
+        if ($this->prescription->removeElement($prescription)) {
             // set the owning side to null (unless already changed)
-            if ($payment->getVisit() === $this) {
-                $payment->setVisit(null);
+            if ($prescription->getVisitOrmEntity() === $this) {
+                $prescription->setVisitOrmEntity(null);
             }
         }
 

@@ -4,9 +4,9 @@ namespace DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Provide
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Repository\InvoiceRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-use DentalOffice\InvoiceBundle\Domain\Repository\InvoiceRepository;
 
 class InvoicesGetCollectionProvider implements ProviderInterface
 {

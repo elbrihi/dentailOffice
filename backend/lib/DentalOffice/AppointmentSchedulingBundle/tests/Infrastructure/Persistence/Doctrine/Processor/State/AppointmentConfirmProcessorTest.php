@@ -3,11 +3,20 @@
 namespace DentalOffice\AppointmentSchedulingBundle\Tests\tructure\Persistence\Doctrine\Processor\State ;
 
 use ApiPlatform\Metadata\Put;
+use DateTimeImmutable;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Aggregate\Appointment;
+use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\AppointmentStatus;
+use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PatientId;
+use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PractitionerId;
+use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PurposeId;
+use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\TimeSlot;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
 use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentConfirmProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Tests\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentProcessorTest;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
+use DentalOffice\UserBundle\Domain\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class AppointmentConfirmProcessorTest extends AppointmentProcessorTest
 {
@@ -59,4 +68,5 @@ class AppointmentConfirmProcessorTest extends AppointmentProcessorTest
      
 
    }
+
 }

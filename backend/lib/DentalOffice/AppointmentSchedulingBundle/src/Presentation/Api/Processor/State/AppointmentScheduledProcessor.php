@@ -9,6 +9,7 @@ use DentalOffice\AppointmentSchedulingBundle\Application\Handler\ScheduleAppoint
 use DentalOffice\AppointmentSchedulingBundle\Domain\Aggregate\Appointment;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\AppointmentConflictDetected;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\AppointmentConflictException;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\PatientNotFoundException;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Service\AppointmentConflictChecker;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\AppointmentDate;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\AppointmentStatus;
@@ -46,6 +47,7 @@ class AppointmentScheduledProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
 
+        
         $request = $context["request"];
 
         $json = json_decode($request->getContent(), true);
@@ -59,6 +61,13 @@ class AppointmentScheduledProcessor implements ProcessorInterface
 
         $patientId =  $uriVariables["patientId"];
        
+        $patient = $this->entityManager
+            ->getRepository(Patient::class)
+            ->find($patientId);
+
+        if (!$patient) {
+            throw new PatientNotFoundException($patientId);
+        }
         $practitionerId = PractitionerId::fromInt((int) $user->getId());
 
         $this->conflictChecker->assertNoConflict($practitionerId, $timeSlot);

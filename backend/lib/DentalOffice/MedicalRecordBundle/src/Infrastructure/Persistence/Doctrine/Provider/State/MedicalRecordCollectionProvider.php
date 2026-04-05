@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use ApiPlatform\State\ProviderInterface;
 use ApiPlatform\Metadata\Operation;
-use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Repository\MedicalRecordRepository;
 
 class MedicalRecordCollectionProvider implements ProviderInterface
 {

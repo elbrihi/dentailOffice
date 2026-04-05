@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Get;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPostProcessor;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPutProcessor;
@@ -27,14 +28,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
     order: ['id' => 'DESC'],
     operations:[
             new Post(
-                security: "is_granted('ROLE_ADMIN')",
+                security: "is_granted('ROLE_OWNER')",
                 uriTemplate: "/create/new/patient",
                 processor: PatientPostProcessor::class,
                 normalizationContext: ['groups' => ['patient:read']],
                 denormalizationContext: ['groups' => ['patient:write']],
             ),
             new Put(
-                security: "is_granted('ROLE_ADMIN')",
+                security: "is_granted('ROLE_OWNER')",
                 uriTemplate: "/update/patient/{id}",
                 processor: PatientPutProcessor::class,
                 normalizationContext: ['groups' => ['patient:read']],
@@ -136,7 +137,7 @@ class Patient
     #[Groups(['visit:read','visit:write','patient:read','patient:write','invoice:write','invoice:read'])]
     private ?string $cni = null;
 
-    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: MedicalRecordOrmEntity::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]
     #[Groups(['patient:read','patient:write'])]
     #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $medicalRecord;
@@ -364,7 +365,7 @@ class Patient
         return $this->medicalRecord;
     }
 
-    public function addMedicalRecord(MedicalRecord $medicalRecord): static
+    public function addMedicalRecord(MedicalRecordOrmEntity $medicalRecord): static
     {
         if (!$this->medicalRecord->contains($medicalRecord)) {
             $this->medicalRecord->add($medicalRecord);
@@ -374,7 +375,7 @@ class Patient
         return $this;
     }
 
-    public function removeMedicalRecord(MedicalRecord $medicalRecord): static
+    public function removeMedicalRecord(MedicalRecordOrmEntity $medicalRecord): static
     {
         if ($this->medicalRecord->removeElement($medicalRecord)) {
             // set the owning side to null (unless already changed)
@@ -416,4 +417,5 @@ class Patient
         return $this;
     }
  
+
 }

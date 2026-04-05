@@ -1,0 +1,183 @@
+{
+  "patient": {
+    "id": 1,
+    "firstName": "Zineb",
+    "lastName": "Amrani",
+
+    "appointments": [
+      {
+        "id": 101,
+        "appointmentDate": "2025-02-12T09:00:00",
+        "reason": "Douleur prémolaire",
+        "status": "completed"
+      },
+      {
+        "id": 102,
+        "appointmentDate": "2025-02-19T09:00:00",
+        "reason": "Suite traitement",
+        "status": "completed"
+      },
+
+      // 🆕 New appointment after 2 years
+      {
+        "id": 201,
+        "appointmentDate": "2027-03-10T10:00:00",
+        "reason": "Douleur molaire",
+        "status": "completed"
+      }
+    ],
+
+    "medicalRecords": [
+      {
+        "id": 201,
+        "clinicalDiagnosis": "Caries profonde",
+        "treatmentPlan": "Dévitalisation + composite",
+        "agreedAmount": 1000,
+        "currency": "MAD",
+
+        "visits": [
+          {
+            "id": 1001,
+            "appointmentId": 101,
+            "visitDate": "2025-02-12",
+            "notes": "Consultation initiale",
+            "status": "completed"
+          },
+          {
+            "id": 1002,
+            "appointmentId": 102,
+            "visitDate": "2025-02-19",
+            "notes": "Dévitalisation",
+            "status": "completed"
+          },
+          {
+            "id": 1003,
+            "appointmentId": 102,
+            "visitDate": "2025-03-01",
+            "notes": "Composite terminé",
+            "status": "completed"
+          }
+        ],
+
+        "invoices": [
+          {
+            "id": 5001,
+            "invoiceNumber": "INV-2025-0001",
+            "issueDate": "2025-02-12",
+
+            "totalAmount": 1000,
+            "paidAmount": 1000,
+            "remainingAmount": 0,
+            "status": "paid",
+
+            "items": [
+              {
+                "description": "Consultation initiale",
+                "amount": 300,
+                "visitId": 1001
+              },
+              {
+                "description": "Dévitalisation",
+                "amount": 400,
+                "visitId": 1002
+              },
+              {
+                "description": "Composite",
+                "amount": 300,
+                "visitId": 1003
+              }
+            ],
+
+            "payments": [
+              {
+                "id": 9001,
+                "paymentDate": "2025-02-12",
+                "amount": 300,
+                "method": "cash",
+                "status": "completed",
+                "reference": null
+              },
+              {
+                "id": 9002,
+                "paymentDate": "2025-02-19",
+                "amount": 400,
+                "method": "cash",
+                "status": "completed",
+                "reference": null
+              },
+              {
+                "id": 9003,
+                "paymentDate": "2025-03-01",
+                "amount": 300,
+                "method": "cash",
+                "status": "completed",
+                "reference": null
+              }
+            ]
+          }
+        ]
+      },
+
+      // 🆕 NEW MEDICAL RECORD (2 years later)
+      {
+        "id": 301,
+        "clinicalDiagnosis": "Infection molaire",
+        "treatmentPlan": "Extraction + implant",
+        "agreedAmount": 3000,
+        "currency": "MAD",
+
+        "visits": [
+          {
+            "id": 2001,
+            "appointmentId": 201,
+            "visitDate": "2027-03-10",
+            "notes": "Consultation + radio",
+            "status": "completed"
+          }
+        ],
+
+        "invoices": [
+          {
+            "id": 6001,
+            "invoiceNumber": "INV-2027-0001",
+            "issueDate": "2027-03-10",
+
+            "totalAmount": 3000,
+            "paidAmount": 500,
+            "remainingAmount": 2500,
+            "status": "partially_paid",
+
+            "items": [
+              {
+                "description": "Consultation + radio",
+                "amount": 500,
+                "visitId": 2001
+              },
+              {
+                "description": "Extraction",
+                "amount": 1000,
+                "visitId": null
+              },
+              {
+                "description": "Implant",
+                "amount": 1500,
+                "visitId": null
+              }
+            ],
+
+            "payments": [
+              {
+                "id": 9101,
+                "paymentDate": "2027-03-10",
+                "amount": 500,
+                "method": "cash",
+                "status": "completed",
+                "reference": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

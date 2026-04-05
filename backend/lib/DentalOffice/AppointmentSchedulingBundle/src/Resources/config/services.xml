@@ -17,9 +17,9 @@
             <argument id="api_platform.validator" />
         </service>
 
-        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor'
+        <service id='DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\VisitPostStateProcessor'
         
-                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\VisitPostStateProcessor' >
+                class = 'DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\VisitPostStateProcessor' >
             <argument id="api_platform.doctrine.orm.state.persist_processor" />
             <argument id="api_platform.doctrine.orm.state.remove_processor" />
             <argument id="api_platform.validator" />
@@ -47,6 +47,13 @@
             <argument id="api_platform.validator" />
         </service>
 
+        <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentCompletedProcessor'
+        
+                class = 'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentCompletedProcessor' >
+            <argument id="api_platform.doctrine.orm.state.persist_processor" />
+            <argument id="api_platform.doctrine.orm.state.remove_processor" />
+            <argument id="api_platform.validator" />
+        </service>
 
         <service id='DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State\AppointmentScheduledProcessor'
         

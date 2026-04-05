@@ -3,12 +3,12 @@
 namespace DentalOffice\UserBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\Post;
-use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -69,7 +69,6 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Groups(['read:authToken', 'write:authToken'])]
-    
     private ?string $apiToken = null;
 
     protected $plainPassword;
@@ -80,10 +79,10 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Patient::class, mappedBy: 'modifiedBy')]
     private Collection $patientdModifieds;
 
-    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'createdBy')]
+    #[ORM\OneToMany(targetEntity: MedicalRecordOrmEntity::class, mappedBy: 'createdBy')]
     private Collection $medicalRecords;
 
-    #[ORM\OneToMany(targetEntity: MedicalRecord::class, mappedBy: 'modifiedBy')]
+    #[ORM\OneToMany(targetEntity: MedicalRecordOrmEntity::class, mappedBy: 'modifiedBy')]
     private Collection $medicalRecordsModifier;
 
     #[ORM\OneToMany(targetEntity: AppointmentOrmEntity::class, mappedBy: 'user')]
@@ -95,6 +94,10 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: VisitOrmEntity::class, mappedBy: 'createdBy')]
     private Collection $visits;
 
+    #[ORM\OneToMany(targetEntity: MedicalRecordOrmEntity::class, mappedBy: 'user')]
+    private Collection $medicalRecord;
+
+
 
     public function __construct()
     {
@@ -105,6 +108,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         $this->appointment = new ArrayCollection();
         $this->appointments = new ArrayCollection();
         $this->visits = new ArrayCollection();
+        $this->medicalRecord = new ArrayCollection();
     }
 
 
@@ -282,7 +286,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this->medicalRecords;
     }
 
-    public function addMedicalRecord(MedicalRecord $medicalRecord): static
+    public function addMedicalRecord(MedicalRecordOrmEntity $medicalRecord): static
     {
         if (!$this->medicalRecords->contains($medicalRecord)) {
             $this->medicalRecords->add($medicalRecord);
@@ -292,7 +296,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeMedicalRecord(MedicalRecord $medicalRecord): static
+    public function removeMedicalRecord(MedicalRecordOrmEntity $medicalRecord): static
     {
         if ($this->medicalRecords->removeElement($medicalRecord)) {
             // set the owning side to null (unless already changed)
@@ -312,7 +316,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this->medicalRecordsModifier;
     }
 
-    public function addMedicalRecordsModifier(MedicalRecord $medicalRecordsModifier): static
+    public function addMedicalRecordsModifier(MedicalRecordOrmEntity $medicalRecordsModifier): static
     {
         if (!$this->medicalRecordsModifier->contains($medicalRecordsModifier)) {
             $this->medicalRecordsModifier->add($medicalRecordsModifier);
@@ -322,7 +326,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeMedicalRecordsModifier(MedicalRecord $medicalRecordsModifier): static
+    public function removeMedicalRecordsModifier(MedicalRecordOrmEntity $medicalRecordsModifier): static
     {
         if ($this->medicalRecordsModifier->removeElement($medicalRecordsModifier)) {
             // set the owning side to null (unless already changed)
@@ -401,5 +405,15 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, MedicalRecordOrmEntity>
+     */
+    public function getMedicalRecord(): Collection
+    {
+        return $this->medicalRecord;
+    }
+
+
 
 }

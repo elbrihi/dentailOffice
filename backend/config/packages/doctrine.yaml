@@ -42,8 +42,8 @@ doctrine:
             DentalOfficeMedicalRecordBundle:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/lib/DentalOffice/MedicalRecordBundle/src/Domain/Entity'
-                prefix: 'DentalOffice\MedicalRecordBundle\Domain\Entity'
+                dir: '%kernel.project_dir%/lib/DentalOffice/MedicalRecordBundle/src/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity'
                 alias: DentalOfficeMedicalRecordBundle
             DentalOfficeAppointmentSchedulingBundle:
                 type: attribute
@@ -55,15 +55,15 @@ doctrine:
             DentalOfficePaymentsBundle:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/lib/DentalOffice/PaymentsBundle/src/Domain/Entity'
-                prefix: 'DentalOffice\PaymentsBundle\Domain\Entity'
+                dir: '%kernel.project_dir%/lib/DentalOffice/PaymentsBundle/src/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'DentalOffice\PaymentsBundle\Infrastructure\Persistence\Doctrine\Entity'
                 alias: DentalOfficePaymentsBundle
 
             DentalOfficeInvoiceBundle:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/lib/DentalOffice/InvoiceBundle/src/Domain/Entity'
-                prefix: 'DentalOffice\InvoiceBundle\Domain\Entity'
+                dir: '%kernel.project_dir%/lib/DentalOffice/InvoiceBundle/src/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity'
                 alias: DentalOfficeInvoiceBundle
         controller_resolver:
             auto_mapping: true

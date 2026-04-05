@@ -3,7 +3,7 @@
 namespace DentalOffice\AppointmentSchedulingBundle\Application\Dto;
 
 use DateTimeInterface;
-use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Symfony\Component\Serializer\Annotation\Context;
@@ -18,7 +18,7 @@ class VisitInputDto
     private ?string $notes = null;
     private ?float $amountPaid = null;
     private ?float $remainingDueAfterVisit = null;
-    private ?MedicalRecord $medicalRecord = null;
+    private ?MedicalRecordOrmEntity $medicalRecord = null;
     private ?DateTimeInterface $createdAt = null;
     private ?\DateTimeImmutable $modifiedAt = null;
     private ?User $createdBy = null;
@@ -89,12 +89,12 @@ class VisitInputDto
         return $this;
     }
 
-    public function getMedicalRecord(): ?MedicalRecord
+    public function getMedicalRecord(): ?MedicalRecordOrmEntity
     {
         return $this->medicalRecord;
     }
 
-    public function setMedicalRecord(?MedicalRecord $medicalRecord): static
+    public function setMedicalRecord(?MedicalRecordOrmEntity $medicalRecord): static
     {
         $this->medicalRecord = $medicalRecord;
         return $this;

@@ -35,7 +35,7 @@ class AppointmentCancelledProcessor implements ProcessorInterface
     }
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): AppointmentOrmEntity
     {
-                $request = $context["request"];
+        $request = $context["request"];
 
         $appointmentId = $uriVariables["appointmentId"];
 

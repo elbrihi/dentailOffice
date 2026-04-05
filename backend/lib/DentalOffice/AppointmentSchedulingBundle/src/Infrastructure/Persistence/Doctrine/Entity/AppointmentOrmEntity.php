@@ -7,15 +7,16 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Repository\AppointmentRepository;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\PatientNotFoundException;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentsGetCollectionProvider;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider\State\AppointmentStateProvider;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Repository\AppointmentRepository as RepositoryAppointmentRepository;
-use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentPostProcessor;
+use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentCompletedProcessor;
+use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentConfirmProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentPutProcessor as StateAppointmentPutProcessor;
 use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentScheduledProcessor;
-use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentStateProcessor as StateAppointmentStateProcessor;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
 
@@ -35,9 +36,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ApiResource(
     order: ['id' => 'DESC'],
+
     operations:[
         new Post(
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_OWNER')",
             uriTemplate: "/create/patient/{patientId}/appointment",
             uriVariables: [
                 'patientId' => new Link(
@@ -50,21 +52,48 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups'=>'appointment:write'],
             denormalizationContext: ['groups'=>'appointment:read'],
         ),
+        new Post(
+            security: "is_granted('APPOINTMENT_COMPLETE', object)",
+            uriTemplate: "/complete/appointment/{appointmentId}",
+            uriVariables: [
+                'appointmentId' => new Link(
+                    fromClass: AppointmentOrmEntity::class,
+                   
+                )
+            ],
+            processor: AppointmentCompletedProcessor::class,
+            normalizationContext: ['groups'=>'appointment:write'],
+            denormalizationContext: ['groups'=>'appointment:read'],
+        ),
+        new Patch(
+            security:  "is_granted('ROLE_OWNER')",
+            uriTemplate: "/confirme/appointment/{appointmentId}",
+            uriVariables: [
+                'appointmentId' => new Link(
+                    fromClass: AppointmentOrmEntity::class,
+                   
+                )
+            ],
+            processor: AppointmentConfirmProcessor::class,
+            normalizationContext: ['groups'=>'appointment:write'],
+            denormalizationContext: ['groups'=>'appointment:read'],
+           
+        ),
         new Get(
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_OWNER')",
             uriTemplate: "/get/appointment/by/{id}",
             normalizationContext: ['groups'=>'appointment:write'],
             denormalizationContext: ['groups'=>'appointment:read']
         ),
         new Put(
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_OWNER')",
             uriTemplate: "/update/appointment/{id}",
             processor: StateAppointmentPutProcessor::class,
             normalizationContext: ['groups'=>'appointment:write'],
             denormalizationContext: ['groups'=>'appointment:read'],
         ),
         new GetCollection(
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_OWNER')",
             uriTemplate: "/get/appointments/by/paginations",
             processor: AppointmentsGetCollectionProvider::class,
             normalizationContext: ['groups'=>'appointment:write'],
@@ -125,6 +154,9 @@ class  AppointmentOrmEntity
     #[ORM\Column]
     private ?\DateTimeImmutable $end = null;
 
+
+
+   
     public function __construct()
     {
     }
@@ -255,6 +287,9 @@ class  AppointmentOrmEntity
 
         return $this;
     }
+
+
+
 
 
 }

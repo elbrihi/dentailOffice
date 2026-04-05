@@ -4,7 +4,9 @@ namespace  DentalOffice\InvoiceBundle\Application\UseCase;
 
 use DentalOffice\InvoiceBundle\Application\Event\InvoiceUpdatedEvent;
 use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
+use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity\InvoiceOrmEntity;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
@@ -22,7 +24,7 @@ class UpdatingtingInvoiceOnUpdatingVisitsMedicalRecord
         $medicalRecordId = $event->getMedicalRecordId();
 
         /** @var MedicalRecord $medicalRecord */
-        $medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)
+        $medicalRecord = $this->entityManager->getRepository(MedicalRecordOrmEntity::class)
             ->find($medicalRecordId);
 
         
@@ -31,7 +33,7 @@ class UpdatingtingInvoiceOnUpdatingVisitsMedicalRecord
         }
 
 
-        $invoice = $this->entityManager->getRepository(Invoice::class)->findOneBy([
+        $invoice = $this->entityManager->getRepository(InvoiceOrmEntity::class)->findOneBy([
             "medicalRecord" => $medicalRecord
         ]);
        

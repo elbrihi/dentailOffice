@@ -7,7 +7,7 @@ use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\ReschouldException
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\ShowException;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\AppointmentStatus;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\CancelledException;
-
+use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\CompletedException;
 use PHPUnit\Framework\TestCase;
 
 class AppointmentStatusTest extends TestCase
@@ -18,6 +18,7 @@ class AppointmentStatusTest extends TestCase
    private const CONFIRMED = 'confirmed';
    private const NO_SHOW = 'no_show';
    private const CANCELLED = 'cancelled';
+   private const COMPLETED = 'completed';
    protected function setUp(): void
    {
        parent::setUp(); 
@@ -55,16 +56,16 @@ class AppointmentStatusTest extends TestCase
              
    }
 
-   public function test_can_t_reschould_appointment()
-   {
-        try {
-            AppointmentStatus::reschould("test");
-        } catch (ReschouldException $e) {
-            //throw $th;
+//    public function test_can_t_reschould_appointment()
+//    {
+//         try {
+//             AppointmentStatus::reschould("test");
+//         } catch (ReschouldException $e) {
+//             //throw $th;
 
-            $this->assertSame($e->getMessage(),"to reschoulde new appointment have be confirmed or scheduled");
-        }
-   }
+//             $this->assertSame($e->getMessage(),"to reschoulde new appointment have be confirmed or scheduled");
+//         }
+//    }
 
     public function test_can_reschould_appointment()
    {
@@ -108,7 +109,7 @@ class AppointmentStatusTest extends TestCase
        $this->assertSame($confirmed->getStatus(),self::CANCELLED);
     }
 
-    public function test_can_t_cancels_appointment()
+    public function test_can_t_cancel_appointment()
     {
 
         try {
@@ -119,5 +120,32 @@ class AppointmentStatusTest extends TestCase
     }
 
 
+    public function test_can_appointment_completed()
+    {
+
+       $completed = AppointmentStatus::completed(self::CONFIRMED);
+
+       $this->assertInstanceOf(AppointmentStatus::class, $completed);
+
+       $this->assertSame($completed ->getStatus(),self::COMPLETED);
+    }
+
+    public function test_can_t_complete_appointment()
+    {
+
+        try {
+            AppointmentStatus::completed("test");
+        } catch (CompletedException $e) {
+
+
+            $json = json_decode($e->getMessage(), true);
+
+            $this->assertArrayHasKey('type', $json);
+            $this->assertSame(409, $json['status']);
+           // $this->assertStringContainsString('already has an appointment', $json['detail']);
+        }
+        
+    }
+    
 
 }

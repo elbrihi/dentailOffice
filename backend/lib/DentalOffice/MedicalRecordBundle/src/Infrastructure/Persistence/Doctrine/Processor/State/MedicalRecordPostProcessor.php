@@ -5,7 +5,7 @@ namespace DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\P
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use DateTimeImmutable;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Appointment;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
 use DentalOffice\InvoiceBundle\Application\Event\InvoiceCreatedEvent;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
@@ -51,7 +51,7 @@ class MedicalRecordPostProcessor implements ProcessorInterface
                         'id' =>  $patientId 
         ]);
 
-        $appointment = $this->entityManager->getRepository(Appointment::class)->findOneBy([
+        $appointment = $this->entityManager->getRepository(AppointmentOrmEntity::class)->findOneBy([
             'id' => $appointmentId
         ]);
 

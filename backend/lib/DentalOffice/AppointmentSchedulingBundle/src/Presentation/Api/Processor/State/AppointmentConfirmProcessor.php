@@ -35,9 +35,11 @@ class AppointmentConfirmProcessor implements ProcessorInterface
     }
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): AppointmentOrmEntity
     {
+       
         $request = $context["request"];
 
-        $appointmentId = $uriVariables["appointmentId"];
+        
+        $appointmentId =  (int)  $uriVariables["appointmentId"];
 
         $orm =  $this->entityManager->getRepository(AppointmentOrmEntity::class)
                         ->findOneBy(
@@ -50,6 +52,7 @@ class AppointmentConfirmProcessor implements ProcessorInterface
         );
     
 
+    
        
         PatientId::fromInt($orm->getPatient()->getId());
         
@@ -66,6 +69,7 @@ class AppointmentConfirmProcessor implements ProcessorInterface
            AppointmentStatus::confirmed($orm->getStatus())
 
         );
+        
         
         $orm->setStatus($appointment->getStatus()->getStatus());
 

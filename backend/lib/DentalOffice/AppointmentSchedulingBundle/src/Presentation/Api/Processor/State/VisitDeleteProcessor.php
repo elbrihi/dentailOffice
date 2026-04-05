@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use DentalOffice\InvoiceBundle\Application\Event\InvoiceUpdatedEvent;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,7 +43,7 @@ class VisitDeleteProcessor implements ProcessorInterface
             throw new BadRequestHttpException('Missing visitId.');
         }
 
-        $visit = $this->entityManager->getRepository(Visit::class)->find($visitId);
+        $visit = $this->entityManager->getRepository(VisitOrmEntity::class)->find($visitId);
         if (!$visit) {
             throw new NotFoundHttpException('Visit not found.');
         }

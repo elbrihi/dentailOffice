@@ -1,0 +1,101 @@
+{
+  "patient": {
+    "id": 1,
+    "firstName": "Zineb",
+    "lastName": "Amrani",
+
+    "appointments": [
+      {
+        "id": 101,
+        "appointmentDate": "2025-02-12T09:00:00",
+        "reason": "Douleur prémolaire",
+        "status": "completed"
+      },
+      {
+        "id": 102,
+        "appointmentDate": "2025-02-19T09:00:00",
+        "reason": "Suite traitement",
+        "status": "completed"
+      }
+    ],
+
+    "medicalRecords": [
+      {
+        "id": 201,
+
+        "clinicalDiagnosis": "Caries profonde",
+        "treatmentPlan": "Dévitalisation + composite",
+
+        "agreedAmount": 1000,
+        "currency": "MAD",
+
+        "visits": [
+          {
+            "id": 1001,
+            "appointmentId": 101,
+            "visitDate": "2025-02-12",
+            "notes": "Consultation initiale",
+            "status": "completed"
+          },
+          {
+            "id": 1002,
+            "appointmentId": 102,
+            "visitDate": "2025-02-19",
+            "notes": "Dévitalisation",
+            "status": "completed"
+          }
+        ],
+
+        "invoices": [
+          {
+            "id": 5001,
+            "invoiceNumber": "INV-2025-0001",
+            "issueDate": "2025-02-12",
+
+            "totalAmount": 1000,
+            "paidAmount": 700,
+            "remainingAmount": 300,
+            "status": "partially_paid",
+
+            "items": [
+              {
+                "description": "Consultation initiale",
+                "amount": 300,
+                "visitId": 1001
+              },
+              {
+                "description": "Dévitalisation",
+                "amount": 400,
+                "visitId": 1002
+              },
+              {
+                "description": "Composite (reste à faire)",
+                "amount": 300,
+                "visitId": null
+              }
+            ],
+
+            "payments": [
+              {
+                "id": 9001,
+                "paymentDate": "2025-02-12",
+                "amount": 300,
+                "method": "cash",
+                "status": "completed",
+                "reference": null
+              },
+              {
+                "id": 9002,
+                "paymentDate": "2025-02-19",
+                "amount": 400,
+                "method": "cash",
+                "status": "completed",
+                "reference": null
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

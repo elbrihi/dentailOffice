@@ -4,6 +4,7 @@
 namespace DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject;
 
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\CancelledException;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\CompletedException;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\ConfirmedException;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\RescheduleException;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\ReschouldException;
@@ -17,6 +18,7 @@ class AppointmentStatus
    private const CANCELLED = 'cancelled';
    private const NO_SHOW = 'no_show';
    private const RESCHEDULED = 'rescheduled';
+   private const COMPLETED = 'completed';
 
    private $value ;
 
@@ -34,6 +36,7 @@ class AppointmentStatus
 
    public static function confirmed(string $scheduled):self
    {
+  
       if($scheduled !== self::SCHEDULED)
       {
          throw ConfirmedException::invalid();
@@ -73,6 +76,31 @@ class AppointmentStatus
       return new self(self::CANCELLED);
    }
 
+   public static function completed(string  $confirmed):self
+   {
+
+   
+      if($confirmed !== self::CONFIRMED)
+      {
+         throw CompletedException::invalidStatus($confirmed);
+      }
+      return new self(self::COMPLETED);
+   }
+    public function transitionTo(string $newStatus): self
+    {
+        $allowed = [
+            self::SCHEDULED => [self::CONFIRMED, self::CANCELLED, self::RESCHEDULED],
+            self::CONFIRMED => [self::COMPLETED, self::CANCELLED, self::RESCHEDULED],
+        ];
+
+        if (!in_array($newStatus, $allowed[$this->value] ?? [], true)) {
+            throw new \DomainException(
+                "Invalid transition from {$this->value} to {$newStatus}"
+            );
+        }
+
+        return new self($newStatus);
+    }
    public function getStatus(): string 
    {
      return $this->value;

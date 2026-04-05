@@ -2,8 +2,8 @@
 
 namespace DentalOffice\AppointmentSchedulingBundle\Application\UseCase;
 
-use DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent;
-use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\AppointmentSchedulingBundle\Domain\Event\VisitCreatedEvent;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
@@ -25,11 +25,12 @@ class UpdateMedicalRecordOnVisit
         $medicalRecordId = $event->getMedicalRecordId();
         
       
-        $medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)->findOneBy([
+        $medicalRecord = $this->entityManager->getRepository(MedicalRecordOrmEntity::class)->findOneBy([
               'id' => $medicalRecordId
             ]
         );
         
+       
         
 
         $agreedAmout = $medicalRecord->getAgreedAmout();
@@ -62,7 +63,8 @@ class UpdateMedicalRecordOnVisit
        
         $this->entityManager->persist($medicalRecord);
         $this->entityManager->flush();
-   
-       // dd($visits);
+        
+        
+        dd($visits);
     }
 }

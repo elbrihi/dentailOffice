@@ -4,7 +4,7 @@ namespace DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\P
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use DentalOffice\MedicalRecordBundle\Domain\Repository\MedicalRecordRepository;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Repository\MedicalRecordRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as ExceptionNotFoundHttpException;
 
 class GetMedicalRecordByPatientProvider implements ProviderInterface

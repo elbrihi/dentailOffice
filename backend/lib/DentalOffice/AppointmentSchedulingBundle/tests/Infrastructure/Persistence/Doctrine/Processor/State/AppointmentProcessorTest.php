@@ -2,7 +2,7 @@
 
 namespace DentalOffice\AppointmentSchedulingBundle\Tests\Infrastructure\Persistence\Doctrine\Processor\State;
 
-use ApiPlatform\Metadata\Post;
+;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Aggregate\Appointment;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\AppointmentStatus;
@@ -11,8 +11,11 @@ use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PractitionerId;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PurposeId;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\TimeSlot;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
-use DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State\AppointmentScheduledProcessor;
-use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
+use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity\InvoiceItemOrmEntity;
+use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity\InvoiceOrmEntity;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\PrescriptionOrmEntity;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,10 +28,12 @@ class AppointmentProcessorTest  extends KernelTestCase
     protected EntityManagerInterface $entityManager;
     protected ClockInterface $clock;
     protected const CNI = 'CNI987654';
+    protected $container;
 
     public static string $username = "testuser";
     protected function setUp():void
     {
+
 
         self::bootKernel();
 
@@ -36,31 +41,47 @@ class AppointmentProcessorTest  extends KernelTestCase
         $this->entityManager = $container->get(EntityManagerInterface::class);
         $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
 
-        $medicalRecords = $this->entityManager->getRepository(MedicalRecord::class)->findAll();
-        foreach ($medicalRecords as $medicalRecord) {
-            $this->entityManager->remove($medicalRecord);
+        foreach ($this->entityManager->getRepository(InvoiceItemOrmEntity::class)->findAll() as $invoice) {
+            $this->entityManager->remove($invoice);
         }
-        // Step 1: Remove Appointments
-        $appointments = $this->entityManager->
-                     getRepository(AppointmentOrmEntity::class)->findAll();
-        foreach ($appointments as $appointment) {
+
+        foreach ($this->entityManager->getRepository(InvoiceOrmEntity::class)->findAll() as $invoice) {
+            $this->entityManager->remove($invoice);
+        }
+        // Step 2: Remove Patients
+
+        // 1. Prescreption (deepest child)
+        foreach ($this->entityManager->getRepository(PrescriptionOrmEntity::class)->findAll() as $presciption) {
+            $this->entityManager->remove( $presciption);
+        }
+
+        // 1. Visits (deepest child)
+        foreach ($this->entityManager->getRepository(VisitOrmEntity::class)->findAll() as $visit) {
+            $this->entityManager->remove($visit);
+        }
+
+        // 2. Medical Records
+        foreach ($this->entityManager->getRepository(MedicalRecordOrmEntity::class)->findAll() as $mr) {
+            $this->entityManager->remove($mr);
+        }
+
+        // 3. Appointments
+        foreach ($this->entityManager->getRepository(AppointmentOrmEntity::class)->findAll() as $appointment) {
             $this->entityManager->remove($appointment);
         }
 
-        // Step 2: Remove Patients
-        $patients = $this->entityManager->getRepository(Patient::class)->findAll();
-        foreach ($patients as $patient) {
+        // 4. Patients
+        foreach ($this->entityManager->getRepository(Patient::class)->findAll() as $patient) {
             $this->entityManager->remove($patient);
         }
 
-        // Step 3: Remove Users
-        $users = $this->entityManager->getRepository(User::class)->findAll();
-        foreach ($users as $user) {
+        // 5. Users (root)
+        foreach ($this->entityManager->getRepository(User::class)->findAll() as $user) {
             $this->entityManager->remove($user);
         }
 
-        // Step 4: Apply the deletions
         $this->entityManager->flush();
+
     }
 
 

@@ -1,15 +1,17 @@
 <?php
 
-namespace DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Processor\State;
+namespace DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Application\Event\VisitCreatedEvent;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Entity\Visit;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use DentalOffice\InvoiceBundle\Application\Event\InvoiceCreatedEvent;
 use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use DentalOffice\PaymentsBundle\Domain\Entity\Payment;
 use DentalOffice\PaymentsBundle\Domain\Repository\PaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,7 +47,7 @@ class VisitPostStateProcessor implements ProcessorInterface
 
        
         $medicalRecordId = $uriVariables['medicalRecordId'];
-        $medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)
+        $medicalRecord = $this->entityManager->getRepository(MedicalRecordOrmEntity::class)
                             ->findOneBy(['id' => $medicalRecordId]);
 
         if (!$medicalRecord) {
@@ -69,7 +71,7 @@ class VisitPostStateProcessor implements ProcessorInterface
         $this->entityManager->flush();
 
         // 2️⃣ Create the real Visit Entity from DTO data
-        $visit = new Visit();
+        $visit = new VisitOrmEntity();
 
         $visit->setDurationMinutes($body["duration_minutes"]);
         $visit->setType($body["type"]);

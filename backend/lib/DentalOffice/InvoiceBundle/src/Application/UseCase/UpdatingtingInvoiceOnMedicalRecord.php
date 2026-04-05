@@ -4,7 +4,9 @@ namespace DentalOffice\InvoiceBundle\Application\UseCase;
 
 use DentalOffice\InvoiceBundle\Application\Event\InvoiceCreatedEvent;
 use DentalOffice\InvoiceBundle\Domain\Entity\Invoice;
+use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity\InvoiceOrmEntity;
 use DentalOffice\MedicalRecordBundle\Domain\Entity\MedicalRecord;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
@@ -24,7 +26,7 @@ class UpdatingtingInvoiceOnMedicalRecord
 
        
         /** @var MedicalRecord $medicalRecord */
-        $medicalRecord = $this->entityManager->getRepository(MedicalRecord::class)
+        $medicalRecord = $this->entityManager->getRepository(MedicalRecordOrmEntity::class)
             ->find($medicalRecordId);
 
         if (!$medicalRecord) {
@@ -56,7 +58,7 @@ class UpdatingtingInvoiceOnMedicalRecord
             $invoice->setMedicalRecord($medicalRecord);
             $medicalRecord->addInvoice($invoice); // ✅ keep the collection in sync
         } else {
-            $invoice = new Invoice();
+            $invoice = new InvoiceOrmEntity();
             $invoice->setInvoiceDate(new \DateTime());
             $invoice->setMedicalRecord($medicalRecord);
             $invoice->setTotalPaid($medicalRecord->getTotalPaid());

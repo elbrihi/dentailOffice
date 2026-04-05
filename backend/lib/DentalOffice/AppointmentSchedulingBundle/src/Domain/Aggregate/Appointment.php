@@ -18,9 +18,7 @@ final class Appointment
     private PurposeId $purposeId,
     private AppointmentStatus $status
    )
-   {
-   
-   }
+   {}
 
    public static function book(
       PatientId $patientId ,
@@ -59,13 +57,13 @@ final class Appointment
         return $this->practitionerId;
     }
 
-      /**
-       * Get the value of purposeId
-       */ 
-      public function getPurposeId():PurposeId
-      {
-            return $this->purposeId;
-      }
+    /**
+     * Get the value of purposeId
+     */ 
+    public function getPurposeId():PurposeId
+    {
+        return $this->purposeId;
+    }
 
     /**
      * Get the value of status

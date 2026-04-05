@@ -1,7 +1,6 @@
 <?php
 
-namespace DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider\State;
-
+namespace DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Provider\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\ProviderInterface;

@@ -2,8 +2,7 @@
 
 
 
-namespace DentalOffice\MedicalRecordBundle\Domain\Entity;
-
+namespace DentalOffice\MedicalRecordBundle\Application\Dto;
 
 class MedicalRecordDto
 {
