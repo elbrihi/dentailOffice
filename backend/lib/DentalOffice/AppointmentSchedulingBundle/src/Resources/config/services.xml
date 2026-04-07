@@ -138,6 +138,14 @@
             />
         </service>
 
+
+                <!-- ✅ YOUR VOTER -->
+        <service 
+            id="DentalOffice\AppointmentSchedulingBundle\Security\AppointmentVoter"
+            class="DentalOffice\AppointmentSchedulingBundle\Security\AppointmentVoter">
+            <tag name="security.voter" />
+        </service>
+
         
     </services>
     

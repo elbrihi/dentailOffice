@@ -41,7 +41,7 @@ class AppointmentCompletedProcessor implements ProcessorInterface
 
         $user =  $this->security->getUser();
 
-        dd($user);
+
        
         $request = $context["request"];
         
@@ -74,7 +74,7 @@ class AppointmentCompletedProcessor implements ProcessorInterface
            $timeSlot,
            PractitionerId::fromInt($orm->getUser()->getId()),
            PurposeId::fromString( $orm->getStatus()),
-           AppointmentStatus::completed($confirmed)
+           AppointmentStatus::completed($orm->getStatus())
 
         );
        
@@ -99,22 +99,11 @@ class AppointmentCompletedProcessor implements ProcessorInterface
 
         );
 
-     
-   
-        // MedicalRecord 
         $medicalRecord = $this->dispatcher->dispatch($appointmentComplted);
 
-       
-        // Visit
-
-        // Update Medical Record 
-
-        // payment
-
-        // invoice 
+    
         return  $orm;
         
-        // updating MedicalRecord in exist and payment and invoice 
     }
     
 }

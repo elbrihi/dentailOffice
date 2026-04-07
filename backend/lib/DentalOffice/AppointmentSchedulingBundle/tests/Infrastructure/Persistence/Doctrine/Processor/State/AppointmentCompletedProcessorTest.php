@@ -106,42 +106,17 @@ class AppointmentCompletedProcessorTest extends AppointmentProcessorTest
                                 "id" => $latestAppointment->getId()
                 ])->getStatus();
 
-            
-            // $request = new Request([], [], [], [], [], [], json_encode([
-            //     "visit_date" => "2025-02-12",
-            //     "chief_complaint" => "Jane",
-            //     "clinical_diagnosis" => "Caries profonde",
-            //     "treatment_plan" => "Dévitalisation + composite",
-            //     "prescriptions" => [
-            //         [
-            //             "medication" => "Metronidazole",
-            //             "dosage" => "500mg three times a day for 5 days",
-            //             "notes" => "Avoid alcohol during treatment"
-            //         ]
-            //     ],
-            //     "follow_up_date" => "2025-02-12",
-            //     "notes" => "notes tests",
-            //     "agreedAmout" => 1000,
-            // ]));
+            // 🔥 IMPORTANT: clear EM to force DB reload
+            $this->entityManager->clear();
 
+            // RE-FETCH from DB
+            $updatedAppointment = $this->entityManager
+                ->getRepository(AppointmentOrmEntity::class)
+                ->find($latestAppointment->getId());
 
-            // $this->assertSame($status,self::COMPLETED);
-          
-            // Given
-            // patient without medical record
-
-            // When
-            // appointment completed
-
-            // Then
-            // medical record created
-
-            // visit created
-            // payment created
-
-            // invoice created
-            // 
-                             
+            // ASSERT ✅
+            $this->assertEquals('completed', $updatedAppointment->getStatus());
+                                    
       }
      
       public function  test_updating_medicalRecord_payment_and_invoice():void

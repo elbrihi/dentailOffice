@@ -133,6 +133,7 @@ class VisitOrmEntity
 
 
     #[ORM\Column]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?bool $status = null;
 
     #[ORM\Column(length: 255)]
@@ -141,15 +142,19 @@ class VisitOrmEntity
 
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?\DateTimeInterface $start = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?\DateTimeInterface $end = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?AppointmentOrmEntity $appointment = null;
 
     #[ORM\OneToMany(targetEntity: PrescriptionOrmEntity::class, mappedBy: 'visitOrmEntity')]
+    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     private Collection $prescription;
 
     public function __construct()

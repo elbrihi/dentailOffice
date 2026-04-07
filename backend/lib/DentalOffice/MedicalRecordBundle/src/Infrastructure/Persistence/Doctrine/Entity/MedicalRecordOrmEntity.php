@@ -103,6 +103,7 @@ class MedicalRecordOrmEntity
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write','payment:write', 'payment:read'])]
     private ?int $id = null;
 
+    
     #[ORM\Column(length: 255)]
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?string $chief_complaint = null;
@@ -153,22 +154,25 @@ class MedicalRecordOrmEntity
 
 
     #[ORM\OneToMany(targetEntity: VisitOrmEntity::class, mappedBy: 'medicalRecord' , cascade: ['persist'])]
-    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     #[ORM\OrderBy(['id' => 'DESC'])]
+    #[Groups(['invoice:read', 'medical_record:read', 'patient:read'])]
     #[MaxDepth(1)]
     private Collection $visits;
 
     #[ORM\OneToMany(targetEntity: InvoiceOrmEntity::class, mappedBy: 'medicalRecord', cascade: ['persist'])]
-    #[Groups(['patient:read','patient:write','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read', 'medical_record:read', 'patient:read'])]
     private Collection $invoice;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'prescriptions')]
+    
     private ?self $medicalRecordOrmEntity = null;
 
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'medicalRecordOrmEntity')]
+    #[Groups(['invoice:read', 'medical_record:read', 'patient:read'])]
     private Collection $prescriptions;
 
     #[ORM\ManyToOne(inversedBy: 'medicalRecord' , cascade: ['persist'])]
+    #[Groups(['invoice:read', 'medical_record:read', 'patient:read'])]
     private ?User $user = null;
 
 

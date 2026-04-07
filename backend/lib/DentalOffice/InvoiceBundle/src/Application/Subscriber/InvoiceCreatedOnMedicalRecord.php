@@ -22,9 +22,10 @@ class InvoiceCreatedOnMedicalRecord implements EventSubscriberInterface
 {
    private const TOTAL_PAID = 0;
    private const REMAINING_DUE = 0;
+   
    public function __construct(
-    private EntityManagerInterface $entityManager,
-    private EventDispatcherInterface $dispatcher
+        private EntityManagerInterface $entityManager,
+        private EventDispatcherInterface $dispatcher
     )
    {
     

@@ -49,7 +49,7 @@ class PaymentOrmEntity
     #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write','invoice:write','invoice:read'])]
     private ?float $amountPaid = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist'])]
     private ?VisitOrmEntity $visit = null;
 
 

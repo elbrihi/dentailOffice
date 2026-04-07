@@ -6,23 +6,18 @@ namespace DentalOffice\AppointmentSchedulingBundle\Tests\Application\EventSubscr
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Application\EventSubscriber\VisitCreatedOnInvoicAndMedicalRecordSubscriber;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Aggregate\Appointment;
-use DentalOffice\AppointmentSchedulingBundle\Domain\Aggregate\Visit;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\AppointmentStatus;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PatientId;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PractitionerId;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\PurposeId;
 use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\TimeSlot;
-use DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject\VisitAmountPaid;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
-use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use DentalOffice\InvoiceBundle\Domain\Aggregate\InvoiceItem;
 use DentalOffice\InvoiceBundle\Domain\Event\InvoiceCreated;
 use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity\InvoiceItemOrmEntity;
 use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity\InvoiceOrmEntity;
-use DentalOffice\MedicalRecordBundle\Application\EventSubscriber\MedicalRecordCreatedOnVisitSubscriber;
 use DentalOffice\MedicalRecordBundle\Domain\Aggregate\MedicalRecord;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
-use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\PrescriptionOrmEntity;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use DentalOffice\UserBundle\Domain\Entity\User;
 
@@ -223,7 +218,7 @@ class VisitCreatedOnInvoicAndMRSubscriberTest extends VisitTest
         $timeSlot = new TimeSlot(
                         new DateTimeImmutable("2026-03-01 09:00:00") ,
                         new DateTimeImmutable("2026-03-01 09:30:00") 
-          );
+        );
 
         $appointmentSchoudled = Appointment::book(
                PatientId::fromInt((int) $patientId ),
@@ -266,9 +261,6 @@ class VisitCreatedOnInvoicAndMRSubscriberTest extends VisitTest
         $orm->setStatus($appointment->getStatus()->getStatus());
 
         $this->entityManager->persist($orm);
-     
-        
-
 
         $this->appointment = $orm;
         
@@ -333,58 +325,7 @@ class VisitCreatedOnInvoicAndMRSubscriberTest extends VisitTest
         $this->entityManager->persist($medicalRecord);
         $this->entityManager->flush();
         static::$medicalRecordId = $medicalRecord->getId();
-        // visit 
 
-
-        // $visitOrmEntity = new VisitOrmEntity();
-
-        //  $visit = Visit::createVisit(
-        //     VisitAmountPaid::fromFloatPositive($visitInpout["amount_paid"]),
-        // );
-
-        // $visitOrmEntity->setCreatedAt( $createdAt);
-        // $visitOrmEntity->setModifiedAt( $createdAt);
-        // $visitOrmEntity->setAmountPaid($visit->getVisitAmountPaid()->getAmountPaid());
-        // $visitOrmEntity->setNotes($visitInpout ["notes"]);
-        // $visitOrmEntity->setCreatedAt($createdAt);
-        // $visitOrmEntity->setCreatedBy($this->user);
-        // $visitOrmEntity->setNotes($visitInpout["notes"]);
-        // $visitOrmEntity->setModifiedBy($this->user);
-        // $visitOrmEntity->setMedicalRecord($medicalRecord );
-        // $visitOrmEntity->setStart($this->appointment->getStart());
-        // $visitOrmEntity->setEnd($this->appointment->getEnd());
-        // $visitOrmEntity->setModifiedBy($this->user);
-        // $visitOrmEntity->setStatus($this->appointment->getStatus());
-        // $visitOrmEntity->setType($visitInpout["type"]);
-        // $visitOrmEntity->setAppointment($this->appointment);
-        
-       
-        // $this->entityManager->persist($visitOrmEntity);
-      
-
-        // $prescription = new PrescriptionOrmEntity();
-
-        // $prescriptions = $this->payload()[0]['visit']['prescriptions'];
-
-
-
-        
-       
-        // for ($i=0; $i < sizeof($prescriptions) ; $i++) { 
-           
-        //     $prescriptionOrmEntity = new PrescriptionOrmEntity();
-            
-               
-        //     $prescriptionOrmEntity->setDosage($prescriptions[$i]['dosage']);
-        //     $prescriptionOrmEntity->setMedication($prescriptions[$i]['medication']);
-        //     $prescriptionOrmEntity->setNotes($prescriptions[$i]['notes']);
-        //     $prescriptionOrmEntity->setVisitOrmEntity($visitOrmEntity);
-
-        //     $this->entityManager->persist($prescriptionOrmEntity);
-           
-        // }
-
-        // $this->entityManager->flush();
 
         $this->medicalRecordOrm = $medicalRecord ;
       
@@ -400,7 +341,6 @@ class VisitCreatedOnInvoicAndMRSubscriberTest extends VisitTest
             "chief_complaint" => "Jane",
             "clinical_diagnosis" => "Caries profonde",
             "treatment_plan" => "Dévitalisation + composite",
-
             "notes" => "notes tests",
             "agreedAmount" => 1000,
         ];

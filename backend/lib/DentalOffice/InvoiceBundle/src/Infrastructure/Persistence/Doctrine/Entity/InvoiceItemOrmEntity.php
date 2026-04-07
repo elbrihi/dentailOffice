@@ -4,6 +4,8 @@ namespace DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Entity;
 
 use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Repository\InvoiceItemOrmEntityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: InvoiceItemOrmEntityRepository::class)]
 #[ORM\Table(name: "invoice_item")]
@@ -12,18 +14,23 @@ class InvoiceItemOrmEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?float $amount = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoiceItem')]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?InvoiceOrmEntity $invoiceOrmEntity = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?string $status = null;
 
     public function getId(): ?int

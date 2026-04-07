@@ -88,6 +88,7 @@ class MedicalRecordCreatedSubscriber implements EventSubscriberInterface
 
         $medicalRecordOrmEntity->setPatient($patient);
 
+
         $medicalRecordOrmEntity->setTotalPaid(0);
 
         $medicalRecordOrmEntity->setRemainingDue(0);

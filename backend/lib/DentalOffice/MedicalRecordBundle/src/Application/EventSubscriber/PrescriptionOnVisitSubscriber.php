@@ -2,8 +2,8 @@
 
 namespace DentalOffice\MedicalRecordBundle\Application\EventSubscriber;
 
-use DentalOffice\AppointmentSchedulingBundle\Domain\Event\VisitCreated;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Event\VisitEvent;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\PrescriptionOrmEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -27,15 +27,15 @@ class PrescriptionOnVisitSubscriber implements EventSubscriberInterface
     {
         $prescriptions = $event->getPayload()[0]['visit']['prescriptions'];
 
-        $visitOrmEntity = $this->entityManager->getRepository(PrescriptionOrmEntity::class)
+    
+
+        $visitOrmEntity = $this->entityManager->getRepository(VisitOrmEntity::class)
                               ->findOneBy(
                                 [
                                     'id' => $event->getVisitId()
                                 ]
         );
-
-        
-       
+      
         for ($i=0; $i < sizeof($prescriptions) ; $i++) { 
            
             $prescriptionOrmEntity = new PrescriptionOrmEntity();
@@ -46,6 +46,7 @@ class PrescriptionOnVisitSubscriber implements EventSubscriberInterface
             $prescriptionOrmEntity->setNotes($prescriptions[$i]['notes']);
             $prescriptionOrmEntity->setVisitOrmEntity($visitOrmEntity);
 
+            
             $this->entityManager->persist($prescriptionOrmEntity);
            
         }

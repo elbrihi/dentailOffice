@@ -18,6 +18,8 @@ class InvoicesGetCollectionProvider implements ProviderInterface
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): Paginator
     {
 
+       
+
         $qb  = $this->invoiceRepository->createQueryBuilder('i')
                 ->orderBy('i.id','DESC');
 

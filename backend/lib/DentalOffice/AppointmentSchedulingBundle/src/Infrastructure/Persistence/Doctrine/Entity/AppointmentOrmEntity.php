@@ -53,7 +53,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             denormalizationContext: ['groups'=>'appointment:read'],
         ),
         new Post(
-            security: "is_granted('APPOINTMENT_COMPLETE', object)",
+            securityPostDenormalize: "is_granted('APPOINTMENT_COMPLETE', object)",
             uriTemplate: "/complete/appointment/{appointmentId}",
             uriVariables: [
                 'appointmentId' => new Link(

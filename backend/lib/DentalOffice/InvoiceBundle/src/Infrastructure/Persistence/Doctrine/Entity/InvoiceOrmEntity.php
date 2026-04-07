@@ -62,43 +62,42 @@ class InvoiceOrmEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: false)]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?string $invoiceNumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?\DateTimeInterface $invoiceDate = null;
 
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?float $totalAmount = null;
 
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?float $totalPaid = null;
 
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?float $remainingDue = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'payments')]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?self $invoice = null;
 
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: PaymentOrmEntity::class, cascade: ['persist'])]
-    #[Groups(['patient:read','patient:write','invoice:write','invoice:read','medical_record:read','medical_record:write'])]
     #[ORM\OrderBy(['id'=>'DESC'])]
     private Collection $payments;
 
     #[ORM\ManyToOne(inversedBy: 'invoice')]
-    #[Groups('invoice:write','invoice:read')]
     private ?MedicalRecordOrmEntity $medicalRecord = null;
 
     #[ORM\OneToMany(targetEntity: InvoiceItemOrmEntity::class, mappedBy: 'invoiceOrmEntity')]
+    #[Groups(['invoice:read','medical_record:read','patient:read'])]
     private Collection $invoiceItem;
 
     #[ORM\Column]
@@ -194,6 +193,7 @@ class InvoiceOrmEntity
 
     public function setInvoice(?self $invoice): static
     {
+        dd( $invoice);
         $this->invoice = $invoice;
 
         return $this;

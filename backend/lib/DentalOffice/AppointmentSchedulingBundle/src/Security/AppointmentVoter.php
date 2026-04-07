@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\AppointmentBundle\Infrastructure\Security;
-
-use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity as EntityAppointmentOrmEntity;
+namespace DentalOffice\AppointmentSchedulingBundle\Security;
+use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\AppointmentOrmEntity;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use  DentalOffice\UserBundle\Domain\Entity\User;
@@ -24,8 +23,7 @@ final class AppointmentVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
 
-
-
+     
         return in_array($attribute, [
             self::VIEW,
             self::CREATE,
@@ -42,7 +40,6 @@ final class AppointmentVoter extends Voter
         mixed $appointment,
         TokenInterface $token
     ): bool {
-
 
         $user = $token->getUser();
 
@@ -98,7 +95,7 @@ final class AppointmentVoter extends Voter
         ]);
     }
 
-    private function canUpdate(User $user, ?EntityAppointmentOrmEntity $appointment): bool
+    private function canUpdate(User $user, ?AppointmentOrmEntity $appointment): bool
     {
         if (!$this->hasAnyRole($user, ['ROLE_MANAGER', 'ROLE_RECEPTIONIST'])) {
             return false;
@@ -108,7 +105,7 @@ final class AppointmentVoter extends Voter
         return !$this->isCompleted($appointment);
     }
 
-    private function canConfirm(User $user, ?EntityAppointmentOrmEntity $appointment): bool
+    private function canConfirm(User $user, ?AppointmentOrmEntity $appointment): bool
     {
         if (!$this->hasAnyRole($user, ['ROLE_MANAGER', 'ROLE_RECEPTIONIST'])) {
             return false;
@@ -117,7 +114,7 @@ final class AppointmentVoter extends Voter
         return $this->isScheduled($appointment);
     }
 
-    private function canCancel(User $user, ?EntityAppointmentOrmEntity $appointment): bool
+    private function canCancel(User $user, ?AppointmentOrmEntity $appointment): bool
     {
         if (!$this->hasAnyRole($user, ['ROLE_MANAGER', 'ROLE_RECEPTIONIST'])) {
             return false;
@@ -126,7 +123,7 @@ final class AppointmentVoter extends Voter
         return !$this->isCompleted($appointment);
     }
 
-    private function canComplete(User $user, ?EntityAppointmentOrmEntity $appointment): bool
+    private function canComplete(User $user, ?AppointmentOrmEntity $appointment): bool
     {
         if (!$this->hasRole($user, 'ROLE_DENTIST')) {
             return false;
@@ -136,7 +133,7 @@ final class AppointmentVoter extends Voter
         return $this->isConfirmed($appointment);
     }
 
-    private function canReschedule(User $user, ?EntityAppointmentOrmEntity $appointment): bool
+    private function canReschedule(User $user, ?AppointmentOrmEntity $appointment): bool
     {
         if (!$this->hasAnyRole($user, ['ROLE_MANAGER', 'ROLE_RECEPTIONIST'])) {
             return false;
@@ -159,17 +156,17 @@ final class AppointmentVoter extends Voter
         return count(array_intersect($roles, $user->getRoles())) > 0;
     }
 
-    private function isScheduled(?EntityAppointmentOrmEntity $appointment): bool
+    private function isScheduled(?AppointmentOrmEntity $appointment): bool
     {
         return $appointment?->getStatus() === 'scheduled';
     }
 
-    private function isConfirmed(?EntityAppointmentOrmEntity $appointment): bool
+    private function isConfirmed(?AppointmentOrmEntity $appointment): bool
     {
         return $appointment?->getStatus() === 'confirmed';
     }
 
-    private function isCompleted(?EntityAppointmentOrmEntity $appointment): bool
+    private function isCompleted(?AppointmentOrmEntity $appointment): bool
     {
         return $appointment?->getStatus() === 'completed';
     }

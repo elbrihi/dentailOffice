@@ -14,6 +14,7 @@ use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\
 use DentalOffice\PatientBundle\Domain\Repository\PatientRepository;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPostProcessor;
 use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor\State\PatientPutProcessor;
+use DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Provider\State\PatientGetCollectionProvider as StatePatientGetCollectionProvider;
 use DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider\State\PatientGetCollectionProvider;
 use DentalOffice\UserBundle\Domain\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -52,7 +53,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 denormalizationContext: ['groups' => ['patient:write']],
                 paginationClientItemsPerPage: true,
                 paginationItemsPerPage: true,
-                provider: PatientGetCollectionProvider::class
+                provider: StatePatientGetCollectionProvider::class
 
             ),
             new GetCollection(
@@ -69,23 +70,26 @@ class Patient
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['patient:read','patient:write','appointment:write','appointment:read','invoice:write','invoice:read'])]
+    #[Groups(['patient:read','patient:write'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['patient:read','patient:write'])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['visit:read','visit:write','patient:read','patient:write','medical_record:read','medical_record:write','appointment:write','appointment:read','invoice:write','invoice:read'])]
+    
+    #[Groups(['patient:read','patient:write'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['visit:read','visit:write','patient:read','patient:write','appointment:write','appointment:read','invoice:write','invoice:read'])]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $firstName = null;
 
 
     #[ORM\Column(length: 255)]
     #[Groups(['patient:read','patient:write'])]
+
     private ?string $gender = null;
 
     #[ORM\Column(length: 255, nullable:true)]
@@ -134,16 +138,17 @@ class Patient
     private ?bool $status = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['visit:read','visit:write','patient:read','patient:write','invoice:write','invoice:read'])]
+    #[Groups(['patient:read','patient:write'])]
     private ?string $cni = null;
 
     #[ORM\OneToMany(targetEntity: MedicalRecordOrmEntity::class, mappedBy: 'patient', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: "medical_record_orm_entity_id", referencedColumnName: "id", nullable: true)]
     #[Groups(['patient:read','patient:write'])]
     #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $medicalRecord;
 
     #[ORM\OneToMany(targetEntity: AppointmentOrmEntity::class, mappedBy: 'patient' , cascade: ['persist'])]
-    #[Groups(['patient:read','patient:write'])] 
+    #[Groups(['patient:read','patient:write'])]
     #[ORM\OrderBy(['id' => 'DESC'])]
     private Collection $appointments;
 

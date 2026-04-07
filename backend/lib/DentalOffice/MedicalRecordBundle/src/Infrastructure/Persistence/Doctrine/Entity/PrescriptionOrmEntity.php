@@ -2,10 +2,13 @@
 
 namespace DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Entity\VisitOrmEntity;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Repository\PrescriptionOrmEntityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PrescriptionOrmEntityRepository::class)]
 
@@ -15,20 +18,38 @@ use Doctrine\ORM\Mapping as ORM;
        
     ]
 )]
+#[ApiResource(
+
+    order: ['id'=>'DESC'],
+    operations: [
+            new Get(
+                security: "is_granted('ROLE_OWNER')",
+                normalizationContext:['groups' => 'prescription:write'],
+                denormalizationContext: ['groups' => 'prescription:read'],
+
+            )
+    ]
+
+)
+]
 class PrescriptionOrmEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?string $medication = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?string $dosage = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
     private ?string $notes = null;
 
     #[ORM\ManyToOne(inversedBy: 'prescription')]

@@ -60,6 +60,7 @@ class CreatedMedicalRecordOnVisitSubscriberTest extends  AppointmentProcessorTes
          $payload 
         );
 
+        
         $this->createdMedicalRecord->createVisit($event);
          
                 // Assert
