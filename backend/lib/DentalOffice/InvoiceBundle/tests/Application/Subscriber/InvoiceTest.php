@@ -34,6 +34,7 @@ class InvoiceTest extends KernelTestCase
         $this->clock = $container->get(ClockInterface::class); // 👈 Fix here
 
 
+
         foreach ($this->entityManager->getRepository(InvoiceItemOrmEntity::class)->findAll() as $invoice) {
 
             

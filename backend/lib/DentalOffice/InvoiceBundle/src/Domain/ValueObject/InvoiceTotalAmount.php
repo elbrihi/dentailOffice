@@ -11,17 +11,20 @@ class InvoiceTotalAmount
      
    }
     public static function fromPositifTotlaAmount(
-      $totalAmount
+      float $totalAmount
       ):self
    {
 
 
+    
       if ( $totalAmount < 0) {
 
-  
-        throw InvalidInvoiceTotalAmount::invalidNegativeTotalamount();
+         
+        return throw InvalidInvoiceTotalAmount::invalidNegativeTotalamount();
       }
 
+    
+     
       return new self($totalAmount);
    }
 

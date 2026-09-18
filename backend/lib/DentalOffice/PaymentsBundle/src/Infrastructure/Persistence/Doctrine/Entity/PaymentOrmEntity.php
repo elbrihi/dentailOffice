@@ -35,7 +35,6 @@ class PaymentOrmEntity
     private ?int $id = null;
 
 
-
     #[ORM\Column(length: 255)]
     #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write','invoice:write','invoice:read'])]
     private ?string $method = null;
@@ -51,6 +50,10 @@ class PaymentOrmEntity
 
     #[ORM\OneToOne(cascade: ['persist'])]
     private ?VisitOrmEntity $visit = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['patient:read','patient:write','payment:write', 'payment:read','medical_record:read','medical_record:write','visit:read','visit:write','invoice:write','invoice:read'])]
+    private ?string $status = null;
 
 
     public function getId(): ?int
@@ -103,6 +106,18 @@ class PaymentOrmEntity
     public function setVisit(?VisitOrmEntity $visit): static
     {
         $this->visit = $visit;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

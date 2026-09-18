@@ -103,6 +103,14 @@ class MedicalRecordOrmEntity
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write','payment:write', 'payment:read'])]
     private ?int $id = null;
 
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
+    private ?string $code = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
+    private ?string $title = null;
     
     #[ORM\Column(length: 255)]
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
@@ -111,10 +119,6 @@ class MedicalRecordOrmEntity
     #[ORM\Column(length: 255)]
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     private ?string $clinical_diagnosis = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
-    private ?string $treatment_plan = null;
 
     #[Groups(['medical_record:read','medical_record:write', 'patient:read','patient:write','visit:read','visit:write'])]
     #[ORM\Column(length: 255)]
@@ -153,7 +157,7 @@ class MedicalRecordOrmEntity
     private ?float $remainingDue = null;
 
 
-    #[ORM\OneToMany(targetEntity: VisitOrmEntity::class, mappedBy: 'medicalRecord' , cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: VisitOrmEntity::class , mappedBy: 'medicalRecord' , cascade: ['persist'])]
     #[ORM\OrderBy(['id' => 'DESC'])]
     #[Groups(['invoice:read', 'medical_record:read', 'patient:read'])]
     #[MaxDepth(1)]
@@ -175,12 +179,25 @@ class MedicalRecordOrmEntity
     #[Groups(['invoice:read', 'medical_record:read', 'patient:read'])]
     private ?User $user = null;
 
+    #[ORM\OneToMany(
+        targetEntity: TreatmentOrmEntity::class,
+        mappedBy: 'medicalRecord',
+        cascade: ['persist'],
+        orphanRemoval: true
+    )]
+    #[Groups(['invoice:read', 'medical_record:read', 'patient:read'])]
+    private Collection $treatments;
+
+
 
     public function __construct()
     {
+        $this->code = $this-> generateMedicalRecordCode();
+        $this->title= $this->generateTitle();
         $this->visits = new ArrayCollection();
         $this->invoice = new ArrayCollection();
         $this->prescriptions = new ArrayCollection();
+        $this->treatments = new ArrayCollection();
     }
 
 
@@ -212,19 +229,6 @@ class MedicalRecordOrmEntity
 
         return $this;
     }
-
-    public function getTreatmentPlan(): ?string
-    {
-        return $this->treatment_plan;
-    }
-
-    public function setTreatmentPlan(string $treatment_plan): static
-    {
-        $this->treatment_plan = $treatment_plan;
-
-        return $this;
-    }
-
 
     public function getNotes(): ?string
     {
@@ -449,6 +453,77 @@ class MedicalRecordOrmEntity
         return $this;
     }
 
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): static
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function generateMedicalRecordCode(): string
+    {
+        $prefix = 'MR';
+        $date = (new \DateTime())->format('Ymd');
+        $rand = str_pad((string) random_int(1, 999), 3, '0', STR_PAD_LEFT);
+
+        return sprintf('%s-%s-%s', $prefix, $date, $rand);
+    }
+
+    public function generateTitle(): string
+    {
+        return sprintf(
+            '%s — %s',
+            $this->clinical_diagnosis ?? 'Diagnostic inconnu',
+            $this->treatment_plan ?? 'Traitement non défini'
+        );
+    }
+
+    /**
+     * @return Collection<int, TreatmentOrmEntity>
+     */
+    public function getTreatments(): Collection
+    {
+        return $this->treatments;
+    }
+
+    public function addTreatment(TreatmentOrmEntity $treatment): static
+    {
+        if (!$this->treatments->contains($treatment)) {
+            $this->treatments->add($treatment);
+            $treatment->setMedicalRecordOrmEntity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTreatment(TreatmentOrmEntity $treatment): static
+    {
+        if ($this->treatments->removeElement($treatment)) {
+            // set the owning side to null (unless already changed)
+            if ($treatment->getMedicalRecordOrmEntity() === $this) {
+                $treatment->setMedicalRecordOrmEntity(null);
+            }
+        }
+
+        return $this;
+    }
 
 
 

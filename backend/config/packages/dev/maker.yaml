@@ -1,8 +1,8 @@
 # create this file if you need to configure anything
 maker:
     #root_namespace: 'DentalOffice\PatientBundle\Domain'
-    #root_namespace:  'DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor'
-    #root_namespace:    'DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider'
+    #root_namespace: 'DentalOffice\PatientBundle\Infrastructure\Persistence\Doctrine\Processor'
+    #root_namespace: 'DentalOffice\PatientBundle\Infrastucture\Persistence\Doctrine\Provider'
     
     
     #root_namespace: 'DentalOffice\UserBundle\Domain'
@@ -14,26 +14,27 @@ maker:
     #root_namespace:  'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine'
     #root_namespace:  'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Processor'
     #root_namespace:  'DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Provider'
-    #root_namespace: 'Stock\'
-    #root_namespace: 'App'
+    #root_namespace:  'Stock\'
+    #root_namespace:  'App'
 
     #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Domain'
     #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine'
     #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Infrastructure\Persistence\Doctrine\Provider'
-    #root_namespace:   'DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor'
-    #root_namespace: 'Stock\'
-    #root_namespace: 'App'
+    #root_namespace:  'DentalOffice\AppointmentSchedulingBundle\Presentation\Api\Processor'
+    #root_namespace:  'Stock\'
+    #root_namespace:  'App'
+
 
     #root_namespace:  'DentalOffice\PaymentsBundle\Domain'
-    #root_namespace:  'DentalOffice\PaymentsBundle\Infrastructure\Persistence\Doctrine'
+    root_namespace:   'DentalOffice\PaymentsBundle\Infrastructure\Persistence\Doctrine'
     #root_namespace:  'DentalOffice\PaymentsBundle\Infrastructure\Persistence\Doctrine\Processor'
     #root_namespace:  'DentalOffice\PaymentsBundle\Infrastructure\Persistence\Doctrine\Provider'
-    #root_namespace: 'Stock\'
-    #root_namespace: 'App'
+    #root_namespace:  'Stock\'
+    #root_namespace:  'App'
 
     #root_namespace:  'DentalOffice\InvoiceBundle\Domain'
-    root_namespace:  'DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine'
+    #root_namespace:  'DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine'
     #root_namespace:  'DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Processor'
     #root_namespace:  'DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Provider'
-    #root_namespace: 'Stock\'
-    #root_namespace: 'App'
+    #root_namespace:  'Stock\'
+    #root_namespace:  'App'

@@ -4,7 +4,7 @@ namespace DentalOffice\AppointmentSchedulingBundle\Domain\ValueObject;
 
 use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Exception\InvalidAppointmentDate;
-use Symfony\Component\Validator\Constraints\Date;
+
 
 final class AppointmentDate
 {

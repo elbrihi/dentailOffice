@@ -28,17 +28,15 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Table(
     name: "visit",
-    indexes: [
-       
-    ]
+    indexes: []
 )]
 #[ORM\Entity(repositoryClass: VisitRepository::class)]
 
 #[ApiResource(
     order: ['id' => 'DESC'],
-    operations:[
+    operations: [
         new Post(
-            input:VisitInputDto::class,
+            input: VisitInputDto::class,
             security: "is_granted('ROLE_ADMIN')",
             uriTemplate: "/create/medicalRecord/{medicalRecordId}/visit",
             uriVariables: [
@@ -46,16 +44,16 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
                     fromClass: MedicalRecordOrmEntity::class,
                     toProperty: 'medicalRecord'
                 ),
-                
+
             ],
             processor: VisitPostStateProcessor::class,
-            provider:VisitPostProvider::class,
+            provider: VisitPostProvider::class,
             normalizationContext: ['groups' => 'visit:write'],
             denormalizationContext: ['groups' => 'visit:read']
-            
+
         ),
         new Put(
-            input:VisitInputDto::class,
+            input: VisitInputDto::class,
             security: "is_granted('ROLE_ADMIN')",
             uriTemplate: "/update/visit/{id}",
             processor: VisitPutStateProcessor::class,
@@ -64,19 +62,19 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
         ),
         new Get(
-            input:VisitInputDto::class,
+            input: VisitInputDto::class,
             security: "is_granted('ROLE_ADMIN')",
             uriTemplate: "/get/visit/{id}",
-            normalizationContext: ['groups'=>'visit:write',  "enable_max_depth"=>"true"],
-            denormalizationContext: ['groups'=>'visit:read'],
+            normalizationContext: ['groups' => 'visit:write',  "enable_max_depth" => "true"],
+            denormalizationContext: ['groups' => 'visit:read'],
 
         ),
         new GetCollection(
             security: "is_granted('ROLE_ADMIN')",
             uriTemplate: "/get/visits/by/paginations",
             provider: VisitsGetCollectionProvider::class,
-            normalizationContext: ['groups'=>'visit:write'],
-            denormalizationContext: ['groups'=>'visit:read'],
+            normalizationContext: ['groups' => 'visit:write'],
+            denormalizationContext: ['groups' => 'visit:read'],
             paginationClientEnabled: true, // ✅ Allow clients to use `page`
             paginationClientItemsPerPage: true,
             paginationItemsPerPage: true,
@@ -84,7 +82,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
         new Delete(
             security: "is_granted('ROLE_ADMIN')",
             uriTemplate: "/delete/visit/{id}",
-            processor:VisitDeleteProcessor::class
+            processor: VisitDeleteProcessor::class
         )
     ],
     paginationPartial: false,
@@ -94,67 +92,65 @@ class VisitOrmEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?string $notes = null;
 
-    #[ORM\Column]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
-    private ?float $amountPaid = null;
 
-    #[ORM\Column(nullable:true)]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[ORM\Column(nullable: true)]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?float $remainingDueAfterVisit = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits')]
-     #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
+    #[ORM\JoinColumn(nullable: false, unique: true)]
     #[MaxDepth(1)]
     private ?MedicalRecordOrmEntity $medicalRecord = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?\DateTimeImmutable $modifiedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits', cascade: ['persist'])]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?User $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits', cascade: ['persist'])]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?User $modifiedBy = null;
 
 
 
     #[ORM\Column]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?bool $status = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?string $type = null;
 
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?\DateTimeInterface $start = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?\DateTimeInterface $end = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups(['visit:read','visit:write','medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['visit:read', 'visit:write', 'medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private ?AppointmentOrmEntity $appointment = null;
 
     #[ORM\OneToMany(targetEntity: PrescriptionOrmEntity::class, mappedBy: 'visitOrmEntity')]
-    #[Groups(['medical_record:read','medical_record:write','patient:read','patient:write'])]
+    #[Groups(['medical_record:read', 'medical_record:write', 'patient:read', 'patient:write'])]
     private Collection $prescription;
 
     public function __construct()
@@ -181,17 +177,6 @@ class VisitOrmEntity
         return $this;
     }
 
-    public function getAmountPaid(): ?float
-    {
-        return $this->amountPaid;
-    }
-
-    public function setAmountPaid(float $amountPaid): static
-    {
-        $this->amountPaid = $amountPaid;
-
-        return $this;
-    }
 
     public function getRemainingDueAfterVisit(): ?float
     {
@@ -357,6 +342,4 @@ class VisitOrmEntity
 
         return $this;
     }
-
-  
 }

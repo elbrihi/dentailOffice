@@ -59,7 +59,7 @@
             "App\\Tests\\": "tests/",
             "DentalOffice\\PatientBundle\\Tests\\": "lib/DentalOffice/PatientBundle/tests/",
             "DentalOffice\\AppointmentSchedulingBundle\\Tests\\":"lib/DentalOffice/AppointmentSchedulingBundle/tests/",
-            "DentalOffice\\MedicalRecordBundle\\":"lib/DentalOffice/MedicalRecordBundle/tests/",
+            "DentalOffice\\MedicalRecordBundle\\Tests\\":"lib/DentalOffice/MedicalRecordBundle/tests/",
             "DentalOffice\\InvoiceBundle\\Tests\\":"lib/DentalOffice/InvoiceBundle/tests/",
             "DentalOffice\\PaymentsBundle\\Tests\\":"lib/DentalOffice/PaymentsBundle/tests/"
             

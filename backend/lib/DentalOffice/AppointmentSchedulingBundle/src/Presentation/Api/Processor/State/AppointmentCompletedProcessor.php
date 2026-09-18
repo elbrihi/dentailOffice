@@ -83,11 +83,8 @@ class AppointmentCompletedProcessor implements ProcessorInterface
 
         $appointmentData = $this->persistProcessor->process($orm, $operation, $uriVariables, $context);
 
-      
-
         $payload = [$request,$user];
    
-      
         $appointmentComplted= AppointmentCompleted::fromData(
             0,
             $orm->getId(),
@@ -101,7 +98,6 @@ class AppointmentCompletedProcessor implements ProcessorInterface
 
         $medicalRecord = $this->dispatcher->dispatch($appointmentComplted);
 
-    
         return  $orm;
         
     }

@@ -34,7 +34,7 @@ class VisitCreatedOnInvoicAndMedicalRecordSubscriber implements EventSubscriberI
         
     
       
-
+        dd($event->getPayload());
         $visitInpout =$event->getPayload()[0]["visit"];
         $medicalRecordInput = $event->getPayload()[0]["medicalRecord"];
 

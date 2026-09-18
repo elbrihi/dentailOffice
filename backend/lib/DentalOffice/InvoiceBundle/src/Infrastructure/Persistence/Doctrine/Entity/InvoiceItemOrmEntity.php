@@ -29,9 +29,10 @@ class InvoiceItemOrmEntity
     #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?InvoiceOrmEntity $invoiceOrmEntity = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 15)]
     #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?string $status = null;
+
 
     public function getId(): ?int
     {
@@ -85,4 +86,6 @@ class InvoiceItemOrmEntity
 
         return $this;
     }
+
+   
 }

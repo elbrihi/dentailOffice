@@ -1,0 +1,470 @@
+{
+  "invoice": {
+
+    "id": 5001,
+    "number": "INV-2026-0001",
+
+    "status": "partially_refunded",
+
+    "currency": "MAD",
+
+
+    "amounts": {
+
+      "agreed_amount": 2000,
+      "total_amount": 2000,
+
+      "paid_amount": 1700,
+
+      "refunded_amount": 500,
+
+      "net_paid_amount": 1200,
+
+      "remaining_due": 800
+    },
+
+
+    "items": [
+
+      {
+        "id": 1,
+
+        "description": "Consultation initiale",
+
+        "amount": 300,
+
+
+        "execution_status": "completed",
+
+        "payment_status": "paid"
+      },
+
+
+      {
+        "id": 2,
+
+        "description": "Dévitalisation",
+
+        "amount": 600,
+
+
+        "execution_status": "completed",
+
+        "payment_status": "partially_paid"
+      },
+
+
+      {
+        "id": 3,
+
+        "description": "Composite",
+
+        "amount": 400,
+
+
+        "execution_status": "completed",
+
+        "payment_status": "partially_paid"
+      },
+
+
+      {
+        "id": 4,
+
+        "description": "Couronne dentaire",
+
+        "amount": 700,
+
+
+        "execution_status": "planned",
+
+        "payment_status": "billed"
+      }
+
+    ],
+
+
+
+    "payments": [
+
+
+
+      {
+        "id": 9001,
+
+        "status": "completed",
+
+
+        "amount": 300,
+
+        "refunded_amount": 0,
+
+        "net_amount": 300,
+
+
+        "allocations": [
+
+          {
+
+            "invoice_item_id": 1,
+
+            "allocated_amount": 300,
+
+
+            "refunds": []
+
+          }
+
+        ]
+
+      },
+
+
+
+
+      {
+        "id": 9002,
+
+
+        "status": "partially_paid",
+
+
+        "amount": 200,
+
+        "refunded_amount": 0,
+
+        "net_amount": 200,
+
+
+        "allocations": [
+
+          {
+
+            "invoice_item_id": 2,
+
+            "allocated_amount": 200,
+
+            "refunds": []
+
+          }
+
+        ]
+
+      },
+
+
+
+
+      {
+        "id": 9003,
+
+
+        "status": "completed",
+
+
+        "amount": 600,
+
+        "refunded_amount": 200,
+
+        "net_amount": 400,
+
+
+        "allocations": [
+
+          {
+
+            "invoice_item_id": 2,
+
+
+            "allocated_amount": 400,
+
+
+            "refunds": [
+
+              {
+
+                "id": 9901,
+
+                "amount": 100,
+
+                "status": "completed",
+
+                "reason": "Treatment adjustment"
+
+              },
+
+
+              {
+
+                "id": 9902,
+
+                "amount": 100,
+
+                "status": "completed",
+
+                "reason": "Patient request"
+
+              }
+
+            ]
+
+          },
+
+
+
+          {
+
+            "invoice_item_id": 3,
+
+
+            "allocated_amount": 200,
+
+
+            "refunds": []
+
+          }
+
+        ]
+
+      },
+
+
+
+
+      {
+        "id": 9004,
+
+
+        "status": "partially_refunded",
+
+
+        "amount": 400,
+
+
+        "refunded_amount": 150,
+
+
+        "net_amount": 250,
+
+
+
+        "allocations": [
+
+
+          {
+
+            "invoice_item_id": 3,
+
+
+            "allocated_amount": 400,
+
+
+            "refunds": [
+
+
+              {
+
+                "id": 9903,
+
+                "amount": 150,
+
+                "status": "completed",
+
+                "reason": "Composite correction"
+
+              }
+
+            ]
+
+          }
+
+        ]
+
+      },
+
+
+
+
+      {
+        "id": 9005,
+
+
+        "status": "pending",
+
+
+        "amount": 300,
+
+
+        "refunded_amount": 0,
+
+
+        "net_amount": 0,
+
+
+        "allocations": []
+
+      },
+
+
+
+
+
+      {
+        "id": 9006,
+
+
+        "status": "processing",
+
+
+        "amount": 200,
+
+
+        "refunded_amount": 0,
+
+
+        "net_amount": 0,
+
+
+        "allocations": []
+
+      },
+
+
+
+
+
+      {
+        "id": 9007,
+
+
+        "status": "failed",
+
+
+        "amount": 500,
+
+
+        "refunded_amount": 0,
+
+
+        "net_amount": 0,
+
+
+        "allocations": []
+
+      },
+
+
+
+
+
+      {
+        "id": 9008,
+
+
+        "status": "cancelled",
+
+
+        "amount": 400,
+
+
+        "refunded_amount": 0,
+
+
+        "net_amount": 0,
+
+
+        "allocations": []
+
+      },
+
+
+
+
+
+      {
+        "id": 9009,
+
+
+        "status": "refunded",
+
+
+        "amount": 300,
+
+
+        "refunded_amount": 300,
+
+
+        "net_amount": 0,
+
+
+        "allocations": [
+
+          {
+
+            "invoice_item_id": 3,
+
+
+            "allocated_amount": 300,
+
+
+            "refunds": [
+
+
+              {
+
+                "id": 9904,
+
+                "amount": 300,
+
+                "status": "completed",
+
+                "reason": "Full refund"
+
+              }
+
+            ]
+
+          }
+
+        ]
+
+      }
+
+
+
+    ],
+
+
+
+    "calculation": {
+
+
+      "rules": {
+
+
+        "paid_amount":
+
+        "SUM(payment.amount WHERE status IN completed,paid,partially_refunded,refunded)",
+
+
+        "refunded_amount":
+
+        "SUM(all refunds.status = completed)",
+
+
+        "net_paid_amount":
+
+        "paid_amount - refunded_amount",
+
+
+        "remaining_due":
+
+        "total_amount - net_paid_amount"
+
+      }
+
+    }
+
+  }
+
+}

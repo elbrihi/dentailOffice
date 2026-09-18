@@ -1,0 +1,90 @@
+{
+   "invoice": {
+      "id": 2005,
+      "status": "refunded",
+      "total_amount": 1000,
+      "paid_amount": 1000,
+      "refunded_amount": 1000,
+      "net_paid_amount": 0,
+      "remaining_amount": 1000,
+      "items": [
+         {
+            "id": 1,
+            "name": "Consultation",
+            "execution_status": "cancelled",
+            "payment_status": "refunded",
+            "amount": 300,
+            "allocated_amount": 300,
+            "refunded_amount": 300,
+            "net_allocated_amount": 0,
+            "remaining_item_due": 300
+         },
+         {
+            "id": 2,
+            "name": "X-Ray",
+            "execution_status": "cancelled",
+            "payment_status": "refunded",
+            "amount": 400,
+            "allocated_amount": 400,
+            "refunded_amount": 400,
+            "net_allocated_amount": 0,
+            "remaining_item_due": 400
+         },
+         {
+            "id": 3,
+            "name": "Cleaning",
+            "execution_status": "cancelled",
+            "payment_status": "refunded",
+            "amount": 300,
+            "allocated_amount": 300,
+            "refunded_amount": 300,
+            "net_allocated_amount": 0,
+            "remaining_item_due": 300
+         }
+      ],
+      "payments": [
+         {
+            "id": 9105,
+            "amount": 1000,
+            "method": "cash",
+            "allocations": [
+               {
+                  "invoice_item_id": 1,
+                  "amount": 300
+               },
+               {
+                  "invoice_item_id": 2,
+                  "amount": 400
+               },
+               {
+                  "invoice_item_id": 3,
+                  "amount": 300
+               }
+            ]
+         }
+      ],
+      "refunds": [
+         {
+            "id": 9907,
+            "invoice_item_id": 1,
+            "payment_id": 9105,
+            "amount": 300,
+            "reason": "Treatment cancelled"
+         },
+         {
+            "id": 9908,
+            "invoice_item_id": 2,
+            "payment_id": 9105,
+            "amount": 400,
+            "reason": "Treatment cancelled"
+         },
+         {
+            "id": 9909,
+            "invoice_item_id": 3,
+            "payment_id": 9105,
+            "amount": 300,
+            "reason": "Treatment cancelled"
+         }
+      ]
+   }
+}

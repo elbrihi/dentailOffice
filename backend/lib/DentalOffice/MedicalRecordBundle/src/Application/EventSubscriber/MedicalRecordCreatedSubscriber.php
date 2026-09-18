@@ -5,6 +5,7 @@ use DateTimeImmutable;
 use DentalOffice\AppointmentSchedulingBundle\Domain\Event\AppointmentCompleted;
 use DentalOffice\MedicalRecordBundle\Domain\Aggregate\MedicalRecord;
 use DentalOffice\MedicalRecordBundle\Domain\Event\MedicalRecordCreated;
+use DentalOffice\MedicalRecordBundle\Domain\Event\TreatmentCreatedOnMedicalRecord;
 use DentalOffice\MedicalRecordBundle\Domain\ValueObject\MedicalRecordAgreedAmount;
 use DentalOffice\MedicalRecordBundle\Domain\ValueObject\MedicalRecordChiefComplaint;
 use DentalOffice\MedicalRecordBundle\Domain\ValueObject\MedicalRecordId;
@@ -56,7 +57,7 @@ class MedicalRecordCreatedSubscriber implements EventSubscriberInterface
             MedicalRecordId::toInt(0),
             MedicalRecordChiefComplaint::chiefComplaint($medicalRecordInput['chief_complaint']),
             MedicalRecordAgreedAmount::fromNumeric($medicalRecordInput['agreedAmount'])
-        ) ;
+        );
 
         
 
@@ -70,14 +71,15 @@ class MedicalRecordCreatedSubscriber implements EventSubscriberInterface
         $medicalRecordOrmEntity->setAgreedAmount($medicalRecord->getAgreedAmout()->getAgreedAmountValue());
 
         $medicalRecordOrmEntity->setClinicalDiagnosis($medicalRecordInput['clinical_diagnosis']);
-
-      // 
+ 
         //treatment_plan
+        $medicalRecordOrmEntity->setCode($medicalRecordOrmEntity->generateMedicalRecordCode());
+
+        $medicalRecordOrmEntity->setTitle( $medicalRecordOrmEntity->generateTitle());
         
-        $medicalRecordOrmEntity->setTreatmentPlan($medicalRecordInput ['treatment_plan']);
-
+        // $medicalRecordOrmEntity->setTreatmentPlan($medicalRecordInput ['treatment_plan']);
+        
         $medicalRecordOrmEntity->setNotes($medicalRecordInput ['notes']);
-
 
 
         $medicalRecordOrmEntity->setCreatedBy($user);
@@ -112,27 +114,35 @@ class MedicalRecordCreatedSubscriber implements EventSubscriberInterface
             MedicalRecordAgreedAmount::fromNumeric($medicalRecordOrmEntity->getAgreedAmount())
         );
 
+
         $uriVariables = $event->getUriVariables();
 
         $payload =  $event->getPayload();
 
 
        
-        $medicalRecordEvent = MedicalRecordCreated::medicalRecordData(
-            $medicalRecordId ,
-            $patient->getId(),
+        // $medicalRecordEvent = MedicalRecordCreated::medicalRecordData(
+        //     $medicalRecordId ,
+        //     $patient->getId(),
+        //     $medicalRecordOrmEntity->getUser()->getId(),
+        //     $event->getAppointmentId(),
+        //     $payload
+        // );
+   
+        
+        $treatmentEvent = TreatmentCreatedOnMedicalRecord::treatmentData(
+            [],
             $medicalRecordOrmEntity->getUser()->getId(),
             $event->getAppointmentId(),
-            $payload
+            $payload,
+            $medicalRecord->getMedicalRecodId()->getMedicalRecordID()
+           
         );
-   
-        // intial invoice 
-
-       
-
-      
         
-        $this->dispatcher->dispatch($medicalRecordEvent);
+       
+        $this->dispatcher->dispatch($treatmentEvent);
+        
+        // $this->dispatcher->dispatch($treatmentEvent);
  
     }
 

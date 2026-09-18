@@ -49,7 +49,7 @@ class InvoiceCreatedOnMedicalRecordTest extends InvoiceTest
         $this->invoiceOnMedicalRecord = static::getContainer()->get(InvoiceCreatedOnMedicalRecord::class);
     }
     public function test_intiale_invoice()
-      {
+    {
 
         
         $this->saveUser();
@@ -60,11 +60,6 @@ class InvoiceCreatedOnMedicalRecordTest extends InvoiceTest
      
         $this->saveMedicalRecord();
         $this->entityManager->flush();
-
-        
-       
-        
-     
        
         $medicalRecordEvent = MedicalRecordCreated::medicalRecordData(
             static::$medicalRecordId,
@@ -74,7 +69,10 @@ class InvoiceCreatedOnMedicalRecordTest extends InvoiceTest
             $this->payload()
 
         );
-        
+
+ 
+    
+     
         $items = $this->payload()[0]['visit']['items'];
       
         $invoiceSubscriber = $this->invoiceOnMedicalRecord->createInvoice($medicalRecordEvent );
@@ -85,7 +83,7 @@ class InvoiceCreatedOnMedicalRecordTest extends InvoiceTest
             ->findOneBy(['medicalRecord' => static::$medicalRecordId]);
 
         $this->assertNotNull($invoice, 'Invoice should be created');
-
+     
         // 2. Items count
         $invoiceItems = $this->entityManager
             ->getRepository(InvoiceItemOrmEntity::class)
@@ -116,6 +114,8 @@ class InvoiceCreatedOnMedicalRecordTest extends InvoiceTest
             $this->assertEquals($items[$index]['amount'], $item->getAmount());
             $this->assertEquals($items[$index]['description'], $item->getDescription());
         }
+      
+      
       }
 
     

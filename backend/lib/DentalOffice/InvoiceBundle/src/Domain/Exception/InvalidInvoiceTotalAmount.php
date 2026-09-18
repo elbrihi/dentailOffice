@@ -6,9 +6,9 @@ use DomainException;
 
 class InvalidInvoiceTotalAmount  extends DomainException
 {
-   private function __construct(private float $totalAmount)
-   {
-      
+   private function __construct(string $message)
+   {   
+      parent::__construct($message);
       
    }
 

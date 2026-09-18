@@ -3,6 +3,7 @@
 namespace DentalOffice\UserBundle\Domain\Entity;
 
 use ApiPlatform\Metadata\Post;
+use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\StepOrmEntity;
 use DentalOffice\PatientBundle\Domain\Entity\Patient;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -97,6 +98,9 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: MedicalRecordOrmEntity::class, mappedBy: 'user')]
     private Collection $medicalRecord;
 
+    #[ORM\OneToMany(targetEntity: StepOrmEntity::class, mappedBy: 'user')]
+    private Collection $step;
+
 
 
     public function __construct()
@@ -109,6 +113,7 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
         $this->appointments = new ArrayCollection();
         $this->visits = new ArrayCollection();
         $this->medicalRecord = new ArrayCollection();
+        $this->step = new ArrayCollection();
     }
 
 
@@ -412,6 +417,36 @@ class User implements UserInterface , PasswordAuthenticatedUserInterface
     public function getMedicalRecord(): Collection
     {
         return $this->medicalRecord;
+    }
+
+    /**
+     * @return Collection<int, StepOrmEntity>
+     */
+    public function getStep(): Collection
+    {
+        return $this->step;
+    }
+
+    public function addStep(StepOrmEntity $step): static
+    {
+        if (!$this->step->contains($step)) {
+            $this->step->add($step);
+            $step->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStep(StepOrmEntity $step): static
+    {
+        if ($this->step->removeElement($step)) {
+            // set the owning side to null (unless already changed)
+            if ($step->getUser() === $this) {
+                $step->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 

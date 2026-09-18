@@ -20,9 +20,9 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class AppointmentCompletedProcessorTest extends AppointmentProcessorTest
 {
 
-      private const COMPLETED = 'completed';
-      public function  test_creating_medical_record_visit():void
-      {
+    private const COMPLETED = 'completed';
+    public function  test_creating_medical_record_visit():void
+    {
             $this->savePatient1();
             $this->saveAppointment1();
 

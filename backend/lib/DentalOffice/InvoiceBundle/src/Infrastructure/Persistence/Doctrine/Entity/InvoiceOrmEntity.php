@@ -15,8 +15,6 @@ use DateTimeImmutable;
 use DentalOffice\InvoiceBundle\Infrastructure\Persistence\Doctrine\Repository\InvoiceRepository;
 use DentalOffice\MedicalRecordBundle\Infrastructure\Persistence\Doctrine\Entity\MedicalRecordOrmEntity;
 use DentalOffice\PaymentsBundle\Infrastructure\Persistence\Doctrine\Entity\PaymentOrmEntity;
-use Doctrine\DBAL\Types\DateImmutableType;
-use Doctrine\DBAL\Types\DateTimeImmutableType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -91,16 +89,25 @@ class InvoiceOrmEntity
 
     #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: PaymentOrmEntity::class, cascade: ['persist'])]
     #[ORM\OrderBy(['id'=>'DESC'])]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private Collection $payments;
 
     #[ORM\ManyToOne(inversedBy: 'invoice')]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?MedicalRecordOrmEntity $medicalRecord = null;
 
     #[ORM\OneToMany(targetEntity: InvoiceItemOrmEntity::class, mappedBy: 'invoiceOrmEntity')]
     #[Groups(['invoice:read','medical_record:read','patient:read'])]
     private Collection $invoiceItem;
 
+
+    #[ORM\Column(length: 20)]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
+    private ?string $status = null;
+
+
     #[ORM\Column]
+    #[Groups(['invoice:read','medical_record:read','patient:read','patient:write'])]
     private ?float $agreedAmount = null;
 
     public function __construct()
@@ -193,7 +200,7 @@ class InvoiceOrmEntity
 
     public function setInvoice(?self $invoice): static
     {
-        dd( $invoice);
+        
         $this->invoice = $invoice;
 
         return $this;
@@ -267,5 +274,18 @@ class InvoiceOrmEntity
 
         return $this;
     }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
    
 }

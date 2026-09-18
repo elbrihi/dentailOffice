@@ -32,7 +32,7 @@ class MedicalRecordCreatedOnVisitSubscriber  implements EventSubscriberInterface
 
     public function createVisit(  $event)
     {
-        dd("hi");
+        
         $visitInpout =$event->getPayload()["request"]["visit"];
         $medicalRecordInput = $event->getPayload()["request"]["medicalRecord"];
 
